@@ -8,10 +8,10 @@ void get_resolution(int& width, int& height) {
 
 Vertex vertices[] =
 { //               COORDINATES           /            COLORS          /           NORMALS         /       TEXTURE COORDINATES    //
-	Vertex{glm::vec3(-1.0f, 0.0f,  1.0f), /*glm::vec3(0.0f, 1.0f, 0.0f),*/ glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(0.0f, 0.0f)},
-	Vertex{glm::vec3(-1.0f, 0.0f, -1.0f),/* glm::vec3(0.0f, 1.0f, 0.0f),*/ glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(0.0f, 1.0f)},
-	Vertex{glm::vec3(1.0f, 0.0f, -1.0f), /*glm::vec3(0.0f, 1.0f, 0.0f), */glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(1.0f, 1.0f)},
-	Vertex{glm::vec3(1.0f, 0.0f,  1.0f), /*glm::vec3(0.0f, 1.0f, 0.0f), */glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(1.0f, 0.0f)}
+	Vertex{glm::vec3(-1.0f, 0.0f,  1.0f),	glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(0.0f, 0.0f)},
+	Vertex{glm::vec3(-1.0f, 0.0f, -1.0f),	glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(0.0f, 1.0f)},
+	Vertex{glm::vec3(1.0f, 0.0f, -1.0f),	glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(1.0f, 1.0f)},
+	Vertex{glm::vec3(1.0f, 0.0f,  1.0f),	glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(1.0f, 0.0f)}
 };
 
 GLuint indices[] =
@@ -88,50 +88,62 @@ int main() {
 	//------------------------------//
 
 	Shader shaderProgram("default.vert", "default.frag");
-	Shader treeShader("default.vert", "default.frag");
 	std::vector<Vertex> verts(vertices, vertices + sizeof(vertices) / sizeof(Vertex));
 	std::vector<GLuint> ind(indices, indices + sizeof(indices) / sizeof(GLuint));
 	std::vector<Texture> tex(textures, textures + sizeof(textures) / sizeof(Texture));
 	Mesh floor(verts, ind, tex);
 
-	Model proba;
-	proba.loadObj("models3d/tree2.obj");
-	proba.objecte->textures = tex;
+	//Shader treeShader("default.vert", "default.frag");
+	//Model proba;
+	//proba.loadObj("models3d/tree2.obj");
+	//proba.objecte->textures = tex;
 
 	//------------------------------//
-	Shader lightShader("light.vert", "light.frag");
+	Shader llum1Shader("light.vert", "light.frag");
+	Shader llum2Shader("light.vert", "light.frag");
 
 	std::vector<Vertex> lightVerts(lightVertices, lightVertices + sizeof(lightVertices) / sizeof(Vertex));
 	std::vector<GLuint> lightInd(lightIndices, lightIndices + sizeof(lightIndices) / sizeof(GLuint));
-	Mesh light(lightVerts, lightInd, tex);
+	Mesh llum1(lightVerts, lightInd, tex);
+	Mesh llum2(lightVerts, lightInd, tex);
 
 	//------------------------------//
-	glm::vec4 lightColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
-	glm::vec3 lightPos = glm::vec3(10.5f, 0.5f, 10.5f);
-	glm::mat4 lightModel = glm::mat4(1.0f);
-	lightModel = glm::translate(lightModel, lightPos);
+	glm::vec4 colorLlum = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
+	glm::vec3 posLlum1 = glm::vec3(0.5f, 0.5f, 0.5f);
+	glm::mat4 modelLlum1 = glm::mat4(1.0f);
+	modelLlum1 = glm::translate(modelLlum1, posLlum1);
+
+	glm::vec3 posLlum2 = glm::vec3(-0.5f, 0.5f, -0.5f);
+	glm::mat4 modelLlum2 = glm::mat4(1.0f);
+	modelLlum2 = glm::translate(modelLlum2, posLlum2);
+
 	//------------------------------//
-	glm::vec3 object1Pos = glm::vec3(10.0f, 0.0f, 10.0f);
+	glm::vec3 object1Pos = glm::vec3(0.0f, 0.0f, 0.0f);
 	glm::mat4 object1Model = glm::mat4(1.0f);
 	object1Model = glm::translate(object1Model, object1Pos);
 	//------------------------------//
-	glm::vec3 treePos = glm::vec3(0, 0, 0);
-	glm::mat4 treeModel = glm::mat4(1.0f);
-	treeModel = glm::translate(treeModel, treePos);
+	//glm::vec3 treePos = glm::vec3(0, 0, 0);
+	//glm::mat4 treeModel = glm::mat4(1.0f);
+	//treeModel = glm::translate(treeModel, treePos);
+	//
+	//treeShader.Activate();
+	//glUniformMatrix4fv(glGetUniformLocation(treeShader.ID, "model"), 1, GL_FALSE, glm::value_ptr(treeModel));
+	//glUniform4f(glGetUniformLocation(treeShader.ID, "lightColor"), lightColor.x, lightColor.y, lightColor.z, lightColor.w);
+	//glUniform3f(glGetUniformLocation(treeShader.ID, "lightPos"), lightPos.x, lightPos.y, lightPos.z);
 
-	treeShader.Activate();
-	glUniformMatrix4fv(glGetUniformLocation(treeShader.ID, "model"), 1, GL_FALSE, glm::value_ptr(treeModel));
-	glUniform4f(glGetUniformLocation(treeShader.ID, "lightColor"), lightColor.x, lightColor.y, lightColor.z, lightColor.w);
-	glUniform3f(glGetUniformLocation(treeShader.ID, "lightPos"), lightPos.x, lightPos.y, lightPos.z);
 
+	llum1Shader.Activate();
+	glUniformMatrix4fv(glGetUniformLocation(llum1Shader.ID, "model"), 1, GL_FALSE, glm::value_ptr(modelLlum1));
+	glUniform4f(glGetUniformLocation(llum1Shader.ID, "lightColor"), colorLlum.x, colorLlum.y, colorLlum.z, colorLlum.w);
+	llum2Shader.Activate();
+	glUniformMatrix4fv(glGetUniformLocation(llum2Shader.ID, "model"), 1, GL_FALSE, glm::value_ptr(modelLlum2));
+	glUniform4f(glGetUniformLocation(llum2Shader.ID, "lightColor"), colorLlum.x, colorLlum.y, colorLlum.z, colorLlum.w);
 
-	lightShader.Activate();
-	glUniformMatrix4fv(glGetUniformLocation(lightShader.ID, "model"), 1, GL_FALSE, glm::value_ptr(lightModel));
-	glUniform4f(glGetUniformLocation(lightShader.ID, "lightColor"), lightColor.x, lightColor.y, lightColor.z, lightColor.w);
+	
 	shaderProgram.Activate();
 	glUniformMatrix4fv(glGetUniformLocation(shaderProgram.ID, "model"), 1, GL_FALSE, glm::value_ptr(object1Model));
-	glUniform4f(glGetUniformLocation(shaderProgram.ID, "lightColor"), lightColor.x, lightColor.y, lightColor.z, lightColor.w);
-	glUniform3f(glGetUniformLocation(shaderProgram.ID, "lightPos"), lightPos.x, lightPos.y, lightPos.z);
+	glUniform4f(glGetUniformLocation(shaderProgram.ID, "lightColor"), colorLlum.x, colorLlum.y, colorLlum.z, colorLlum.w);
+	glUniform3f(glGetUniformLocation(shaderProgram.ID, "lightPos"), posLlum1.x, posLlum1.y, posLlum1.z);
 
 	//Activem el depth test perque les coses mes llunyanes no es dibuixin sobre les properes
 	glEnable(GL_DEPTH_TEST);
@@ -149,10 +161,10 @@ int main() {
 		camera.Inputs(window);
 		camera.UpdateMatrix(45.0f, 0.1f, 100.0f);
 
-		proba.objecte->Draw(treeShader, camera);
+		//proba.objecte->Draw(treeShader, camera);
 		floor.Draw(shaderProgram, camera);
-		light.Draw(lightShader, camera);
-
+		llum1.Draw(llum1Shader, camera);
+		llum2.Draw(llum2Shader, camera);
 
 		//Cambiem el buffer que esta en pantalla pel que acabem de dibuixar en aquesta iteració
 		glfwSwapBuffers(window);
@@ -166,7 +178,7 @@ int main() {
 	}
 	//Netegem tot el que hem utilitzat
 	shaderProgram.Delete();
-	lightShader.Delete();
+	llum1Shader.Delete();
 
 	//Destruim la finestra per alliberar la memoria
 	glfwDestroyWindow(window);

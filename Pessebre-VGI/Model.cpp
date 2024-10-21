@@ -81,7 +81,7 @@ void Model::loadObj(const char* file)
 
 	for (unsigned int i = 0; i < tempIndex.size(); i++)
 	{
-		Vertex vert = { tempVert[tempIndex[i]], tempNor[tempNorIndex[i]], tempTex[tempTexIndex[i]] };
+		Vertex vert = { tempVert[tempIndex[i]], tempNor[tempNorIndex[i]], glm::vec3(1,1,1) ,tempTex[tempTexIndex[i]]};
 		vertices.push_back(vert);
 		indices.push_back(i);
 	}
