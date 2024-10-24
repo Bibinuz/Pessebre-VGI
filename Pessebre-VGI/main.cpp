@@ -158,6 +158,19 @@ int main() {
 		//Pintem color de fons
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		//S'encarrega de tots els inputs de la camera
+		ImGui_ImplOpenGL3_NewFrame();
+		ImGui_ImplGlfw_NewFrame();
+		ImGui::NewFrame();
+
+		
+		ImGui::Begin("funcio ImGui::Begin");
+		ImGui::Text("funcio ImGui::Text");
+		ImGui::End();
+
+		ImGui::Render();//se usa para finalizar la creación de la interfaz gráfica y generar los comandos de dibujo correspondientes.
+		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
+
 		camera.Inputs(window);
 		camera.UpdateMatrix(45.0f, 0.1f, 100.0f);
 
