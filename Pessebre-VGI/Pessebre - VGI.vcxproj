@@ -180,6 +180,8 @@
     <None Include="default.frag" />
     <None Include="light.frag" />
     <None Include="light.vert" />
+    <None Include="skybox.frag" />
+    <None Include="skybox.vert" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
@@ -192,6 +194,13 @@
     <ClInclude Include="VBO.h" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="..\forest-skyboxes\Brudslojan\negz.jpg" />
+    <Image Include="..\forest-skyboxes\Plants\negx.jpg" />
+    <Image Include="..\forest-skyboxes\Plants\negy.jpg" />
+    <Image Include="..\forest-skyboxes\Plants\negz.jpg" />
+    <Image Include="..\forest-skyboxes\Plants\posx.jpg" />
+    <Image Include="..\forest-skyboxes\Plants\posy.jpg" />
+    <Image Include="..\forest-skyboxes\Plants\posz.jpg" />
     <Image Include="brick.png" />
     <Image Include="planks.png" />
     <Image Include="planksSpec.png" />
