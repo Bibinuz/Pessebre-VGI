@@ -162,15 +162,6 @@ int main() {
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
 
-		
-		ImGui::Begin("funcio ImGui::Begin");
-		ImGui::Text("funcio ImGui::Text");
-		ImGui::End();
-
-		ImGui::Render();//se usa para finalizar la creación de la interfaz gráfica y generar los comandos de dibujo correspondientes.
-		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-
-
 		camera.Inputs(window);
 		camera.UpdateMatrix(45.0f, 0.1f, 100.0f);
 
@@ -178,6 +169,13 @@ int main() {
 		floor.Draw(shaderProgram, camera);
 		light.Draw(lightShader, camera);
 
+		ImGui::SetNextWindowFocus();  // Asegura que la ventana tenga foco
+		ImGui::Begin("funcio ImGui::Beguin");//ImGui::Begin("Ventana", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoBackground);
+		ImGui::Text("funcio ImGui::Text");
+		ImGui::End();
+
+		ImGui::Render();//se usa para finalizar la creación de la interfaz gráfica y generar los comandos de dibujo correspondientes.
+		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
 		//Cambiem el buffer que esta en pantalla pel que acabem de dibuixar en aquesta iteració
 		glfwSwapBuffers(window);
