@@ -140,8 +140,17 @@ int main() {
 	//Activem el depth test perque les coses mes llunyanes no es dibuixin sobre les properes
 	glEnable(GL_DEPTH_TEST);
 
-	Camera camera(width, height, glm::vec3(0.0f, 6.0f, 0.0f));
+	//Camera camera(width, height, glm::vec3(0.0f, 6.0f, 0.0f));
 
+
+	// Definim tres càmeres amb diferents posicions
+	Camera camera1(width, height, glm::vec3(0.0f, 6.0f, 0.0f)); // Càmera inicial
+	Camera camera2(width, height, glm::vec3(10.0f, 6.0f, 10.0f)); // Segona càmera
+	Camera camera3(width, height, glm::vec3(-10.0f, 6.0f, -10.0f)); // Tercera càmera
+
+	Camera* camera = &camera1; // Inicialitzem la càmera activa
+
+	// Configuració d'ImGui
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
 	ImGuiIO& io = ImGui::GetIO(); (void)io;
@@ -149,44 +158,66 @@ int main() {
 	ImGui_ImplGlfw_InitForOpenGL(window, true);
 	ImGui_ImplOpenGL3_Init("#version 330");
 
-
-	//Bucle principal
+	// Bucle principal
 	while (!glfwWindowShouldClose(window)) {
+		// Calculem el temps per al frame rate
 		float i = glfwGetTime();
-		//Definim color de fons
+
+		// Esborrem el color de fons
 		glClearColor(0.07f, 0.13f, 0.17f, 1.0f);
-		//Pintem color de fons
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		//S'encarrega de tots els inputs de la camera
+
+		// Inputs i actualització de la càmera
+		camera->Inputs(window);
+		camera->UpdateMatrix(45.0f, 0.1f, 100.0f);
+
+		// Renderitzem l'escena amb la càmera activa
+		proba.objecte->Draw(treeShader, *camera);
+		floor.Draw(shaderProgram, *camera);
+		light.Draw(lightShader, *camera);
+
+		// Iniciem el nou frame d'ImGui
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
 
-		camera.Inputs(window);
-		camera.UpdateMatrix(45.0f, 0.1f, 100.0f);
-
-		proba.objecte->Draw(treeShader, camera);
-		floor.Draw(shaderProgram, camera);
-		light.Draw(lightShader, camera);
-
-		ImGui::SetNextWindowFocus();  // Asegura que la ventana tenga foco
-		ImGui::Begin("funcio ImGui::Beguin");//ImGui::Begin("Ventana", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoBackground);
-		ImGui::Text("funcio ImGui::Text");
+		// Finestra d'ImGui per seleccionar la càmera
+		ImGui::Begin("Camera Selector");
+		if (ImGui::Button("Camera 1")) {
+			camera = &camera1;
+		}
+		if (ImGui::Button("Camera 2")) {
+			camera = &camera2;
+		}
+		if (ImGui::Button("Camera 3")) {
+			camera = &camera3;
+		}
 		ImGui::End();
 
-		ImGui::Render();//se usa para finalizar la creación de la interfaz gráfica y generar los comandos de dibujo correspondientes.
+		// Finestra addicional de prova
+		ImGui::Begin("Ventana de Informació");
+		ImGui::Text("Exemple de text a ImGui");
+		ImGui::End();
+
+		// Renderització d'ImGui
+		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
-		//Cambiem el buffer que esta en pantalla pel que acabem de dibuixar en aquesta iteració
+		// Intercanviem el buffer de la pantalla
 		glfwSwapBuffers(window);
 
-		//Llegim tots els events glfw, ja sigui tancar la finestra o llegir inputs del teclat/ratolí/gamepad
+		// Processa els esdeveniments
 		glfwPollEvents();
 		glFinish();
+
+		// Actualitzem la mida de la finestra i el viewport
 		glfwGetWindowSize(window, &width, &height);
 		glViewport(0, 0, width, height);
+
+		// Imprimim el frame rate
 		std::cout << 1 / (glfwGetTime() - i) << std::endl;
 	}
+
 	//Netegem tot el que hem utilitzat
 	shaderProgram.Delete();
 	lightShader.Delete();
