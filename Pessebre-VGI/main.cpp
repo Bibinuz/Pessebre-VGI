@@ -6,6 +6,21 @@ void get_resolution(int& width, int& height) {
 	height = mode->height;
 }
 
+enum TipusLlum
+{
+	Punt,
+	Foco
+};
+
+struct Llum {
+	bool sw_light;
+	glm::vec3 lightPos;
+	glm::vec4 lightCol;
+	TipusLlum tipus;
+	float intensitat;
+};
+
+
 Vertex vertices[] =
 { //               COORDINATES           /            COLORS          /           NORMALS         /       TEXTURE COORDINATES    //
 	Vertex{glm::vec3(-1.0f, 0.0f,  1.0f),	glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(0.0f, 0.0f)},
@@ -109,17 +124,18 @@ int main() {
 
 	//------------------------------//
 	glm::vec4 colorLlum = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
-	glm::vec3 posLlum1 = glm::vec3(0.5f, 0.5f, 0.5f);
+	glm::vec3 posLlum1 = glm::vec3(1.5f, 0.5f, 1.5f);
 	glm::mat4 modelLlum1 = glm::mat4(1.0f);
 	modelLlum1 = glm::translate(modelLlum1, posLlum1);
 
-	glm::vec3 posLlum2 = glm::vec3(-0.5f, 0.5f, -0.5f);
+	glm::vec3 posLlum2 = glm::vec3(-1.5f, 1.5f, -1.5f);
 	glm::mat4 modelLlum2 = glm::mat4(1.0f);
 	modelLlum2 = glm::translate(modelLlum2, posLlum2);
 
 	//------------------------------//
 	glm::vec3 object1Pos = glm::vec3(0.0f, 0.0f, 0.0f);
 	glm::mat4 object1Model = glm::mat4(1.0f);
+	object1Model = glm::scale(object1Model, glm::vec3(5, 1, 5));
 	object1Model = glm::translate(object1Model, object1Pos);
 	//------------------------------//
 	//glm::vec3 treePos = glm::vec3(0, 0, 0);
@@ -139,11 +155,28 @@ int main() {
 	glUniformMatrix4fv(glGetUniformLocation(llum2Shader.ID, "model"), 1, GL_FALSE, glm::value_ptr(modelLlum2));
 	glUniform4f(glGetUniformLocation(llum2Shader.ID, "lightColor"), colorLlum.x, colorLlum.y, colorLlum.z, colorLlum.w);
 
-	
 	shaderProgram.Activate();
 	glUniformMatrix4fv(glGetUniformLocation(shaderProgram.ID, "model"), 1, GL_FALSE, glm::value_ptr(object1Model));
-	glUniform4f(glGetUniformLocation(shaderProgram.ID, "lightColor"), colorLlum.x, colorLlum.y, colorLlum.z, colorLlum.w);
-	glUniform3f(glGetUniformLocation(shaderProgram.ID, "lightPos"), posLlum1.x, posLlum1.y, posLlum1.z);
+
+	Llum l1 = { true, posLlum1, colorLlum, Punt , 1 };
+	Llum l2 = { true, posLlum2, colorLlum, Foco , 1};
+	
+	
+	glUniform1i(glGetUniformLocation(shaderProgram.ID, "lights[0].sw_light"), l1.sw_light);
+	glUniform3f(glGetUniformLocation(shaderProgram.ID, "lights[0].lightPos"), l1.lightPos.x, l1.lightPos.y, l1.lightPos.z);
+	glUniform4f(glGetUniformLocation(shaderProgram.ID, "lights[0].lightColor"), l1.lightCol.r, l1.lightCol.g, l1.lightCol.b, l1.lightCol.a);
+	glUniform1i(glGetUniformLocation(shaderProgram.ID, "lights[0].tipus"), l1.tipus);
+	glUniform1f(glGetUniformLocation(shaderProgram.ID, "lights[0].intensitat"), l1.intensitat);
+
+
+	glUniform1i(glGetUniformLocation(shaderProgram.ID, "lights[1].sw_light"), l2.sw_light);
+	glUniform3f(glGetUniformLocation(shaderProgram.ID, "lights[1].lightPos"), l2.lightPos.x, l2.lightPos.y, l2.lightPos.z);
+	glUniform4f(glGetUniformLocation(shaderProgram.ID, "lights[1].lightColor"), l2.lightCol.r, l2.lightCol.g, l2.lightCol.b, l2.lightCol.a);
+	glUniform1i(glGetUniformLocation(shaderProgram.ID, "lights[1].tipus"), l2.tipus);
+	glUniform1f(glGetUniformLocation(shaderProgram.ID, "lights[1].intensitat"), l2.intensitat);
+
+	glUniform1i(glGetUniformLocation(shaderProgram.ID, "numLights"), 2);
+
 
 	//Activem el depth test perque les coses mes llunyanes no es dibuixin sobre les properes
 	glEnable(GL_DEPTH_TEST);
