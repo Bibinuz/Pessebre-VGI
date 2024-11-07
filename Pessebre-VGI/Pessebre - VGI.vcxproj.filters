@@ -150,6 +150,9 @@
     <ClInclude Include="imGui\imgui_impl_opengl3_loader.h">
       <Filter>Header Files\imgui</Filter>
     </ClInclude>
+    <ClInclude Include="imGuiImplementation.h">
+      <Filter>Header Files\imgui</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="pop_cat.png">

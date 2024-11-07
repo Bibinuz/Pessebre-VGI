@@ -1,6 +1,7 @@
 #include "imgui/imgui.h"
 #include "imgui/imgui_impl_glfw.h"
 #include "imgui/imgui_impl_opengl3.h"
+#include "imGuiImplementation.h"
 
 #include"Model.h"
 
@@ -147,16 +148,18 @@ int main() {
 	Camera camera1(width, height, glm::vec3(0.0f, 6.0f, 0.0f)); // Càmera inicial
 	Camera camera2(width, height, glm::vec3(10.0f, 6.0f, 10.0f)); // Segona càmera
 	Camera camera3(width, height, glm::vec3(-10.0f, 6.0f, -10.0f)); // Tercera càmera
-
+	std::vector<Camera> Cameres;
+	Cameres.push_back(camera1); Cameres.push_back(camera2); Cameres.push_back(camera3);
 	Camera* camera = &camera1; // Inicialitzem la càmera activa
 
 	// Configuració d'ImGui
-	IMGUI_CHECKVERSION();
+	imGuiImplementation varImgui(window);
+	/*IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
 	ImGuiIO& io = ImGui::GetIO(); (void)io;
 	ImGui::StyleColorsDark();
 	ImGui_ImplGlfw_InitForOpenGL(window, true);
-	ImGui_ImplOpenGL3_Init("#version 330");
+	ImGui_ImplOpenGL3_Init("#version 330");*/
 
 	// Bucle principal
 	while (!glfwWindowShouldClose(window)) {
@@ -177,11 +180,13 @@ int main() {
 		light.Draw(lightShader, *camera);
 
 		// Iniciem el nou frame d'ImGui
-		ImGui_ImplOpenGL3_NewFrame();
+		/*ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
-		ImGui::NewFrame();
+		ImGui::NewFrame();*/
+		varImgui.imGuiInitNewFrame();
 
 		// Finestra d'ImGui per seleccionar la càmera
+		/*
 		ImGui::Begin("Camera Selector");
 		if (ImGui::Button("Camera 1")) {
 			camera = &camera1;
@@ -193,6 +198,9 @@ int main() {
 			camera = &camera3;
 		}
 		ImGui::End();
+		*/
+
+		camera = varImgui.cameraSelector(Cameres);
 
 		// Finestra addicional de prova
 		ImGui::Begin("Ventana de Informació");
