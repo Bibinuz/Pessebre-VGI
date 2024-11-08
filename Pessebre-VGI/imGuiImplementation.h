@@ -12,7 +12,7 @@ public:
 	~imGuiImplementation();
 
 	void imGuiInitNewFrame();
-	Camera* cameraSelector(std::vector<Camera> Cameres);
+	void cameraSelector(std::vector<Camera>& Cameres, Camera*& c);
 
 private:
 	ImGuiIO io;
@@ -41,26 +41,17 @@ inline void imGuiImplementation::imGuiInitNewFrame()
 
 }
 
-inline Camera* imGuiImplementation::cameraSelector(std::vector<Camera> Cameres)
+inline void imGuiImplementation::cameraSelector(std::vector<Camera>& Cameres, Camera*& c)
 {
-	Camera* camera  = nullptr;
 	ImGui::Begin("Camera Selector");
-	if (!Cameres.empty())
-	{
-		if (ImGui::Button("Camera 1")) {
-			camera = &Cameres[0];
-		}
-		if (ImGui::Button("Camera 2")) {
-			camera = &Cameres[1];
-		}
-		if (ImGui::Button("Camera 3")) {
-			camera = &Cameres[2];
-		}
+	if (ImGui::Button("Camera 1")) {
+		c = &Cameres[0];
 	}
-	else {
-		ImGui::Text("No hi ha càmeres disponibles.");
+	if (ImGui::Button("Camera 2")) {
+		c = &Cameres[1];
+	}
+	if (ImGui::Button("Camera 3")) {
+		c = &Cameres[2];
 	}
 	ImGui::End();
-
-	return camera;
 }

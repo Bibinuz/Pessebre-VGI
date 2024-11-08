@@ -3,16 +3,12 @@
   "WorkspaceRootPath": "C:\\Users\\Lenovo\\Desktop\\UAB\\3r 1r semestre\\VGI\\Pessebre-VGI\\Pessebre-VGI\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{8B73D535-518E-43E0-AE13-E74346276F72}|Pessebre - VGI.vcxproj|C:\\Users\\Lenovo\\Desktop\\UAB\\3r 1r semestre\\VGI\\Pessebre-VGI\\Pessebre-VGI\\imGuiImplementation.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{8B73D535-518E-43E0-AE13-E74346276F72}|Pessebre - VGI.vcxproj|solutionrelative:imGuiImplementation.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{8B73D535-518E-43E0-AE13-E74346276F72}|Pessebre - VGI.vcxproj|C:\\Users\\Lenovo\\Desktop\\UAB\\3r 1r semestre\\VGI\\Pessebre-VGI\\Pessebre-VGI\\imGui\\imgui_impl_opengl3.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{8B73D535-518E-43E0-AE13-E74346276F72}|Pessebre - VGI.vcxproj|solutionrelative:imGui\\imgui_impl_opengl3.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{8B73D535-518E-43E0-AE13-E74346276F72}|Pessebre - VGI.vcxproj|C:\\Users\\Lenovo\\Desktop\\UAB\\3r 1r semestre\\VGI\\Pessebre-VGI\\Pessebre-VGI\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{8B73D535-518E-43E0-AE13-E74346276F72}|Pessebre - VGI.vcxproj|solutionrelative:main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8B73D535-518E-43E0-AE13-E74346276F72}|Pessebre - VGI.vcxproj|C:\\Users\\Lenovo\\Desktop\\UAB\\3r 1r semestre\\VGI\\Pessebre-VGI\\Pessebre-VGI\\imGuiImplementation.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{8B73D535-518E-43E0-AE13-E74346276F72}|Pessebre - VGI.vcxproj|solutionrelative:imGuiImplementation.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     }
   ],
   "DocumentGroupContainers": [
@@ -22,7 +18,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 1,
+          "SelectedChildIndex": 2,
           "Children": [
             {
               "$type": "Bookmark",
@@ -30,41 +26,28 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "imGuiImplementation.h",
               "DocumentMoniker": "C:\\Users\\Lenovo\\Desktop\\UAB\\3r 1r semestre\\VGI\\Pessebre-VGI\\Pessebre-VGI\\imGuiImplementation.h",
               "RelativeDocumentMoniker": "imGuiImplementation.h",
               "ToolTip": "C:\\Users\\Lenovo\\Desktop\\UAB\\3r 1r semestre\\VGI\\Pessebre-VGI\\Pessebre-VGI\\imGuiImplementation.h",
               "RelativeToolTip": "imGuiImplementation.h",
-              "ViewState": "AgIAACcAAAAAAAAAAAAAAD8AAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAB4AAAAAAAAAAADwvzYAAAACAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
               "WhenOpened": "2024-11-07T12:12:15.303Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 0,
               "Title": "main.cpp",
               "DocumentMoniker": "C:\\Users\\Lenovo\\Desktop\\UAB\\3r 1r semestre\\VGI\\Pessebre-VGI\\Pessebre-VGI\\main.cpp",
               "RelativeDocumentMoniker": "main.cpp",
               "ToolTip": "C:\\Users\\Lenovo\\Desktop\\UAB\\3r 1r semestre\\VGI\\Pessebre-VGI\\Pessebre-VGI\\main.cpp",
               "RelativeToolTip": "main.cpp",
-              "ViewState": "AgIAAKkAAAAAAAAAAAAiwLcAAAAcAAAAAAAAAA==",
+              "ViewState": "AgIAAMMAAAAAAAAAAAAlwJsAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2024-10-24T11:12:28.856Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "imgui_impl_opengl3.cpp",
-              "DocumentMoniker": "C:\\Users\\Lenovo\\Desktop\\UAB\\3r 1r semestre\\VGI\\Pessebre-VGI\\Pessebre-VGI\\imGui\\imgui_impl_opengl3.cpp",
-              "RelativeDocumentMoniker": "imGui\\imgui_impl_opengl3.cpp",
-              "ToolTip": "C:\\Users\\Lenovo\\Desktop\\UAB\\3r 1r semestre\\VGI\\Pessebre-VGI\\Pessebre-VGI\\imGui\\imgui_impl_opengl3.cpp",
-              "RelativeToolTip": "imGui\\imgui_impl_opengl3.cpp",
-              "ViewState": "AgIAAN8CAAAAAAAAAAAmwO8CAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2024-10-24T11:24:33.668Z",
               "EditorCaption": ""
             }
           ]

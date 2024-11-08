@@ -154,12 +154,6 @@ int main() {
 
 	// Configuració d'ImGui
 	imGuiImplementation varImgui(window);
-	/*IMGUI_CHECKVERSION();
-	ImGui::CreateContext();
-	ImGuiIO& io = ImGui::GetIO(); (void)io;
-	ImGui::StyleColorsDark();
-	ImGui_ImplGlfw_InitForOpenGL(window, true);
-	ImGui_ImplOpenGL3_Init("#version 330");*/
 
 	// Bucle principal
 	while (!glfwWindowShouldClose(window)) {
@@ -180,9 +174,6 @@ int main() {
 		light.Draw(lightShader, *camera);
 
 		// Iniciem el nou frame d'ImGui
-		/*ImGui_ImplOpenGL3_NewFrame();
-		ImGui_ImplGlfw_NewFrame();
-		ImGui::NewFrame();*/
 		varImgui.imGuiInitNewFrame();
 
 		// Finestra d'ImGui per seleccionar la càmera
@@ -200,7 +191,7 @@ int main() {
 		ImGui::End();
 		*/
 
-		camera = varImgui.cameraSelector(Cameres);
+		varImgui.cameraSelector(Cameres, camera);
 
 		// Finestra addicional de prova
 		ImGui::Begin("Ventana de Informació");
