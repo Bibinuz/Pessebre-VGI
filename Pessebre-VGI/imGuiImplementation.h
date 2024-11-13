@@ -13,6 +13,7 @@ public:
 
 	void imGuiInitNewFrame();
 	void cameraSelector(std::vector<Camera>& Cameres, Camera*& c);
+	void imGuiRender();
 
 private:
 	ImGuiIO io;
@@ -54,4 +55,10 @@ inline void imGuiImplementation::cameraSelector(std::vector<Camera>& Cameres, Ca
 		c = &Cameres[2];
 	}
 	ImGui::End();
+}
+
+inline void imGuiImplementation::imGuiRender()
+{
+	ImGui::Render();
+	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }

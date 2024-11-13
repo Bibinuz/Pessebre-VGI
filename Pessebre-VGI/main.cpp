@@ -176,31 +176,12 @@ int main() {
 		// Iniciem el nou frame d'ImGui
 		varImgui.imGuiInitNewFrame();
 
-		// Finestra d'ImGui per seleccionar la càmera
-		/*
-		ImGui::Begin("Camera Selector");
-		if (ImGui::Button("Camera 1")) {
-			camera = &camera1;
-		}
-		if (ImGui::Button("Camera 2")) {
-			camera = &camera2;
-		}
-		if (ImGui::Button("Camera 3")) {
-			camera = &camera3;
-		}
-		ImGui::End();
-		*/
-
+		//Selector entre les tres cameres
 		varImgui.cameraSelector(Cameres, camera);
 
-		// Finestra addicional de prova
-		ImGui::Begin("Ventana de Informació");
-		ImGui::Text("Exemple de text a ImGui");
-		ImGui::End();
 
 		// Renderització d'ImGui
-		ImGui::Render();
-		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+		varImgui.imGuiRender();
 
 		// Intercanviem el buffer de la pantalla
 		glfwSwapBuffers(window);
