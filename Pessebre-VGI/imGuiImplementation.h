@@ -22,8 +22,10 @@ public:
 	void imGuiInitNewFrame();
 	void cameraSelector(std::vector<Camera>& Cameres, Camera*& c);
 	void imGuiRender();
-	void imGuiMainMenu();
+	void imGuiMainMenu(int windowWidth, int windowHeight);
 	void imGuiShowFPS();
+
+	void RenderCenteredButton(const char* label, ImVec2 buttonSize);
 
 	MenuOption op = None;
 
@@ -75,22 +77,66 @@ inline void imGuiImplementation::imGuiRender()
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
 
-inline void imGuiImplementation::imGuiMainMenu()
+inline void imGuiImplementation::imGuiMainMenu(int windowWidth,int windowHeight)
 {
-	// Comença una nova finestra per al menú
-	ImGui::Begin("Main Menu");
+	
+	ImGui::SetNextWindowPos(ImVec2(0, 0));
+	ImGui::SetNextWindowSize(ImVec2(windowWidth, windowHeight));
 
-	// Botons de menú
-	if (ImGui::Button("Juga")) {
-		op = Juga;  // Canvia l'estat quan es fa clic en "Juga"
-	}
-	if (ImGui::Button("Manager")) {
-		op = Manager;  // Canvia l'estat quan es fa clic en "Manager"
-	}
-	if (ImGui::Button("Ca    mera Estatica")) {
-		op = StaticCamera;  // Canvia l'estat quan es fa clic en "Càmera Estàtica"
-	}
+	
+	// Flags para impedir redimensionamiento, mover, etc.
+	ImGuiWindowFlags windowFlags = ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize |
+		ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse;
 
+
+	// Crear la ventana de ImGui
+	ImGui::Begin("Ventana a Pantalla Completa", nullptr, windowFlags);
+	//-------------------Titul
+	 // Obtener el tamaño de la ventana actual
+	ImVec2 windowSize = ImGui::GetWindowSize();
+
+	// Calcular el tamaño del texto
+	ImVec2 textSize = ImGui::CalcTextSize("El Pesebre");
+
+	// Calcular la posición X para centrar el texto
+	float centerX = (windowSize.x - textSize.x) / 2.0f;
+	float centerYTitle = (windowSize.y - textSize.y) * 1.0f / 8.0f;
+	// Posicionar el cursor en X para centrarlo y Y en la parte superior
+	ImGui::SetCursorPosX(centerX);
+	ImGui::SetCursorPosY(centerYTitle); // Ajusta el valor de Y si es necesario
+	ImGui::TextWrapped("El Pesebre");
+	 
+	//------------Crear Botons
+	ImVec2 buttonSize(240, 80);
+	// Obtener el tamaño de la ventana de ImGui
+
+	centerX = (windowSize.x - buttonSize.x) / 2.0f;
+	float centerYTop = (windowSize.y - buttonSize.y)*2.0f / 8.0f;
+	float centerYCenter = (windowSize.y - buttonSize.y) * 4.0f / 8.0f;
+	float centerYBotom = (windowSize.y - buttonSize.y) * 6.0f / 8.0f;
+
+
+
+	// Establecer la posición del cursor en X para centrar el botón
+	ImGui::SetCursorPosX(centerX);
+	ImGui::SetCursorPosY(centerYTop);
+
+	if (ImGui::Button("Jugar", buttonSize)) {
+		op = Juga;
+	}
+	ImGui::SetCursorPosX(centerX);
+	ImGui::SetCursorPosY(centerYCenter);
+
+	if (ImGui::Button("Manager", buttonSize)) {
+		op = Manager;
+	}
+	ImGui::SetCursorPosX(centerX);
+	ImGui::SetCursorPosY(centerYBotom);
+
+	if (ImGui::Button("Camera Estatica", buttonSize)) {
+		op = StaticCamera;
+	}
+	// Contenido de la ventana
 	ImGui::End();
 
 	imGuiRender();
@@ -122,6 +168,18 @@ inline void imGuiImplementation::imGuiShowFPS()
 	ImGui::End();
 }
 
+inline void imGuiImplementation::RenderCenteredButton(const char* label, ImVec2 buttonSize)
+{
+	// Obtener el tamaño de la ventana de ImGui
+	ImVec2 windowSize = ImGui::GetWindowSize();
 
+	// Calcular la posición X para centrar el botón horizontalmente
+	float centerX = (windowSize.x - buttonSize.x) / 2.0f;
 
+	// Establecer la posición del cursor en X para centrar el botón
+	ImGui::SetCursorPosX(centerX);
+
+	// Dibujar el botón centrado
+	ImGui::Button(label, buttonSize);
+}
 

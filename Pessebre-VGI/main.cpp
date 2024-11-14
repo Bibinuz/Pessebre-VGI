@@ -154,16 +154,19 @@ int main() {
 
 
 	// Definim tres càmeres amb diferents posicions
-	Camera camera1(width, height, glm::vec3(0.0f, 6.0f, 0.0f)); // Càmera inicial
+	Camera cameraEstatica(width, height, glm::vec3(0.0f, 6.0f, 0.0f)); // Càmera inicial
+	cameraEstatica.cameraActive = false;
 	Camera camera2(width, height, glm::vec3(10.0f, 6.0f, 10.0f)); // Segona càmera
 	Camera camera3(width, height, glm::vec3(-10.0f, 6.0f, -10.0f)); // Tercera càmera
 	std::vector<Camera> Cameres;
-	Cameres.push_back(camera1); Cameres.push_back(camera2); Cameres.push_back(camera3);
-	Camera* camera = &camera1; // Inicialitzem la càmera activa
+	Cameres.push_back(cameraEstatica); Cameres.push_back(camera2); Cameres.push_back(camera3);
+	Camera* camera = &cameraEstatica; // Inicialitzem la càmera activa
 
 	// Configuració d'ImGui
 	imGuiImplementation varImgui(window);
 
+
+	int windowWidth, windowHeight;
 	// Bucle principal
 	while (!glfwWindowShouldClose(window)) {
 		// Calculem el temps per al frame rate
@@ -182,11 +185,13 @@ int main() {
 		floor.Draw(shaderProgram, *camera);
 		light.Draw(lightShader, *camera);
 		
+		//-----------------------------------------------
 		varImgui.imGuiInitNewFrame();
+		//-----------------------------------------------
 
-		if (varImgui.op == None) {
-			varImgui.imGuiMainMenu();
-		}
+		glfwGetFramebufferSize(window, &windowWidth, &windowHeight);
+
+		
 
 
 		switch (varImgui.op) {
@@ -194,12 +199,11 @@ int main() {
 			//std::cout << "Iniciant el joc..." << std::endl;
 			varImgui.cameraSelector(Cameres, camera);
 			ImGui::SetNextWindowPos(ImVec2(1750, 10));
-			ImGui::Begin("Juga");
+			ImGui::Begin("Juga",nullptr,ImGuiTableColumnFlags_NoResize);
 			if (ImGui::Button("Tornar al menu")) {
 				varImgui.op = None;  // Torna al menú principal
 			}
 			ImGui::End();
-			// Codi per iniciar el joc (per exemple, canviar a una escena de joc)
 			break;
 
 		case Manager:
@@ -227,8 +231,12 @@ int main() {
 			break;
 
 		case None:
+			varImgui.imGuiMainMenu(windowWidth, windowHeight);
+			break;
+
+			
 		default:
-			//std::cout << "Esperant selecció..." << std::endl;
+			std::cout << "Esperant selecció..." << std::endl;
 			break;
 		}
 
