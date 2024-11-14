@@ -3,16 +3,20 @@
   "WorkspaceRootPath": "C:\\Users\\Mar\u00E7al\\Documents\\3r\\VGI\\Entorn_nostre_2\\Pessebre-VGI\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{8B73D535-518E-43E0-AE13-E74346276F72}|Pessebre - VGI.vcxproj|C:\\Users\\Mar\u00E7al\\Documents\\3r\\VGI\\Entorn_nostre_2\\Pessebre-VGI\\skybox.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{8B73D535-518E-43E0-AE13-E74346276F72}|Pessebre - VGI.vcxproj|solutionrelative:skybox.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{8B73D535-518E-43E0-AE13-E74346276F72}|Pessebre - VGI.vcxproj|C:\\Users\\Mar\u00E7al\\Documents\\3r\\VGI\\Entorn_nostre_2\\Pessebre-VGI\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{8B73D535-518E-43E0-AE13-E74346276F72}|Pessebre - VGI.vcxproj|solutionrelative:main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{8B73D535-518E-43E0-AE13-E74346276F72}|Pessebre - VGI.vcxproj|C:\\Users\\Mar\u00E7al\\Documents\\3r\\VGI\\Entorn_nostre_2\\Pessebre-VGI\\skybox.frag||{8B382828-6202-11D1-8870-0000F87579D2}",
-      "RelativeMoniker": "D:0:0:{8B73D535-518E-43E0-AE13-E74346276F72}|Pessebre - VGI.vcxproj|solutionrelative:skybox.frag||{8B382828-6202-11D1-8870-0000F87579D2}"
+      "AbsoluteMoniker": "D:0:0:{8B73D535-518E-43E0-AE13-E74346276F72}|Pessebre - VGI.vcxproj|C:\\Users\\Mar\u00E7al\\Documents\\3r\\VGI\\Entorn_nostre_2\\Pessebre-VGI\\skybox.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{8B73D535-518E-43E0-AE13-E74346276F72}|Pessebre - VGI.vcxproj|solutionrelative:skybox.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{8B73D535-518E-43E0-AE13-E74346276F72}|Pessebre - VGI.vcxproj|C:\\Users\\Mar\u00E7al\\Documents\\3r\\VGI\\Entorn_nostre_2\\Pessebre-VGI\\skybox.vert||{8B382828-6202-11D1-8870-0000F87579D2}",
-      "RelativeMoniker": "D:0:0:{8B73D535-518E-43E0-AE13-E74346276F72}|Pessebre - VGI.vcxproj|solutionrelative:skybox.vert||{8B382828-6202-11D1-8870-0000F87579D2}"
+      "AbsoluteMoniker": "D:0:0:{8B73D535-518E-43E0-AE13-E74346276F72}|Pessebre - VGI.vcxproj|C:\\Users\\Mar\u00E7al\\Documents\\3r\\VGI\\Entorn_nostre_2\\Pessebre-VGI\\Model.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{8B73D535-518E-43E0-AE13-E74346276F72}|Pessebre - VGI.vcxproj|solutionrelative:Model.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     }
   ],
   "DocumentGroupContainers": [
@@ -27,39 +31,53 @@
             {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "skybox.frag",
-              "DocumentMoniker": "C:\\Users\\Mar\u00E7al\\Documents\\3r\\VGI\\Entorn_nostre_2\\Pessebre-VGI\\skybox.frag",
-              "RelativeDocumentMoniker": "skybox.frag",
-              "ToolTip": "C:\\Users\\Mar\u00E7al\\Documents\\3r\\VGI\\Entorn_nostre_2\\Pessebre-VGI\\skybox.frag",
-              "RelativeToolTip": "skybox.frag",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
-              "WhenOpened": "2024-10-21T19:55:30.826Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "skybox.vert",
-              "DocumentMoniker": "C:\\Users\\Mar\u00E7al\\Documents\\3r\\VGI\\Entorn_nostre_2\\Pessebre-VGI\\skybox.vert",
-              "RelativeDocumentMoniker": "skybox.vert",
-              "ToolTip": "C:\\Users\\Mar\u00E7al\\Documents\\3r\\VGI\\Entorn_nostre_2\\Pessebre-VGI\\skybox.vert",
-              "RelativeToolTip": "skybox.vert",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAAFAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
-              "WhenOpened": "2024-10-21T18:24:59.618Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
               "Title": "main.cpp",
               "DocumentMoniker": "C:\\Users\\Mar\u00E7al\\Documents\\3r\\VGI\\Entorn_nostre_2\\Pessebre-VGI\\main.cpp",
               "RelativeDocumentMoniker": "main.cpp",
               "ToolTip": "C:\\Users\\Mar\u00E7al\\Documents\\3r\\VGI\\Entorn_nostre_2\\Pessebre-VGI\\main.cpp",
               "RelativeToolTip": "main.cpp",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAXAAAAAAAAAA==",
+              "ViewState": "AgIAAKYAAAAAAAAAAAAAALkAAAAVAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2024-10-21T18:10:40.907Z",
+              "IsPinned": true
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "skybox.cpp",
+              "DocumentMoniker": "C:\\Users\\Mar\u00E7al\\Documents\\3r\\VGI\\Entorn_nostre_2\\Pessebre-VGI\\skybox.cpp",
+              "RelativeDocumentMoniker": "skybox.cpp",
+              "ToolTip": "C:\\Users\\Mar\u00E7al\\Documents\\3r\\VGI\\Entorn_nostre_2\\Pessebre-VGI\\skybox.cpp",
+              "RelativeToolTip": "skybox.cpp",
+              "ViewState": "AgIAAEgAAAAAAAAAAAAAAFAAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2024-11-12T21:35:09.418Z",
+              "IsPinned": true
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "skybox.h",
+              "DocumentMoniker": "C:\\Users\\Mar\u00E7al\\Documents\\3r\\VGI\\Entorn_nostre_2\\Pessebre-VGI\\skybox.h",
+              "RelativeDocumentMoniker": "skybox.h",
+              "ToolTip": "C:\\Users\\Mar\u00E7al\\Documents\\3r\\VGI\\Entorn_nostre_2\\Pessebre-VGI\\skybox.h",
+              "RelativeToolTip": "skybox.h",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABkAAAAGAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2024-11-12T21:33:17.846Z",
               "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "Model.h",
+              "DocumentMoniker": "C:\\Users\\Mar\u00E7al\\Documents\\3r\\VGI\\Entorn_nostre_2\\Pessebre-VGI\\Model.h",
+              "RelativeDocumentMoniker": "Model.h",
+              "ToolTip": "C:\\Users\\Mar\u00E7al\\Documents\\3r\\VGI\\Entorn_nostre_2\\Pessebre-VGI\\Model.h",
+              "RelativeToolTip": "Model.h",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2024-11-12T21:26:23.065Z"
             }
           ]
         }
