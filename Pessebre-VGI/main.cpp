@@ -5,6 +5,7 @@
 
 #include"Model.h"
 
+
 void get_resolution(int& width, int& height) {
 	const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 	width = mode->width;
@@ -177,8 +178,8 @@ int main() {
 		varImgui.imGuiInitNewFrame();
 
 		//Selector entre les tres cameres
-		varImgui.cameraSelector(Cameres, camera);
-
+		//varImgui.cameraSelector(Cameres, camera);
+		varImgui.imGuiMainMenu();
 
 		// Renderització d'ImGui
 		varImgui.imGuiRender();

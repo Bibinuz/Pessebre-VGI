@@ -5,6 +5,14 @@
 #include <vector>
 #include "Camera.h"
 
+enum MenuOption
+{
+	None,
+	Juga,
+	Manager,
+	StaticCamera
+};
+
 class imGuiImplementation
 {
 public:
@@ -14,6 +22,9 @@ public:
 	void imGuiInitNewFrame();
 	void cameraSelector(std::vector<Camera>& Cameres, Camera*& c);
 	void imGuiRender();
+	void imGuiMainMenu();
+
+	MenuOption op;
 
 private:
 	ImGuiIO io;
@@ -62,3 +73,26 @@ inline void imGuiImplementation::imGuiRender()
 	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
+
+inline void imGuiImplementation::imGuiMainMenu()
+{
+	// Comença una nova finestra per al menú
+	ImGui::Begin("Main Menu");
+
+	// Botons de menú
+	if (ImGui::Button("Juga")) {
+		op = Juga;  // Canvia l'estat quan es fa clic en "Juga"
+	}
+	if (ImGui::Button("Manager")) {
+		op = Manager;  // Canvia l'estat quan es fa clic en "Manager"
+	}
+	if (ImGui::Button("Càmera Estatica")) {
+		op = StaticCamera;  // Canvia l'estat quan es fa clic en "Càmera Estàtica"
+	}
+
+	ImGui::End();
+
+	imGuiRender();
+}
+
+
