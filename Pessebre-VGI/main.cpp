@@ -193,12 +193,23 @@ int main() {
 		case Juga:
 			//std::cout << "Iniciant el joc..." << std::endl;
 			varImgui.cameraSelector(Cameres, camera);
+			ImGui::SetNextWindowPos(ImVec2(1750, 10));
+			ImGui::Begin("Juga");
+			if (ImGui::Button("Tornar al menu")) {
+				varImgui.op = None;  // Torna al menú principal
+			}
+			ImGui::End();
 			// Codi per iniciar el joc (per exemple, canviar a una escena de joc)
 			break;
 
 		case Manager:
 			//std::cout << "Obrint el gestor..." << std::endl;
 			varImgui.cameraSelector(Cameres,camera);
+			ImGui::Begin("Manager");
+			if (ImGui::Button("Tornar al menu")) {
+				varImgui.op = None;  // Torna al menú principal
+			}
+			ImGui::End();
 			// Codi per gestionar alguna configuració o obrir un gestor de dades
 			break;
 
@@ -206,6 +217,11 @@ int main() {
 			//std::cout << "Activant la càmera estàtica..." << std::endl;
 			// Codi per activar una càmera estàtica
 			varImgui.cameraSelector(Cameres, camera);
+			ImGui::Begin("Manager");
+			if (ImGui::Button("Tornar al menu")) {
+				varImgui.op = None;  // Torna al menú principal
+			}
+			ImGui::End();
 			break;
 
 		case None:
@@ -215,18 +231,6 @@ int main() {
 		}
 
 		varImgui.imGuiRender();
-		/*
-		// Iniciem el nou frame d'ImGui
-		varImgui.imGuiInitNewFrame();
-
-		//Selector entre les tres cameres
-		//varImgui.cameraSelector(Cameres, camera);
-		varImgui.imGuiMainMenu();
-
-		// Renderització d'ImGui
-		varImgui.imGuiRender();
-		*/
-		// Intercanviem el buffer de la pantalla
 		glfwSwapBuffers(window);
 
 		// Processa els esdeveniments
