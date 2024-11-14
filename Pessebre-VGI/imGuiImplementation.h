@@ -23,8 +23,9 @@ public:
 	void cameraSelector(std::vector<Camera>& Cameres, Camera*& c);
 	void imGuiRender();
 	void imGuiMainMenu();
+	void imGuiShowFPS();
 
-	MenuOption op;
+	MenuOption op = None;
 
 private:
 	ImGuiIO io;
@@ -86,7 +87,7 @@ inline void imGuiImplementation::imGuiMainMenu()
 	if (ImGui::Button("Manager")) {
 		op = Manager;  // Canvia l'estat quan es fa clic en "Manager"
 	}
-	if (ImGui::Button("Càmera Estatica")) {
+	if (ImGui::Button("Ca    mera Estatica")) {
 		op = StaticCamera;  // Canvia l'estat quan es fa clic en "Càmera Estàtica"
 	}
 
@@ -94,5 +95,33 @@ inline void imGuiImplementation::imGuiMainMenu()
 
 	imGuiRender();
 }
+
+inline void imGuiImplementation::imGuiShowFPS()
+{
+	static float timeElapsed = 0.0f;  // Tiempo acumulado
+	static int frameCount = 0;  // Contador de frames
+	static float fps = 0.0f;  // FPS promedio
+
+	// Acumulamos el tiempo de cada frame
+	timeElapsed += ImGui::GetIO().DeltaTime;  // DeltaTime es el tiempo entre frames
+
+	// Incrementamos el contador de frames
+	frameCount++;
+
+	// Cada 5 segundos, calculamos la media de los FPS
+	if (timeElapsed >= 1.0f) {
+		fps = frameCount / timeElapsed;  // FPS = frames / tiempo
+		timeElapsed = 0.0f;  // Reiniciamos el tiempo
+		frameCount = 0;  // Reiniciamos el contador de frames
+	}
+
+	// Mostrar la ventana de FPS
+	ImGui::SetNextWindowPos(ImVec2(10, 10));  // Posicionar la ventana en la esquina superior izquierda
+	ImGui::Begin("FPS Counter", nullptr, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoInputs | ImGuiWindowFlags_AlwaysAutoResize);
+	ImGui::Text("Average FPS (last 1s): %.1f", fps);  // Mostrar el FPS promedio
+	ImGui::End();
+}
+
+
 
 

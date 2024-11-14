@@ -210,6 +210,8 @@ int main() {
 				varImgui.op = None;  // Torna al menú principal
 			}
 			ImGui::End();
+			//Per mostrar fps
+			varImgui.imGuiShowFPS();
 			// Codi per gestionar alguna configuració o obrir un gestor de dades
 			break;
 
@@ -217,7 +219,7 @@ int main() {
 			//std::cout << "Activant la càmera estàtica..." << std::endl;
 			// Codi per activar una càmera estàtica
 			varImgui.cameraSelector(Cameres, camera);
-			ImGui::Begin("Manager");
+			ImGui::Begin("Static Camera");
 			if (ImGui::Button("Tornar al menu")) {
 				varImgui.op = None;  // Torna al menú principal
 			}
