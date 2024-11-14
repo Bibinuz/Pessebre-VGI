@@ -54,10 +54,7 @@ GLuint lightIndices[] =
 	4, 6, 7
 };
 
-int main() {
-
-
-
+GLFWwindow* inicialitzaFinestra() {
 
 	glfwInit();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -71,7 +68,7 @@ int main() {
 	if (window == NULL) {
 		std::cout << "Failed to create window\n";
 		glfwTerminate();
-		return -1;
+		return window;
 	}
 	glfwMaximizeWindow(window);
 	glfwMakeContextCurrent(window);
@@ -80,7 +77,18 @@ int main() {
 	gladLoadGL();
 
 	glViewport(0, 0, width, height);
-	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
+	//Activem el depth test perque les coses mes llunyanes no es dibuixin sobre les properes
+	glEnable(GL_DEPTH_TEST); glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	return window;
+}
+
+int main() {
+
+	GLFWwindow* window = inicialitzaFinestra();
+
+	int width, height;
+	get_resolution(width, height);
 
 	//------------------------------//
 
@@ -140,7 +148,7 @@ int main() {
 	glUniform3f(glGetUniformLocation(shaderProgram.ID, "lightPos"), lightPos.x, lightPos.y, lightPos.z);
 
 	//Activem el depth test perque les coses mes llunyanes no es dibuixin sobre les properes
-	glEnable(GL_DEPTH_TEST);
+	//glEnable(GL_DEPTH_TEST);
 
 	//Camera camera(width, height, glm::vec3(0.0f, 6.0f, 0.0f));
 
@@ -173,7 +181,41 @@ int main() {
 		proba.objecte->Draw(treeShader, *camera);
 		floor.Draw(shaderProgram, *camera);
 		light.Draw(lightShader, *camera);
+		
+		varImgui.imGuiInitNewFrame();
 
+		if (varImgui.op == None) {
+			varImgui.imGuiMainMenu();
+		}
+
+
+		switch (varImgui.op) {
+		case Juga:
+			//std::cout << "Iniciant el joc..." << std::endl;
+			varImgui.cameraSelector(Cameres, camera);
+			// Codi per iniciar el joc (per exemple, canviar a una escena de joc)
+			break;
+
+		case Manager:
+			//std::cout << "Obrint el gestor..." << std::endl;
+			varImgui.cameraSelector(Cameres,camera);
+			// Codi per gestionar alguna configuració o obrir un gestor de dades
+			break;
+
+		case StaticCamera:
+			//std::cout << "Activant la càmera estàtica..." << std::endl;
+			// Codi per activar una càmera estàtica
+			varImgui.cameraSelector(Cameres, camera);
+			break;
+
+		case None:
+		default:
+			//std::cout << "Esperant selecció..." << std::endl;
+			break;
+		}
+
+		varImgui.imGuiRender();
+		/*
 		// Iniciem el nou frame d'ImGui
 		varImgui.imGuiInitNewFrame();
 
@@ -183,7 +225,7 @@ int main() {
 
 		// Renderització d'ImGui
 		varImgui.imGuiRender();
-
+		*/
 		// Intercanviem el buffer de la pantalla
 		glfwSwapBuffers(window);
 
