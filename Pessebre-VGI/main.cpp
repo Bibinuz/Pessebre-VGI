@@ -1,4 +1,6 @@
 #include"Model.h"
+#include"skybox.h"
+
 
 void get_resolution(int& width, int& height) {
 	const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
@@ -49,10 +51,6 @@ GLuint lightIndices[] =
 };
 
 int main() {
-
-
-
-
 	glfwInit();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -88,6 +86,8 @@ int main() {
 	//------------------------------//
 
 	Shader shaderProgram("default.vert", "default.frag");
+	Shader treeShader("default.vert", "default.frag");
+	Shader skyboxShader("skybox.vert", "skybox.frag");
 	std::vector<Vertex> verts(vertices, vertices + sizeof(vertices) / sizeof(Vertex));
 	std::vector<GLuint> ind(indices, indices + sizeof(indices) / sizeof(GLuint));
 	std::vector<Texture> tex(textures, textures + sizeof(textures) / sizeof(Texture));
@@ -128,15 +128,15 @@ int main() {
 	object1Model = glm::scale(object1Model, glm::vec3(5, 1, 5));
 	object1Model = glm::translate(object1Model, object1Pos);
 	//------------------------------//
+
+	glm::vec3 treePos = glm::vec3(0, 0, 0);
+	glm::mat4 treeModel = glm::mat4(1.0f);
+	treeModel = glm::scale(treeModel, glm::vec3(0.2, 0.2, 0.2));
+	treeModel = glm::translate(treeModel, treePos);
+
 	//glm::vec3 treePos = glm::vec3(0, 0, 0);
 	//glm::mat4 treeModel = glm::mat4(1.0f);
 	//treeModel = glm::translate(treeModel, treePos);
-	//
-	//treeShader.Activate();
-	//glUniformMatrix4fv(glGetUniformLocation(treeShader.ID, "model"), 1, GL_FALSE, glm::value_ptr(treeModel));
-	//glUniform4f(glGetUniformLocation(treeShader.ID, "lightColor"), lightColor.x, lightColor.y, lightColor.z, lightColor.w);
-	//glUniform3f(glGetUniformLocation(treeShader.ID, "lightPos"), lightPos.x, lightPos.y, lightPos.z);
-
 
 	llum1Shader.Activate();
 	glUniformMatrix4fv(glGetUniformLocation(llum1Shader.ID, "model"), 1, GL_FALSE, glm::value_ptr(modelLlum1));
@@ -147,6 +147,11 @@ int main() {
 	llum3Shader.Activate();
 	glUniformMatrix4fv(glGetUniformLocation(llum2Shader.ID, "model"), 1, GL_FALSE, glm::value_ptr(modelLlum3));
 	glUniform4f(glGetUniformLocation(llum2Shader.ID, "lightColor"), colorLlum.x, colorLlum.y, colorLlum.z, colorLlum.w);
+	
+	treeShader.Activate();
+	glUniformMatrix4fv(glGetUniformLocation(treeShader.ID, "model"), 1, GL_FALSE, glm::value_ptr(treeModel));
+	glUniform4f(glGetUniformLocation(treeShader.ID, "lightColor"), lightColor.x, lightColor.y, lightColor.z, lightColor.w);
+	glUniform3f(glGetUniformLocation(treeShader.ID, "lightPos"), lightPos.x, lightPos.y, lightPos.z);
 
 
 	shaderProgram.Activate();
@@ -172,11 +177,20 @@ int main() {
 		glUniform1f(glGetUniformLocation(shaderProgram.ID, ("lights[" + std::to_string(i) + "].intensitat").c_str()	),	llums[i].intensitat);
 	}
 
+	skyboxShader.Activate();
+	glUniform1i(glGetUniformLocation(skyboxShader.ID, "skybox"), 0);
+
 	//Activem el depth test perque les coses mes llunyanes no es dibuixin sobre les properes
 	glEnable(GL_DEPTH_TEST);
 
 	Camera camera(width, height, glm::vec3(0.0f, 6.0f, 0.0f));
 
+	//Instànciem una skybox
+	Skybox skybox;
+	//Inicialitzem l'Skybox
+	skybox.initSkybox(skyboxShader);
+
+	
 	//Bucle principal
 	while (!glfwWindowShouldClose(window)) {
 		float i = glfwGetTime();
@@ -193,6 +207,13 @@ int main() {
 		llum1.Draw(llum1Shader, camera);
 		llum2.Draw(llum2Shader, camera);
 		llum3.Draw(llum3Shader, camera);
+
+		// Since the cubemap will always have a depth of 1.0, we need that equal sign so it doesn't get discarded
+		glDepthFunc(GL_LEQUAL);
+
+		//Mostrem l'skybox.
+		skybox.drawSkybox(skyboxShader, camera);
+
 		//Cambiem el buffer que esta en pantalla pel que acabem de dibuixar en aquesta iteració
 		glfwSwapBuffers(window);
 
@@ -206,6 +227,12 @@ int main() {
 	//Netegem tot el que hem utilitzat
 	shaderProgram.Delete();
 	llum1Shader.Delete();
+	llum2Shader.Delete();
+	llum3Shader.Delete();
+	skyboxShader.Delete();
+
+	//esborrem l'skybox.
+	skybox.cleanup();
 
 	//Destruim la finestra per alliberar la memoria
 	glfwDestroyWindow(window);
