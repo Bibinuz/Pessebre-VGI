@@ -5,6 +5,7 @@
 
 #include"Model.h"
 
+int TOTAL_CAGANERS=5;
 
 void get_resolution(int& width, int& height) {
 	const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
@@ -167,8 +168,9 @@ int main() {
 
 
 	int windowWidth, windowHeight;
+	int caganers=0;
 	// Bucle principal
-	while (!glfwWindowShouldClose(window)) {
+	while (!glfwWindowShouldClose(window)&&varImgui.op!=Exit) {
 		// Calculem el temps per al frame rate
 		float i = glfwGetTime();
 
@@ -196,41 +198,47 @@ int main() {
 
 		switch (varImgui.op) {
 		case Juga:
-			//std::cout << "Iniciant el joc..." << std::endl;
-			varImgui.cameraSelector(Cameres, camera);
-			ImGui::SetNextWindowPos(ImVec2(1750, 10));
-			ImGui::Begin("Juga",nullptr,ImGuiTableColumnFlags_NoResize);
+			//varImgui.cameraSelector(Cameres, camera);//------------SELECTOR DE CAMARES
+			ImGui::SetNextWindowPos(ImVec2(1650, 10));
+
+			ImGui::Begin("Juga",nullptr,ImGuiWindowFlags_NoResize|ImGuiWindowFlags_NoTitleBar|ImGuiWindowFlags_NoBackground|ImGuiWindowFlags_AlwaysAutoResize);
+			//ImGui::Text("%d/%d Caganers",caganers,TOTAL_CAGANERS); ImGui::SameLine();//----------------CAGANERS 
+			//if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {//__________________________Per a sortir al menu principal amb ESC
 			if (ImGui::Button("Tornar al menu")) {
-				varImgui.op = None;  // Torna al menú principal
+
+				varImgui.op = Menu;  // Torna al menú principal
 			}
 			ImGui::End();
 			break;
 
 		case Manager:
-			//std::cout << "Obrint el gestor..." << std::endl;
 			varImgui.cameraSelector(Cameres,camera);
-			ImGui::Begin("Manager");
+
+			ImGui::SetNextWindowPos(ImVec2(1650, 10));
+			ImGui::Begin("Manager", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_AlwaysAutoResize);
+
 			if (ImGui::Button("Tornar al menu")) {
-				varImgui.op = None;  // Torna al menú principal
+				varImgui.op = Menu;  // Torna al menú principal
 			}
 			ImGui::End();
 			//Per mostrar fps
 			varImgui.imGuiShowFPS();
-			// Codi per gestionar alguna configuració o obrir un gestor de dades
 			break;
 
 		case StaticCamera:
-			//std::cout << "Activant la càmera estàtica..." << std::endl;
 			// Codi per activar una càmera estàtica
 			varImgui.cameraSelector(Cameres, camera);
 			ImGui::Begin("Static Camera");
 			if (ImGui::Button("Tornar al menu")) {
-				varImgui.op = None;  // Torna al menú principal
+				varImgui.op = Menu;  // Torna al menú principal
 			}
 			ImGui::End();
 			break;
 
-		case None:
+		case Menu:
+			varImgui.imGuiMainMenu(windowWidth, windowHeight);
+			break;
+		case Exit:
 			varImgui.imGuiMainMenu(windowWidth, windowHeight);
 			break;
 

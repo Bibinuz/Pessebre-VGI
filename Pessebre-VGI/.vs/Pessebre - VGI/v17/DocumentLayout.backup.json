@@ -1,14 +1,14 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\lucas\\Desktop\\GitHub\\VGI\\Pessebre-VGI\\Pessebre-VGI\\",
+  "WorkspaceRootPath": "C:\\Users\\FX505\\Desktop\\ProjecteVGI\\Pessebre-VGI\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{8B73D535-518E-43E0-AE13-E74346276F72}|Pessebre - VGI.vcxproj|C:\\Users\\lucas\\Desktop\\GitHub\\VGI\\Pessebre-VGI\\Pessebre-VGI\\imGuiImplementation.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{8B73D535-518E-43E0-AE13-E74346276F72}|Pessebre - VGI.vcxproj|solutionrelative:imGuiImplementation.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+      "AbsoluteMoniker": "D:0:0:{8B73D535-518E-43E0-AE13-E74346276F72}|Pessebre - VGI.vcxproj|C:\\Users\\FX505\\Desktop\\ProjecteVGI\\Pessebre-VGI\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{8B73D535-518E-43E0-AE13-E74346276F72}|Pessebre - VGI.vcxproj|solutionrelative:main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{8B73D535-518E-43E0-AE13-E74346276F72}|Pessebre - VGI.vcxproj|C:\\Users\\lucas\\Desktop\\GitHub\\VGI\\Pessebre-VGI\\Pessebre-VGI\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{8B73D535-518E-43E0-AE13-E74346276F72}|Pessebre - VGI.vcxproj|solutionrelative:main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+      "AbsoluteMoniker": "D:0:0:{8B73D535-518E-43E0-AE13-E74346276F72}|Pessebre - VGI.vcxproj|C:\\Users\\FX505\\Desktop\\ProjecteVGI\\Pessebre-VGI\\imGuiImplementation.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{8B73D535-518E-43E0-AE13-E74346276F72}|Pessebre - VGI.vcxproj|solutionrelative:imGuiImplementation.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     }
   ],
   "DocumentGroupContainers": [
@@ -18,30 +18,30 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "imGuiImplementation.h",
-              "DocumentMoniker": "C:\\Users\\lucas\\Desktop\\GitHub\\VGI\\Pessebre-VGI\\Pessebre-VGI\\imGuiImplementation.h",
+              "DocumentMoniker": "C:\\Users\\FX505\\Desktop\\ProjecteVGI\\Pessebre-VGI\\imGuiImplementation.h",
               "RelativeDocumentMoniker": "imGuiImplementation.h",
-              "ToolTip": "C:\\Users\\lucas\\Desktop\\GitHub\\VGI\\Pessebre-VGI\\Pessebre-VGI\\imGuiImplementation.h",
+              "ToolTip": "C:\\Users\\FX505\\Desktop\\ProjecteVGI\\Pessebre-VGI\\imGuiImplementation.h",
               "RelativeToolTip": "imGuiImplementation.h",
-              "ViewState": "AgIAAFwAAAAAAAAAAAAmwG8AAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAH4AAAAAAAAAAAAIwJEAAAAMAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
               "WhenOpened": "2024-11-07T12:12:15.303Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 0,
               "Title": "main.cpp",
-              "DocumentMoniker": "C:\\Users\\lucas\\Desktop\\GitHub\\VGI\\Pessebre-VGI\\Pessebre-VGI\\main.cpp",
+              "DocumentMoniker": "C:\\Users\\FX505\\Desktop\\ProjecteVGI\\Pessebre-VGI\\main.cpp",
               "RelativeDocumentMoniker": "main.cpp",
-              "ToolTip": "C:\\Users\\lucas\\Desktop\\GitHub\\VGI\\Pessebre-VGI\\Pessebre-VGI\\main.cpp",
+              "ToolTip": "C:\\Users\\FX505\\Desktop\\ProjecteVGI\\Pessebre-VGI\\main.cpp",
               "RelativeToolTip": "main.cpp",
-              "ViewState": "AgIAAMgAAAAAAAAAAAAEwOoAAAAJAAAAAAAAAA==",
+              "ViewState": "AgIAAMsAAAAAAAAAAAAIwN4AAAAQAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2024-10-24T11:12:28.856Z",
               "EditorCaption": ""

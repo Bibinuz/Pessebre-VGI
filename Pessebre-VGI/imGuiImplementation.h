@@ -7,10 +7,11 @@
 
 enum MenuOption
 {
-	None,
+	Menu,
 	Juga,
 	Manager,
-	StaticCamera
+	StaticCamera,
+	Exit
 };
 
 class imGuiImplementation
@@ -27,7 +28,7 @@ public:
 
 	void RenderCenteredButton(const char* label, ImVec2 buttonSize);
 
-	MenuOption op = None;
+	MenuOption op = Menu;
 
 private:
 	ImGuiIO io;
@@ -100,7 +101,7 @@ inline void imGuiImplementation::imGuiMainMenu(int windowWidth,int windowHeight)
 
 	// Calcular la posición X para centrar el texto
 	float centerX = (windowSize.x - textSize.x) / 2.0f;
-	float centerYTitle = (windowSize.y - textSize.y) * 1.0f / 8.0f;
+	float centerYTitle = (windowSize.y - textSize.y) * 1.0f / 10.0f;
 	// Posicionar el cursor en X para centrarlo y Y en la parte superior
 	ImGui::SetCursorPosX(centerX);
 	ImGui::SetCursorPosY(centerYTitle); // Ajusta el valor de Y si es necesario
@@ -111,9 +112,11 @@ inline void imGuiImplementation::imGuiMainMenu(int windowWidth,int windowHeight)
 	// Obtener el tamaño de la ventana de ImGui
 
 	centerX = (windowSize.x - buttonSize.x) / 2.0f;
-	float centerYTop = (windowSize.y - buttonSize.y)*2.0f / 8.0f;
-	float centerYCenter = (windowSize.y - buttonSize.y) * 4.0f / 8.0f;
-	float centerYBotom = (windowSize.y - buttonSize.y) * 6.0f / 8.0f;
+	float centerYTop = (windowSize.y - buttonSize.y)*2.0f / 10.0f;
+	float centerYCenter = (windowSize.y - buttonSize.y) * 4.0f / 10.0f;
+	float centerYBotom = (windowSize.y - buttonSize.y) * 6.0f / 10.0f;
+	float centerYExit = (windowSize.y - buttonSize.y) * 8.0f / 10.0f;
+
 
 
 
@@ -135,6 +138,12 @@ inline void imGuiImplementation::imGuiMainMenu(int windowWidth,int windowHeight)
 
 	if (ImGui::Button("Camera Estatica", buttonSize)) {
 		op = StaticCamera;
+	}
+	ImGui::SetCursorPosX(centerX);
+	ImGui::SetCursorPosY(centerYExit);
+
+	if (ImGui::Button("Exit", buttonSize)) {
+		op = Exit;
 	}
 	// Contenido de la ventana
 	ImGui::End();
