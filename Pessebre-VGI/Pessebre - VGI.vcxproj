@@ -178,9 +178,12 @@
     <Text Include="default.vert" />
   </ItemGroup>
   <ItemGroup>
+    <None Include=".gitignore" />
     <None Include="default.frag" />
     <None Include="light.frag" />
     <None Include="light.vert" />
+    <None Include="object.frag" />
+    <None Include="object.vert" />
     <None Include="skybox.frag" />
     <None Include="skybox.vert" />
   </ItemGroup>

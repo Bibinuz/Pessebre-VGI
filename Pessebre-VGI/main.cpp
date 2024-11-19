@@ -9,11 +9,11 @@ void get_resolution(int& width, int& height) {
 }
 
 Vertex vertices[] =
-{ //               COORDINATES           /            COLORS          /           NORMALS         /       TEXTURE COORDINATES    //
-	Vertex{glm::vec3(-1.0f, 0.0f,  1.0f),	glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(0.0f, 0.0f)},
-	Vertex{glm::vec3(-1.0f, 0.0f, -1.0f),	glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(0.0f, 1.0f)},
-	Vertex{glm::vec3(1.0f, 0.0f, -1.0f),	glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(1.0f, 1.0f)},
-	Vertex{glm::vec3(1.0f, 0.0f,  1.0f),	glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(1.0f, 0.0f)}
+{ //               COORDINATES           /           NORMALS          /      TEXTURE COORDINATES   /           COLORS           //
+	Vertex{glm::vec3(-1.0f, 0.0f,  1.0f),	glm::vec3(0.0f, 1.0f, 0.0f), glm::vec2(0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f)},
+	Vertex{glm::vec3(-1.0f, 0.0f, -1.0f),	glm::vec3(0.0f, 1.0f, 0.0f), glm::vec2(0.0f, 1.0f), glm::vec3(1.0f, 1.0f, 1.0f)},
+	Vertex{glm::vec3(1.0f, 0.0f, -1.0f),	glm::vec3(0.0f, 1.0f, 0.0f), glm::vec2(1.0f, 1.0f), glm::vec3(1.0f, 1.0f, 1.0f)},
+	Vertex{glm::vec3(1.0f, 0.0f,  1.0f),	glm::vec3(0.0f, 1.0f, 0.0f), glm::vec2(1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f)}
 };
 
 GLuint indices[] =
@@ -86,17 +86,51 @@ int main() {
 	//------------------------------//
 
 	Shader shaderProgram("default.vert", "default.frag");
-	Shader treeShader("default.vert", "default.frag");
+	Shader pozoShader("object.vert", "object.frag");
 	Shader skyboxShader("skybox.vert", "skybox.frag");
 	std::vector<Vertex> verts(vertices, vertices + sizeof(vertices) / sizeof(Vertex));
 	std::vector<GLuint> ind(indices, indices + sizeof(indices) / sizeof(GLuint));
 	std::vector<Texture> tex(textures, textures + sizeof(textures) / sizeof(Texture));
 	Mesh floor(verts, ind, tex);
 
-	//Shader treeShader("default.vert", "default.frag");
-	//Model proba;
-	//proba.loadObj("models3d/tree2.obj");
-	//proba.objecte->textures = tex;
+	glm::vec4 lightColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
+	glm::vec3 lightPos = glm::vec3(1.0f, 1.0f, 1.0f);
+
+	// Crear el objeto modelo (pozo)
+	Model pozoModel;
+	pozoModel.loadObj("models3d/pozo3.obj");
+
+	// Configurar la posición del pozo
+	glm::vec3 pozoPos = glm::vec3(0.0f, 0.0f, 0.0f); //pozo
+	glm::mat4 pozoModelMatrix = glm::mat4(1.0f);
+	pozoModelMatrix = glm::translate(pozoModelMatrix, pozoPos);  // Mover el pozo a la posición deseada
+	pozoModelMatrix = glm::scale(pozoModelMatrix, glm::vec3(0.03f, 0.03f, 0.03f));  // Escala el pozo
+
+	pozoShader.Activate();
+	glUniformMatrix4fv(glGetUniformLocation(pozoShader.ID, "model"), 1, GL_FALSE, glm::value_ptr(pozoModelMatrix));
+
+	// Verificar si el modelo tiene texturas
+	if (!pozoModel.textures.empty()) {
+		// Iterar sobre todas las texturas del modelo
+		for (size_t i = 0; i < pozoModel.textures.size(); ++i) {
+			// Activar la textura correspondiente
+			glActiveTexture(GL_TEXTURE0 + i);  // Usar GL_TEXTURE0, GL_TEXTURE1, GL_TEXTURE2, etc.
+			glBindTexture(GL_TEXTURE_2D, pozoModel.textures[i].id);
+
+			// Asignar la textura al shader, el uniforme cambia dinámicamente según el índice
+			std::string uniformName = (i == 0) ? "diffuse" : (i == 1) ? "specular" : "texture";
+			glUniform1i(glGetUniformLocation(pozoShader.ID, (uniformName + std::to_string(i)).c_str()), i);
+
+			// Mostrar información de la textura cargada
+			std::cout << "Loaded texture ID: " << pozoModel.textures[i].id << " at uniform: " << uniformName + std::to_string(i) << std::endl;
+
+			// Generar mipmaps para la textura
+			glGenerateMipmap(GL_TEXTURE_2D);
+		}
+	}
+	else {
+		std::cerr << "No se han cargado texturas para el modelo." << std::endl;
+	}
 
 	//------------------------------//
 	Shader llum1Shader("light.vert", "light.frag");
@@ -129,15 +163,6 @@ int main() {
 	object1Model = glm::translate(object1Model, object1Pos);
 	//------------------------------//
 
-	glm::vec3 treePos = glm::vec3(0, 0, 0);
-	glm::mat4 treeModel = glm::mat4(1.0f);
-	treeModel = glm::scale(treeModel, glm::vec3(0.2, 0.2, 0.2));
-	treeModel = glm::translate(treeModel, treePos);
-
-	//glm::vec3 treePos = glm::vec3(0, 0, 0);
-	//glm::mat4 treeModel = glm::mat4(1.0f);
-	//treeModel = glm::translate(treeModel, treePos);
-
 	llum1Shader.Activate();
 	glUniformMatrix4fv(glGetUniformLocation(llum1Shader.ID, "model"), 1, GL_FALSE, glm::value_ptr(modelLlum1));
 	glUniform4f(glGetUniformLocation(llum1Shader.ID, "lightColor"), colorLlum.x, colorLlum.y, colorLlum.z, colorLlum.w);
@@ -147,12 +172,6 @@ int main() {
 	llum3Shader.Activate();
 	glUniformMatrix4fv(glGetUniformLocation(llum2Shader.ID, "model"), 1, GL_FALSE, glm::value_ptr(modelLlum3));
 	glUniform4f(glGetUniformLocation(llum2Shader.ID, "lightColor"), colorLlum.x, colorLlum.y, colorLlum.z, colorLlum.w);
-	
-	treeShader.Activate();
-	glUniformMatrix4fv(glGetUniformLocation(treeShader.ID, "model"), 1, GL_FALSE, glm::value_ptr(treeModel));
-	glUniform4f(glGetUniformLocation(treeShader.ID, "lightColor"), lightColor.x, lightColor.y, lightColor.z, lightColor.w);
-	glUniform3f(glGetUniformLocation(treeShader.ID, "lightPos"), lightPos.x, lightPos.y, lightPos.z);
-
 
 	shaderProgram.Activate();
 	glUniformMatrix4fv(glGetUniformLocation(shaderProgram.ID, "model"), 1, GL_FALSE, glm::value_ptr(object1Model));
@@ -184,6 +203,7 @@ int main() {
 	glEnable(GL_DEPTH_TEST);
 
 	Camera camera(width, height, glm::vec3(0.0f, 6.0f, 0.0f));
+	glm::vec3 camPos = camera.Position;
 
 	//Instànciem una skybox
 	Skybox skybox;
@@ -211,6 +231,15 @@ int main() {
 		// Since the cubemap will always have a depth of 1.0, we need that equal sign so it doesn't get discarded
 		glDepthFunc(GL_LEQUAL);
 
+		// Activar shader adecuado para el modelo
+		pozoShader.Activate();
+		glUniform3fv(glGetUniformLocation(pozoShader.ID, "lightPos"), 1, glm::value_ptr(lightPos));
+		glUniform4fv(glGetUniformLocation(pozoShader.ID, "lightColor"), 1, glm::value_ptr(lightColor));
+		glUniform3fv(glGetUniformLocation(pozoShader.ID, "camPos"), 1, glm::value_ptr(camPos));
+
+		// Dibujar el pozo
+		pozoModel.objecte->Draw(pozoShader, camera);
+
 		//Mostrem l'skybox.
 		skybox.drawSkybox(skyboxShader, camera);
 
@@ -226,6 +255,7 @@ int main() {
 	}
 	//Netegem tot el que hem utilitzat
 	shaderProgram.Delete();
+	pozoShader.Delete();
 	llum1Shader.Delete();
 	llum2Shader.Delete();
 	llum3Shader.Delete();
