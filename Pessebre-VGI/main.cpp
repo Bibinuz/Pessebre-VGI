@@ -1,5 +1,11 @@
 #include "skybox.h"
 #include "funcionsEscena.h"
+#include "imgui/imgui.h"
+#include "imgui/imgui_impl_glfw.h"
+#include "imgui/imgui_impl_opengl3.h"
+#include "imGuiImplementation.h"
+
+int TOTAL_CAGANERS=5;
 
 Vertex lightVertices[] =
 { //     COORDINATES     //
@@ -29,7 +35,8 @@ GLuint lightIndices[] =
 	4, 6, 7
 };
 
-int main() {
+GLFWwindow* inicialitzaFinestra() {
+
 	glfwInit();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -42,7 +49,7 @@ int main() {
 	if (window == NULL) {
 		std::cout << "Failed to create window\n";
 		glfwTerminate();
-		return -1;
+		return window;
 	}
 	glfwMaximizeWindow(window);
 	glfwMakeContextCurrent(window);
@@ -51,7 +58,18 @@ int main() {
 	gladLoadGL();
 
 	glViewport(0, 0, width, height);
-	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
+	//Activem el depth test perque les coses mes llunyanes no es dibuixin sobre les properes
+	glEnable(GL_DEPTH_TEST); glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	return window;
+}
+
+int main() {
+
+	GLFWwindow* window = inicialitzaFinestra();
+
+	int width, height;
+	get_resolution(width, height);
 
 	//------------------------------// esto no se porque influye en una cara del skybox que le da la vuelta si lo borro ademas influye en el color de algun objeto no entiendo nada;
 
@@ -119,7 +137,7 @@ int main() {
 	glUniform1i(glGetUniformLocation(skyboxShader.ID, "skybox"), 0);
 
 	//Activem el depth test perque les coses mes llunyanes no es dibuixin sobre les properes
-	glEnable(GL_DEPTH_TEST);
+	//glEnable(GL_DEPTH_TEST);
 
 	//Instànciem una skybox
 	Skybox skybox;
@@ -127,19 +145,43 @@ int main() {
 	skybox.initSkybox(skyboxShader);
 
 
-	//Bucle principal
-	while (!glfwWindowShouldClose(window)) {
+
+	// Definim tres càmeres amb diferents posicions
+	Camera cameraEstatica(width, height, glm::vec3(0.0f, 6.0f, 0.0f)); // Càmera inicial
+	cameraEstatica.cameraActive = false;
+	Camera camera2(width, height, glm::vec3(10.0f, 6.0f, 10.0f)); // Segona càmera
+	Camera camera3(width, height, glm::vec3(-10.0f, 6.0f, -10.0f)); // Tercera càmera
+	std::vector<Camera> Cameres;
+	Cameres.push_back(cameraEstatica); Cameres.push_back(camera2); Cameres.push_back(camera3);
+	Camera* camera = &cameraEstatica; // Inicialitzem la càmera activa
+
+	// Configuració d'ImGui
+	imGuiImplementation varImgui(window);
+
+
+	int windowWidth, windowHeight;
+	int caganers=0;
+	// Bucle principal
+	while (!glfwWindowShouldClose(window)&&varImgui.op!=Exit) {
+		// Calculem el temps per al frame rate
 		float i = glfwGetTime();
-		//Definim color de fons
+
+		// Esborrem el color de fons
 		glClearColor(0.07f, 0.13f, 0.17f, 1.0f);
-		//Pintem color de fons
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		//S'encarrega de tots els inputs de la camera
-		camera.Inputs(window);
-		camera.UpdateMatrix(45.0f, 0.1f, 100.0f);
 
 		// Since the cubemap will always have a depth of 1.0, we need that equal sign so it doesn't get discarded
 		glDepthFunc(GL_LEQUAL);
+		// Inputs i actualització de la càmera
+		camera->Inputs(window);
+		camera->UpdateMatrix(45.0f, 0.1f, 100.0f);
+		//-----------------------------------------------
+		varImgui.imGuiInitNewFrame();
+		//-----------------------------------------------
+
+		glfwGetFramebufferSize(window, &windowWidth, &windowHeight);
+
+		
 
 		DrawModels(shaderProgram, models, modelMatrices, llums, camera);
 		
@@ -147,16 +189,73 @@ int main() {
 		//Mostrem l'skybox.
 		skybox.drawSkybox(skyboxShader, camera);
 
-		//Cambiem el buffer que esta en pantalla pel que acabem de dibuixar en aquesta iteració
+		switch (varImgui.op) {
+		case Juga:
+			//varImgui.cameraSelector(Cameres, camera);//------------SELECTOR DE CAMARES
+			ImGui::SetNextWindowPos(ImVec2(1650, 10));
+
+			ImGui::Begin("Juga",nullptr,ImGuiWindowFlags_NoResize|ImGuiWindowFlags_NoTitleBar|ImGuiWindowFlags_NoBackground|ImGuiWindowFlags_AlwaysAutoResize);
+			//ImGui::Text("%d/%d Caganers",caganers,TOTAL_CAGANERS); ImGui::SameLine();//----------------CAGANERS 
+			//if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {//__________________________Per a sortir al menu principal amb ESC
+			if (ImGui::Button("Tornar al menu")) {
+
+				varImgui.op = Menu;  // Torna al menú principal
+			}
+			ImGui::End();
+			break;
+
+		case Manager:
+			varImgui.cameraSelector(Cameres,camera);
+
+			ImGui::SetNextWindowPos(ImVec2(1650, 10));
+			ImGui::Begin("Manager", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_AlwaysAutoResize);
+
+			if (ImGui::Button("Tornar al menu")) {
+				varImgui.op = Menu;  // Torna al menú principal
+			}
+			ImGui::End();
+			//Per mostrar fps
+			varImgui.imGuiShowFPS();
+			break;
+
+		case StaticCamera:
+			// Codi per activar una càmera estàtica
+			varImgui.cameraSelector(Cameres, camera);
+			ImGui::Begin("Static Camera");
+			if (ImGui::Button("Tornar al menu")) {
+				varImgui.op = Menu;  // Torna al menú principal
+			}
+			ImGui::End();
+			break;
+
+		case Menu:
+			varImgui.imGuiMainMenu(windowWidth, windowHeight);
+			break;
+		case Exit:
+			varImgui.imGuiMainMenu(windowWidth, windowHeight);
+			break;
+
+			
+		default:
+			std::cout << "Esperant selecció..." << std::endl;
+			break;
+		}
+
+		varImgui.imGuiRender();
 		glfwSwapBuffers(window);
 
-		//Llegim tots els events glfw, ja sigui tancar la finestra o llegir inputs del teclat/ratolí/gamepad
+		// Processa els esdeveniments
 		glfwPollEvents();
 		glFinish();
+
+		// Actualitzem la mida de la finestra i el viewport
 		glfwGetWindowSize(window, &width, &height);
 		glViewport(0, 0, width, height);
+
+		// Imprimim el frame rate
 		std::cout << 1 / (glfwGetTime() - i) << std::endl;
 	}
+
 	//Netegem tot el que hem utilitzat
 	shaderProgram.Delete();
 	//objetosShader.Delete();
