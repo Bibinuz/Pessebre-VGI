@@ -92,6 +92,9 @@ int main() {
 	std::vector<GLuint> ind(indices, indices + sizeof(indices) / sizeof(GLuint));
 	std::vector<Texture> tex(textures, textures + sizeof(textures) / sizeof(Texture));
 	Mesh floor(verts, ind, tex);
+	Model tree;
+	tree.loadObj("models3d/tree2.obj");
+	tree.objecte->textures = tex;
 
 	//Shader treeShader("default.vert", "default.frag");
 	//Model proba;
@@ -150,8 +153,8 @@ int main() {
 	
 	treeShader.Activate();
 	glUniformMatrix4fv(glGetUniformLocation(treeShader.ID, "model"), 1, GL_FALSE, glm::value_ptr(treeModel));
-	glUniform4f(glGetUniformLocation(treeShader.ID, "lightColor"), lightColor.x, lightColor.y, lightColor.z, lightColor.w);
-	glUniform3f(glGetUniformLocation(treeShader.ID, "lightPos"), lightPos.x, lightPos.y, lightPos.z);
+	glUniform4f(glGetUniformLocation(treeShader.ID, "lightColor"), colorLlum.x, colorLlum.y, colorLlum.z, colorLlum.w);
+	glUniform3f(glGetUniformLocation(treeShader.ID, "lightPos"), posLlum1.x, posLlum1.y, posLlum1.z);
 
 
 	shaderProgram.Activate();
@@ -207,6 +210,7 @@ int main() {
 		llum1.Draw(llum1Shader, camera);
 		llum2.Draw(llum2Shader, camera);
 		llum3.Draw(llum3Shader, camera);
+		//tree.objecte->Draw(treeShader, camera);
 
 		// Since the cubemap will always have a depth of 1.0, we need that equal sign so it doesn't get discarded
 		glDepthFunc(GL_LEQUAL);
