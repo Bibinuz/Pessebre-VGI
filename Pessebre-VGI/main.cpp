@@ -1,8 +1,9 @@
+#pragma once
 #include "skybox.h"
 #include "funcionsEscena.h"
-#include "imgui/imgui.h"
-#include "imgui/imgui_impl_glfw.h"
-#include "imgui/imgui_impl_opengl3.h"
+//#include "imgui/imgui.h"
+//#include "imgui/imgui_impl_glfw.h"
+//#include "imgui/imgui_impl_opengl3.h"
 #include "imGuiImplementation.h"
 
 int TOTAL_CAGANERS=5;
@@ -71,6 +72,18 @@ int main() {
 	int width, height;
 	get_resolution(width, height);
 
+	// Definim tres càmeres amb diferents posicions
+	Camera cameraEstatica(width, height, glm::vec3(0.0f, 6.0f, 0.0f)); // Càmera inicial
+	cameraEstatica.cameraActive = false;
+	Camera camera2(width, height, glm::vec3(10.0f, 6.0f, 10.0f)); // Segona càmera
+	Camera camera3(width, height, glm::vec3(-10.0f, 6.0f, -10.0f)); // Tercera càmera
+	std::vector<Camera> Cameres;
+	Cameres.push_back(cameraEstatica); Cameres.push_back(camera2); Cameres.push_back(camera3);
+	Camera* camera = &cameraEstatica; // Inicialitzem la càmera activa
+
+
+
+
 	//------------------------------// esto no se porque influye en una cara del skybox que le da la vuelta si lo borro ademas influye en el color de algun objeto no entiendo nada;
 
 	Texture textures[]
@@ -101,8 +114,7 @@ int main() {
 
 	SetupModels(models, modelMatrices);
 
-	Camera camera(width, height, glm::vec3(0.0f, 2.0f, 12.0f));
-	glm::vec3 camPos = camera.Position;
+	glm::vec3 camPos = camera->Position;
 
 	glm::vec3 posLlum1 = glm::vec3(3, 3, 0);
 	glm::mat4 modelLlum1 = glm::mat4(1.0f);
@@ -126,8 +138,8 @@ int main() {
 	llums.push_back({ true, posLlum2, color2, Foco, 1, &llum2, &modelLlum2});
 	llums.push_back({ true, posLlum3, color3, Punt, 1, &llum3, &modelLlum3 });
 
-	camera.RotateCamera(-12.0f, glm::vec3(1.0f, 0.0f, 0.0f));
-	camera.RotateCamera(-7.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+	//cameraNormal.RotateCamera(-12.0f, glm::vec3(1.0f, 0.0f, 0.0f));
+	//cameraNormal.RotateCamera(-7.0f, glm::vec3(0.0f, 1.0f, 0.0f));
 
 
 	//objetosShader.Activate();
@@ -143,17 +155,6 @@ int main() {
 	Skybox skybox;
 	//Inicialitzem l'Skybox
 	skybox.initSkybox(skyboxShader);
-
-
-
-	// Definim tres càmeres amb diferents posicions
-	Camera cameraEstatica(width, height, glm::vec3(0.0f, 6.0f, 0.0f)); // Càmera inicial
-	cameraEstatica.cameraActive = false;
-	Camera camera2(width, height, glm::vec3(10.0f, 6.0f, 10.0f)); // Segona càmera
-	Camera camera3(width, height, glm::vec3(-10.0f, 6.0f, -10.0f)); // Tercera càmera
-	std::vector<Camera> Cameres;
-	Cameres.push_back(cameraEstatica); Cameres.push_back(camera2); Cameres.push_back(camera3);
-	Camera* camera = &cameraEstatica; // Inicialitzem la càmera activa
 
 	// Configuració d'ImGui
 	imGuiImplementation varImgui(window);
@@ -183,11 +184,11 @@ int main() {
 
 		
 
-		DrawModels(shaderProgram, models, modelMatrices, llums, camera);
+		DrawModels(shaderProgram, models, modelMatrices, llums, *camera);
 		
-		DrawLights(lightShader, llums, camera);
+		DrawLights(lightShader, llums, *camera);
 		//Mostrem l'skybox.
-		skybox.drawSkybox(skyboxShader, camera);
+		skybox.drawSkybox(skyboxShader, *camera);
 
 		switch (varImgui.op) {
 		case Juga:

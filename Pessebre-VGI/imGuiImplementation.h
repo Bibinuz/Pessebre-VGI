@@ -4,6 +4,7 @@
 #include "imgui/imgui_impl_opengl3.h"
 #include <vector>
 #include "Camera.h"
+#include "Model.h"
 
 enum MenuOption
 {
