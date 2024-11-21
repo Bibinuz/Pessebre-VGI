@@ -23,6 +23,7 @@ uniform Light lights[10];
 uniform int numLights;
 
 
+
 vec4 pointLight(int i)
 { 
 	float a = 0.01;

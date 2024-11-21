@@ -57,7 +57,7 @@
     <ClCompile Include="skybox.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="scene.cpp">
+    <ClCompile Include="funcionsEscena.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -118,7 +118,7 @@
     <ClInclude Include="skybox.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="scene.h">
+    <ClInclude Include="funcionsEscena.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

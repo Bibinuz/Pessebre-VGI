@@ -9,21 +9,6 @@
 #include<cerrno>
 #include<glm/glm.hpp>
 
-enum TipusLlum
-{
-	Punt,
-	Foco,
-	Directa
-};
-
-struct Llum {
-	bool sw_light;
-	glm::vec3 lightPos;
-	glm::vec4 lightCol;
-	TipusLlum tipus;
-	float intensitat;
-};
-
 std::string get_file_contents(const char* filename);
 
 class Shader
