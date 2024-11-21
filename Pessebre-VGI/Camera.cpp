@@ -1,7 +1,5 @@
 #include"Camera.h"
 
-
-
 Camera::Camera(int width, int height, glm::vec3 position)
 {
 	Camera::width = width;
@@ -82,4 +80,17 @@ void Camera::Inputs(GLFWwindow* window)
 		glfwSetCursorPos(window, width / 2, height / 2);
 
 	}
+
+}
+
+void Camera::RotateCamera(float angle, const glm::vec3& axis)
+{
+	// Convertir el ángulo a radianes
+	float radians = glm::radians(angle);
+
+	// Crear la matriz de rotación
+	glm::mat4 rotationMatrix = glm::rotate(glm::mat4(1.0f), radians, axis);
+
+	// Aplicar la rotación a la orientación de la cámara
+	Orientation = glm::vec3(rotationMatrix * glm::vec4(Orientation, 0.0f));
 }

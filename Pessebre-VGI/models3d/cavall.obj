@@ -1,6 +1,6 @@
 # Blender 4.2.2 LTS
 # www.blender.org
-mtllib caballito.mtl
+mtllib cavall.mtl
 o horse_001
 v 0.190156 1.282241 0.405754
 v 0.144673 1.099385 0.649637

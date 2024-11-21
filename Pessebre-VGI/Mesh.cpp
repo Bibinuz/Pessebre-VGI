@@ -1,5 +1,13 @@
 #include "Mesh.h"
 
+// Constructor predeterminado
+Mesh::Mesh() {
+	// Inicializar los vectores como vacíos
+	this->vertices = {};
+	this->indices = {};
+	this->textures = {};
+}
+
 Mesh::Mesh(std::vector<Vertex>& vertices, std::vector<GLuint>& indices, std::vector<Texture>& textures)
 {
 	Mesh::vertices = vertices;
