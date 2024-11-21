@@ -16,6 +16,11 @@ std::string get_file_contents(const char* filename)
 	throw(errno);
 }
 
+Shader::Shader() : ID(0)
+{
+	// No hace nada, pero asegura que los objetos Shader se inicialicen de manera segura.
+}
+
 Shader::Shader(const char* vertexFile, const char* fragmentFile)
 {
 	std::string vertexCode = get_file_contents(vertexFile);

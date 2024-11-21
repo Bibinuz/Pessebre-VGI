@@ -30,6 +30,9 @@ class Shader
 {
 public:
 	GLuint ID;
+	// Constructor predeterminado
+	Shader();
+
 	Shader(const char* vertexFile, const char* fragmentFile);
 
 	void compileErrors(unsigned int shader, const char* type);

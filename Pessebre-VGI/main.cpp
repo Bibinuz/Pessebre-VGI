@@ -1,6 +1,7 @@
-#include"Model.h"
-#include"skybox.h"
-
+#include "Model.h"
+#include "VAO.h"
+#include "VBO.h"
+#include "skybox.h"
 
 void get_resolution(int& width, int& height) {
 	const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
@@ -8,47 +9,78 @@ void get_resolution(int& width, int& height) {
 	height = mode->height;
 }
 
-Vertex vertices[] =
-{ //               COORDINATES           /            COLORS          /           NORMALS         /       TEXTURE COORDINATES    //
-	Vertex{glm::vec3(-1.0f, 0.0f,  1.0f),	glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(0.0f, 0.0f)},
-	Vertex{glm::vec3(-1.0f, 0.0f, -1.0f),	glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(0.0f, 1.0f)},
-	Vertex{glm::vec3(1.0f, 0.0f, -1.0f),	glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(1.0f, 1.0f)},
-	Vertex{glm::vec3(1.0f, 0.0f,  1.0f),	glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(1.0f, 0.0f)}
-};
+void CreateModel(Model& model, const std::string& filePath, const glm::vec3& position, const glm::vec3& scale, glm::mat4& modelMatrix, float rotationAngle = 0.0f, const glm::vec3& rotationAxis = glm::vec3(0.0f, 1.0f, 0.0f)) {
+	model.loadObj(filePath.c_str());  // Cargar el modelo desde el archivo
+	modelMatrix = glm::mat4(1.0f);  // Inicializar la matriz de transformación
+	modelMatrix = glm::translate(modelMatrix, position);  // Aplicar la posición
+	modelMatrix = glm::rotate(modelMatrix, rotationAngle, rotationAxis);  // Aplicar la rotación
+	modelMatrix = glm::scale(modelMatrix, scale);  // Aplicar la escala
+}
 
-GLuint indices[] =
-{
-	0, 1, 2,
-	0, 2, 3
-};
+void BindTextures(Shader& shader, const Model& model) {
+	// Comprobar si el modelo tiene texturas cargadas
+	if (!model.textures.empty()) {
+		shader.Activate();
 
-Vertex lightVertices[] =
-{ //     COORDINATES     //
-	Vertex{glm::vec3(-0.1f, -0.1f,  0.1f)},
-	Vertex{glm::vec3(-0.1f, -0.1f, -0.1f)},
-	Vertex{glm::vec3(0.1f, -0.1f, -0.1f)},
-	Vertex{glm::vec3(0.1f, -0.1f,  0.1f)},
-	Vertex{glm::vec3(-0.1f,  0.1f,  0.1f)},
-	Vertex{glm::vec3(-0.1f,  0.1f, -0.1f)},
-	Vertex{glm::vec3(0.1f,  0.1f, -0.1f)},
-	Vertex{glm::vec3(0.1f,  0.1f,  0.1f)}
-};
+		// Activar y vincular la textura
+		glActiveTexture(GL_TEXTURE0);  // Usamos la primera unidad de textura
+		glBindTexture(GL_TEXTURE_2D, model.textures[0].id);  // Vincular la primera textura del modelo
 
-GLuint lightIndices[] =
-{
-	0, 1, 2,
-	0, 2, 3,
-	0, 4, 7,
-	0, 7, 3,
-	3, 7, 6,
-	3, 6, 2,
-	2, 6, 5,
-	2, 5, 1,
-	1, 5, 4,
-	1, 4, 0,
-	4, 5, 6,
-	4, 6, 7
-};
+		// Asignar la textura al shader (suponiendo que en el shader se usa un sampler2D llamado "texture0")
+		glUniform1i(glGetUniformLocation(shader.ID, "texture0"), 0);
+	}
+	else {
+		std::cerr << "No se han cargado texturas para el modelo." << std::endl;
+	}
+}
+
+void DrawModelWithShader(Shader& shader, const Model& model, const glm::mat4& modelMatrix, const glm::vec3& lightPos, const glm::vec4& lightColor, const glm::vec3& camPos, Camera& camera) {
+	shader.Activate();
+
+	// Configurar propiedades globales del shader
+	glUniform3fv(glGetUniformLocation(shader.ID, "lightPos"), 1, glm::value_ptr(lightPos));
+	glUniform4fv(glGetUniformLocation(shader.ID, "lightColor"), 1, glm::value_ptr(lightColor));
+	glUniform3fv(glGetUniformLocation(shader.ID, "camPos"), 1, glm::value_ptr(camPos));
+
+	// Configurar la matriz de modelo específica y dibujar
+	glUniformMatrix4fv(glGetUniformLocation(shader.ID, "model"), 1, GL_FALSE, glm::value_ptr(modelMatrix));
+	BindTextures(shader, model);  // Vincular texturas del modelo
+	model.objecte->Draw(shader, camera);  // Dibujar el modelo
+}
+
+void SetupModels(std::vector<Model>& models, std::vector<glm::mat4>& modelMatrices) {
+	// Lista de parámetros para cada modelo
+	struct ModelData {
+		std::string filePath;
+		glm::vec3 position;
+		glm::vec3 scale;
+		float rotationAngle;  // Opcional: ángulo de rotación (en radianes)
+		glm::vec3 rotationAxis;
+	};
+
+	std::vector<ModelData> modelDataList = {
+		{ "models3d/superficie.obj", glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.5f, 0.5f, 0.5f), 0.0f, glm::vec3(0.0f, 1.0f, 0.0f) },
+		{ "models3d/iglesia.obj", glm::vec3(0.0f, 0.05f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), 0.0f, glm::vec3(0.0f, 1.0f, 0.0f) },
+		{ "models3d/dona1.obj", glm::vec3(1.0f, 0.05f, 1.0f), glm::vec3(0.5f, 0.5f, 0.5f), 0.0f, glm::vec3(0.0f, 1.0f, 0.0f) },
+		{ "models3d/moli.obj", glm::vec3(-5.0f, 0.05f, 0.0f), glm::vec3(0.75f, 0.75f, 0.75f),  0.0f, glm::vec3(0.0f, 1.0f, 0.0f) },
+		{ "models3d/gallina.obj", glm::vec3(-3.0f, 0.05f, 3.0f), glm::vec3(0.5f, 0.5f, 0.5f), glm::radians(140.0f), glm::vec3(0.0f, 1.0f, 0.0f) },
+		{ "models3d/cavall.obj", glm::vec3(3.0f, 0.05f, 3.0f), glm::vec3(0.5f, 0.5f, 0.5f), glm::radians(-120.0f), glm::vec3(0.0f, 1.0f, 0.0f) },
+		{ "models3d/arbre1.obj", glm::vec3(4.0f, 0.05f, 0.0f), glm::vec3(0.15f, 0.15f, 0.15f), 0.0f, glm::vec3(0.0f, 1.0f, 0.0f) }
+	};
+
+	// Crear cada modelo
+	for (const auto& data : modelDataList) {
+		models.emplace_back();  // Agregar un nuevo modelo
+		modelMatrices.emplace_back();  // Agregar una nueva matriz de modelo
+		CreateModel(models.back(), data.filePath, data.position, data.scale, modelMatrices.back(), data.rotationAngle, data.rotationAxis);
+	}
+}
+
+void DrawModels(Shader& shader, const std::vector<Model>& models, const std::vector<glm::mat4>& modelMatrices, const glm::vec3& lightPos, const glm::vec4& lightColor, const glm::vec3& camPos, Camera& camera) {
+	for (size_t i = 0; i < models.size(); ++i) {
+		DrawModelWithShader(shader, models[i], modelMatrices[i], lightPos, lightColor, camPos, camera);
+	}
+}
 
 int main() {
 	glfwInit();
@@ -74,7 +106,7 @@ int main() {
 	glViewport(0, 0, width, height);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
-	//------------------------------//
+	//------------------------------// esto no se porque influye en una cara del skybox que le da la vuelta si lo borro ademas influye en el color de algun objeto no entiendo nada;
 
 	Texture textures[]
 	{
@@ -86,7 +118,7 @@ int main() {
 	//------------------------------//
 
 	Shader shaderProgram("default.vert", "default.frag");
-	Shader treeShader("default.vert", "default.frag");
+	Shader objetosShader("object.vert", "object.frag");
 	Shader skyboxShader("skybox.vert", "skybox.frag");
 	std::vector<Vertex> verts(vertices, vertices + sizeof(vertices) / sizeof(Vertex));
 	std::vector<GLuint> ind(indices, indices + sizeof(indices) / sizeof(GLuint));
@@ -96,27 +128,17 @@ int main() {
 	tree.loadObj("models3d/tree2.obj");
 	tree.objecte->textures = tex;
 
-	//Shader treeShader("default.vert", "default.frag");
-	//Model proba;
-	//proba.loadObj("models3d/tree2.obj");
-	//proba.objecte->textures = tex;
+	std::vector<Model> models;
+	std::vector<glm::mat4> modelMatrices;
+	glm::vec4 lightColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
+	glm::vec3 lightPos = glm::vec3(-2.0f, 10.0f, 5.0f);
 
-	//------------------------------//
-	Shader llum1Shader("light.vert", "light.frag");
-	Shader llum2Shader("light.vert", "light.frag");
-	Shader llum3Shader("light.vert", "light.frag");
+	SetupModels(models, modelMatrices);
 
-	std::vector<Vertex> lightVerts(lightVertices, lightVertices + sizeof(lightVertices) / sizeof(Vertex));
-	std::vector<GLuint> lightInd(lightIndices, lightIndices + sizeof(lightIndices) / sizeof(GLuint));
-	Mesh llum1(lightVerts, lightInd, tex);
-	Mesh llum2(lightVerts, lightInd, tex);
-	Mesh llum3(lightVerts, lightInd, tex);
+	Camera camera(width, height, glm::vec3(0.0f, 2.0f, 12.0f));
+	glm::vec3 camPos = camera.Position;
 
-	//------------------------------//
-	glm::vec4 colorLlum = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
-	glm::vec3 posLlum1 = glm::vec3(1.5f, 1.5f, 1.5f);
-	glm::mat4 modelLlum1 = glm::mat4(1.0f);
-	modelLlum1 = glm::translate(modelLlum1, posLlum1);
+	//camera.UpdateMatrix(45.0f, 0.1f, 100.0f);
 
 	glm::vec3 posLlum2 = glm::vec3(-1.5f, 1.5f, -1.5f);
 	glm::mat4 modelLlum2 = glm::mat4(1.0f);
@@ -155,30 +177,12 @@ int main() {
 	glUniformMatrix4fv(glGetUniformLocation(treeShader.ID, "model"), 1, GL_FALSE, glm::value_ptr(treeModel));
 	glUniform4f(glGetUniformLocation(treeShader.ID, "lightColor"), colorLlum.x, colorLlum.y, colorLlum.z, colorLlum.w);
 	glUniform3f(glGetUniformLocation(treeShader.ID, "lightPos"), posLlum1.x, posLlum1.y, posLlum1.z);
+	camera.RotateCamera(-12.0f, glm::vec3(1.0f, 0.0f, 0.0f));
+	camera.RotateCamera(-7.0f, glm::vec3(0.0f, 1.0f, 0.0f));
 
 
-	shaderProgram.Activate();
-	glUniformMatrix4fv(glGetUniformLocation(shaderProgram.ID, "model"), 1, GL_FALSE, glm::value_ptr(object1Model));
+	objetosShader.Activate();
 
-
-	Llum l1 = { true, posLlum1, colorLlum, Punt, 1 };
-	Llum l2 = { true, posLlum2, colorLlum, Foco, 1 };
-	Llum l3 = { true, posLlum3, colorLlum, Foco, 3 };
-
-	std::vector<Llum> llums;
-	llums.push_back(l1);
-	llums.push_back(l2);
-	llums.push_back(l3);
-	glUniform1i(glGetUniformLocation(shaderProgram.ID, "numLights"), llums.size());
-
-	for (int i = 0; i < llums.size(); i++)
-	{
-		glUniform1i(glGetUniformLocation(shaderProgram.ID, ("lights[" + std::to_string(i) + "].sw_light").c_str()	),	llums[i].sw_light);
-		glUniform3f(glGetUniformLocation(shaderProgram.ID, ("lights[" + std::to_string(i) + "].lightPos").c_str()	),	llums[i].lightPos.x, llums[i].lightPos.y, llums[i].lightPos.z);
-		glUniform4f(glGetUniformLocation(shaderProgram.ID, ("lights[" + std::to_string(i) + "].lightColor").c_str()	),	llums[i].lightCol.r, llums[i].lightCol.g, llums[i].lightCol.b, llums[i].lightCol.a);
-		glUniform1i(glGetUniformLocation(shaderProgram.ID, ("lights[" + std::to_string(i) + "].tipus").c_str()		),	llums[i].tipus);
-		glUniform1f(glGetUniformLocation(shaderProgram.ID, ("lights[" + std::to_string(i) + "].intensitat").c_str()	),	llums[i].intensitat);
-	}
 
 	skyboxShader.Activate();
 	glUniform1i(glGetUniformLocation(skyboxShader.ID, "skybox"), 0);
@@ -186,14 +190,12 @@ int main() {
 	//Activem el depth test perque les coses mes llunyanes no es dibuixin sobre les properes
 	glEnable(GL_DEPTH_TEST);
 
-	Camera camera(width, height, glm::vec3(0.0f, 6.0f, 0.0f));
-
 	//Instànciem una skybox
 	Skybox skybox;
 	//Inicialitzem l'Skybox
 	skybox.initSkybox(skyboxShader);
 
-	
+
 	//Bucle principal
 	while (!glfwWindowShouldClose(window)) {
 		float i = glfwGetTime();
@@ -215,6 +217,8 @@ int main() {
 		// Since the cubemap will always have a depth of 1.0, we need that equal sign so it doesn't get discarded
 		glDepthFunc(GL_LEQUAL);
 
+		DrawModels(objetosShader, models, modelMatrices, lightPos, lightColor, camPos, camera);
+
 		//Mostrem l'skybox.
 		skybox.drawSkybox(skyboxShader, camera);
 
@@ -230,9 +234,7 @@ int main() {
 	}
 	//Netegem tot el que hem utilitzat
 	shaderProgram.Delete();
-	llum1Shader.Delete();
-	llum2Shader.Delete();
-	llum3Shader.Delete();
+	objetosShader.Delete();
 	skyboxShader.Delete();
 
 	//esborrem l'skybox.

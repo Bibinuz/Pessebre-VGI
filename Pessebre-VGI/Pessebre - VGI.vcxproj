@@ -163,6 +163,7 @@
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="EBO.cpp" />
+    <ClCompile Include="scene.cpp" />
     <ClCompile Include="glad.c" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Mesh.cpp" />
@@ -178,15 +179,19 @@
     <Text Include="default.vert" />
   </ItemGroup>
   <ItemGroup>
+    <None Include=".gitignore" />
     <None Include="default.frag" />
     <None Include="light.frag" />
     <None Include="light.vert" />
+    <None Include="object.frag" />
+    <None Include="object.vert" />
     <None Include="skybox.frag" />
     <None Include="skybox.vert" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
     <ClInclude Include="EBO.h" />
+    <ClInclude Include="scene.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="shaderClass.h" />

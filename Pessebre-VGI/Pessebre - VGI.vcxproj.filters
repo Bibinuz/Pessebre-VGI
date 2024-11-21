@@ -57,6 +57,9 @@
     <ClCompile Include="skybox.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="scene.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Text Include="default.vert">
@@ -79,6 +82,13 @@
     <None Include="skybox.frag">
       <Filter>Resource Files\Shaders</Filter>
     </None>
+    <None Include="object.frag">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="object.vert">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include=".gitignore" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="shaderClass.h">
@@ -106,6 +116,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="skybox.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="scene.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
