@@ -16,7 +16,11 @@ struct Llum {
 	TipusLlum tipus;
 	float intensitat;
 	Mesh* mesh;
-	glm::mat4* model;
+	glm::mat4 model;
+	unsigned int shadowUnit = 0;
+	unsigned int depthMap = 0;
+	unsigned int depthMapFBO = 0;
+	glm::mat4 lightSpaceMatrix = glm::mat4(1.0f);
 };
 
 
@@ -26,7 +30,7 @@ void CreateModel(Model& model, const std::string& filePath, const glm::vec3& pos
 
 void BindTextures(Shader& shader, const Model& model);
 
-void DrawModelWithShader(Shader& shader, const Model& model, const glm::mat4& modelMatrix, std::vector<Llum>& llums, Camera& camera);
+void DrawModelWithShader(Shader& shader, const Model& model, const glm::mat4& modelMatrix, Camera& camera);
 
 void SetupModels(std::vector<Model>& models, std::vector<glm::mat4>& modelMatrices);
 
@@ -34,3 +38,4 @@ void DrawModels(Shader& shader, const std::vector<Model>& models, const std::vec
 
 void DrawLights(Shader& shader, std::vector<Llum>& llums, Camera& camera);
 
+void DrawDepthMap(Shader& shader, const std::vector<Model>& models, const std::vector<glm::mat4>& modelMatrices, glm::vec3& lightPos, glm::mat4& lightSpaceMatrix);
