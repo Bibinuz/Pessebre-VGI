@@ -65,13 +65,19 @@ void SetupModels(std::vector<Model>& models, std::vector<glm::mat4>& modelMatric
 	};
 
 	std::vector<ModelData> modelDataList = {
-		{ "models3d/superficie.obj", glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.5f, 0.5f, 0.5f), 0.0f, glm::vec3(0.0f, 1.0f, 0.0f) },
-		{ "models3d/iglesia.obj", glm::vec3(0.0f, 0.05f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), 0.0f, glm::vec3(0.0f, 1.0f, 0.0f) },
-		{ "models3d/dona1.obj", glm::vec3(1.0f, 0.05f, 1.0f), glm::vec3(0.5f, 0.5f, 0.5f), 0.0f, glm::vec3(0.0f, 1.0f, 0.0f) },
-		{ "models3d/moli.obj", glm::vec3(-5.0f, 0.05f, 0.0f), glm::vec3(0.75f, 0.75f, 0.75f),  0.0f, glm::vec3(0.0f, 1.0f, 0.0f) },
-		{ "models3d/gallina.obj", glm::vec3(-3.0f, 0.05f, 3.0f), glm::vec3(0.5f, 0.5f, 0.5f), glm::radians(140.0f), glm::vec3(0.0f, 1.0f, 0.0f) },
-		{ "models3d/cavall.obj", glm::vec3(3.0f, 0.05f, 3.0f), glm::vec3(0.5f, 0.5f, 0.5f), glm::radians(-120.0f), glm::vec3(0.0f, 1.0f, 0.0f) },
-		{ "models3d/arbre1.obj", glm::vec3(4.0f, 0.05f, 0.0f), glm::vec3(0.15f, 0.15f, 0.15f), 0.0f, glm::vec3(0.0f, 1.0f, 0.0f) }
+		{"models3d/terratop.obj", glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(5.0f, 5.0f, 5.0f), 0.0f, glm::vec3(0.0f, 1.0f, 0.0f)},
+		{ "models3d/baltasar.obj", glm::vec3(-6.0f, 0.05f, -5.0f), glm::vec3(20.0f, 20.0f, 20.0f), glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f) },
+		{ "models3d/melchor.obj", glm::vec3(5.0f, 1.25f, -5.0f), glm::vec3(2.0f, 2.0f, 2.0f), glm::radians(-90.0f), glm::vec3(0.0f, 1.0f, 0.0f) },
+		{ "models3d/gaspar.obj", glm::vec3(9.0f, 0.05f, -8.0f), glm::vec3(20.0f, 20.0f, 20.0f), glm::radians(-60.0f), glm::vec3(0.0f, 1.0f, 0.0f) },
+		{ "models3d/portal.obj", glm::vec3(0.0f, -1.0f, 0.0f), glm::vec3(0.75f, 0.75f, 0.75f), glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f) },
+		{ "models3d/marsal.obj", glm::vec3(-2.0f, 1.75f, -2.0f), glm::vec3(0.05f, 0.05f, 0.05f), 0.0f, glm::vec3(0.0f, 1.0f, 0.0f) },
+		{ "models3d/maria.obj", glm::vec3(1.0f, 0.05f, 0.0f), glm::vec3(20.0f, 20.0f, 20.0f), glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f) },
+		{ "models3d/burro.obj", glm::vec3(0.5f, 0.05f, 2.0f), glm::vec3(20.0f, 20.0f, 20.0f), glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f) },
+		{ "models3d/buey.obj", glm::vec3(-0.5f, 0.05f, 2.0f), glm::vec3(20.0f, 20.0f, 20.0f), glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f) },
+		{ "models3d/nenJesus.obj", glm::vec3(0.25f, 0.1f, 0.0f), glm::vec3(20.0f, 20.0f, 20.0f), glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f) },
+		{ "models3d/cuna.obj", glm::vec3(0.25f, 0.05f, 1.0f), glm::vec3(20.0f, 20.0f, 20.0f), glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f) },
+		{ "models3d/ovella.obj", glm::vec3(-11.0f, 0.8f, -3.0f), glm::vec3(0.4f, 0.4f, 0.4f), glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f) },
+		{ "models3d/angel.obj", glm::vec3(9.0f, 5.0f, 5.0f), glm::vec3(0.2f, 0.2f, 0.2f), glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f) }
 	};
 
 	// Crear cada modelo

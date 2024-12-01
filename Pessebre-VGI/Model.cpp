@@ -156,20 +156,13 @@ void Model::loadMtl(const char* file)
         }
     }
 
-    // Si no se ha cargado una textura, crear una textura de color sólido usando el color difuso
+    // Si no se ha cargado una textura, mostrar mensaje de error
     if (textures.empty()) {
         std::cout << "No se encontró mapa de textura, usando color difuso en lugar de textura." << std::endl;
-
-        unsigned char solidColor[3] = {
-            static_cast<unsigned char>(material.diffuseColor.r * 255),
-            static_cast<unsigned char>(material.diffuseColor.g * 255),
-            static_cast<unsigned char>(material.diffuseColor.b * 255)
-        };
 
         GLuint solidTextureID;
         glGenTextures(1, &solidTextureID);
         glBindTexture(GL_TEXTURE_2D, solidTextureID);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 1, 1, 0, GL_RGB, GL_UNSIGNED_BYTE, solidColor);
         glGenerateMipmap(GL_TEXTURE_2D);
 
         Texture texture;

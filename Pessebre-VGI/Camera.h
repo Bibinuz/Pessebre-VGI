@@ -25,7 +25,7 @@ public:
 	int height;
 
 	float speed;
-	float walkSpeed = 0.01f;
+	float walkSpeed = 0.1f;
 	float runSpeed = 4*walkSpeed;
 	float sensitivity = 100.0f;
 
