@@ -82,11 +82,11 @@ void DrawModels(Shader& shader, const std::vector<Model>& models, const std::vec
 		glUniform1i(glGetUniformLocation(shader.ID, ("lights[" + std::to_string(i) + "].tipus").c_str()),      llums[i].tipus);
 		glUniform1f(glGetUniformLocation(shader.ID, ("lights[" + std::to_string(i) + "].intensitat").c_str()), llums[i].intensitat);
 
-		glActiveTexture(GL_TEXTURE0 + llums[i].shadowUnit);
-		glBindTexture(GL_TEXTURE_2D, llums[i].depthMap);
+		glActiveTexture(GL_TEXTURE0 + llums[i].shadowmap.unit);
+		glBindTexture(GL_TEXTURE_2D, llums[i].shadowmap.depthMap);
 
-		glUniform1i(glGetUniformLocation(shader.ID, ("lights[" + std::to_string(i) + "].depthMap").c_str()),   llums[i].shadowUnit);
-		glUniformMatrix4fv(glGetUniformLocation(shader.ID, ("lights[" + std::to_string(i) + "].lightSpaceMatrix").c_str()), 1, GL_FALSE, glm::value_ptr(llums[i].lightSpaceMatrix));
+		glUniform1i(glGetUniformLocation(shader.ID, ("lights[" + std::to_string(i) + "].depthMap").c_str()),   llums[i].shadowmap.unit);
+		glUniformMatrix4fv(glGetUniformLocation(shader.ID, ("lights[" + std::to_string(i) + "].lightSpaceMatrix").c_str()), 1, GL_FALSE, glm::value_ptr(llums[i].shadowmap.lightSpaceMatrix));
 
 	}
 
@@ -107,18 +107,5 @@ void DrawLights(Shader& shader, std::vector<Llum>& llums, Camera& camera) {
 			glUniform4f(glGetUniformLocation(shader.ID, "lightColor"), llum.lightCol.r, llum.lightCol.g, llum.lightCol.b, llum.lightCol.a);
 			llum.mesh->Draw(shader, camera);
 		}
-	}
-}
-
-void DrawDepthMap(Shader& shader, const std::vector<Model>& models, const std::vector<glm::mat4>& modelMatrices, glm::vec3& lightPos, glm::mat4& lightSpaceMatrix) {
-	shader.Activate();
-	glUniform3fv(glGetUniformLocation(shader.ID, "aPos"), 1, glm::value_ptr(lightPos));
-	glUniformMatrix4fv(glGetUniformLocation(shader.ID, "lightSpaceMatrix"), 1, GL_FALSE, glm::value_ptr(lightSpaceMatrix));
-
-	for (size_t i = 0; i < models.size(); i++)
-	{
-		glUniformMatrix4fv(glGetUniformLocation(shader.ID, "model"), 1, GL_FALSE, glm::value_ptr(modelMatrices[i]));
-		models[i].objecte->VAO.Bind();
-		glDrawElements(GL_TRIANGLES, models[i].objecte->indices.size(), GL_UNSIGNED_INT, 0);
 	}
 }

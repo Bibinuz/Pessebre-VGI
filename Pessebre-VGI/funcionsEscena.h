@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Model.h"
+#include "Shadowmap.h"
 
 enum TipusLlum
 {
@@ -17,12 +18,8 @@ struct Llum {
 	float intensitat;
 	Mesh* mesh;
 	glm::mat4 model;
-	unsigned int shadowUnit = 0;
-	unsigned int depthMap = 0;
-	unsigned int depthMapFBO = 0;
-	glm::mat4 lightSpaceMatrix = glm::mat4(1.0f);
+	Shadowmap shadowmap;
 };
-
 
 void get_resolution(int& width, int& height);
 

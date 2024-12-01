@@ -6,6 +6,7 @@
 //#include "imgui/imgui_impl_glfw.h"
 //#include "imgui/imgui_impl_opengl3.h"
 #include "imGuiImplementation.h"
+#include "Shadowmap.h"
 
 int TOTAL_CAGANERS=5;
 
@@ -144,7 +145,9 @@ int main() {
 	/* Shadow maps */
 	Shader depthShader("depth.vert", "depth.frag");
 
-	InicialitzarShadowMap(llums);
+	for (int i = 0; i < llums.size(); i++) {
+		llums[i].shadowmap = Shadowmap(10, i);
+	}
 
 
 	//Instànciem una skybox
@@ -173,7 +176,12 @@ int main() {
 		// Since the cubemap will always have a depth of 1.0, we need that equal sign so it doesn't get discarded
 		glDepthFunc(GL_LEQUAL);
 		
-		RenderitzarShadowMap(llums, depthShader, models, modelMatrices);
+		glCullFace(GL_FRONT);
+		for (Llum& llum : llums)
+		{
+			llum.shadowmap.RenderitzarShadowMap(llum.lightPos, depthShader, models, modelMatrices);
+		}
+		glCullFace(GL_BACK);
 		glViewport(0, 0, width, height);
 		
 		// Inputs i actualització de la càmera

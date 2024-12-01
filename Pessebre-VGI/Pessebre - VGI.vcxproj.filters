@@ -87,7 +87,7 @@
     <ClCompile Include="imGui\imgui.cpp">
       <Filter>Source Files\imgui</Filter>
     </ClCompile>
-    <ClCompile Include="shadowmaps.cpp">
+    <ClCompile Include="Shadowmap.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -187,7 +187,7 @@
     <ClInclude Include="imGui\imconfig.h">
       <Filter>Header Files\imgui</Filter>
     </ClInclude>
-    <ClInclude Include="shadowmaps.h">
+    <ClInclude Include="Shadowmap.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
