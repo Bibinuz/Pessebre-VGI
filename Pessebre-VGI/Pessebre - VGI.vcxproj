@@ -162,6 +162,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="CubShadowMap.cpp" />
     <ClCompile Include="EBO.cpp" />
     <ClCompile Include="funcionsEscena.cpp" />
     <ClCompile Include="glad.c" />
@@ -200,6 +201,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="CubShadowMap.h" />
     <ClInclude Include="EBO.h" />
     <ClInclude Include="funcionsEscena.h" />
     <ClInclude Include="imGuiImplementation.h" />

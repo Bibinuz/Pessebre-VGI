@@ -90,6 +90,9 @@
     <ClCompile Include="Shadowmap.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="CubShadowMap.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Text Include="default.vert">
@@ -188,6 +191,9 @@
       <Filter>Header Files\imgui</Filter>
     </ClInclude>
     <ClInclude Include="Shadowmap.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CubShadowMap.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
