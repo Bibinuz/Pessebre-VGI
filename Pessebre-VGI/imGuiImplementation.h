@@ -12,6 +12,8 @@ enum MenuOption
 	Juga,
 	Manager,
 	StaticCamera,
+	Controls,
+	Credits,
 	Exit
 };
 
@@ -26,6 +28,10 @@ public:
 	void imGuiRender();
 	void imGuiMainMenu(int windowWidth, int windowHeight);
 	void imGuiShowFPS();
+	void imGuiStaticCamera(Camera*& c, Camera& estaticCam) {c = &estaticCam; };
+	void imGuiCamPosition(const Camera* camera);
+	void imGuiControls(int windowWidth, int windowHeight);
+	void imGuiCredits(int windowWidth, int windowHeight);
 
 	void RenderCenteredButton(const char* label, ImVec2 buttonSize);
 
@@ -109,14 +115,16 @@ inline void imGuiImplementation::imGuiMainMenu(int windowWidth,int windowHeight)
 	ImGui::TextWrapped("El Pesebre");
 	 
 	//------------Crear Botons
-	ImVec2 buttonSize(240, 80);
+	ImVec2 buttonSize(200, 60);
 	// Obtener el tamaño de la ventana de ImGui
 
 	centerX = (windowSize.x - buttonSize.x) / 2.0f;
-	float centerYTop = (windowSize.y - buttonSize.y)*2.0f / 10.0f;
-	float centerYCenter = (windowSize.y - buttonSize.y) * 4.0f / 10.0f;
-	float centerYBotom = (windowSize.y - buttonSize.y) * 6.0f / 10.0f;
-	float centerYExit = (windowSize.y - buttonSize.y) * 8.0f / 10.0f;
+	float centerYTop = (windowSize.y - buttonSize.y)*1.5f / 10.0f;
+	float centerYCenter = (windowSize.y - buttonSize.y) * 2.5f / 10.0f;
+	float centerYBotom = (windowSize.y - buttonSize.y) * 3.5f / 10.0f;
+	float centerYControls = (windowSize.y - buttonSize.y) * 4.5f / 10.0f;
+	float centerYCredits = (windowSize.y - buttonSize.y) * 5.5f / 10.0f;
+	float centerYExit = (windowSize.y - buttonSize.y) * 6.5f / 10.0f;
 
 
 
@@ -139,6 +147,18 @@ inline void imGuiImplementation::imGuiMainMenu(int windowWidth,int windowHeight)
 
 	if (ImGui::Button("Camera Estatica", buttonSize)) {
 		op = StaticCamera;
+	}
+	ImGui::SetCursorPosX(centerX);
+	ImGui::SetCursorPosY(centerYControls);
+
+	if (ImGui::Button("Controls", buttonSize)) {
+		op = Controls;
+	}
+	ImGui::SetCursorPosX(centerX);
+	ImGui::SetCursorPosY(centerYCredits);
+
+	if (ImGui::Button("Credits", buttonSize)) {
+		op = Credits;
 	}
 	ImGui::SetCursorPosX(centerX);
 	ImGui::SetCursorPosY(centerYExit);
@@ -176,6 +196,93 @@ inline void imGuiImplementation::imGuiShowFPS()
 	ImGui::Begin("FPS Counter", nullptr, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoInputs | ImGuiWindowFlags_AlwaysAutoResize);
 	ImGui::Text("Average FPS (last 1s): %.1f", fps);  // Mostrar el FPS promedio
 	ImGui::End();
+}
+
+inline void imGuiImplementation::imGuiCamPosition(const Camera* camera)
+{
+	// Inicia una nova finestra d'ImGui
+	ImGui::Begin("Camera Info");
+
+	// Mostra les coordenades de la càmera
+	ImGui::Text("Position:");
+	ImGui::Text("X: %.2f", camera->Position.x);
+	ImGui::Text("Y: %.2f", camera->Position.y);
+	ImGui::Text("Z: %.2f", camera->Position.z);
+
+	// Mostra la direcció (Orientation) de la càmera
+	ImGui::Text("Orientation:");
+	ImGui::Text("X: %.2f", camera->Orientation.x);
+	ImGui::Text("Y: %.2f", camera->Orientation.y);
+	ImGui::Text("Z: %.2f", camera->Orientation.z);
+
+	// Mostra el vector Up
+	ImGui::Text("Up:");
+	ImGui::Text("X: %.2f", camera->Up.x);
+	ImGui::Text("Y: %.2f", camera->Up.y);
+	ImGui::Text("Z: %.2f", camera->Up.z);
+
+	// Mostra si la càmera està activa o estàtica
+	ImGui::Text("Camera Active: %s", camera->cameraActive ? "Yes" : "No");
+	ImGui::Text("Static Camera: %s", camera->cameraEstatica ? "Yes" : "No");
+
+	// Mostra la velocitat actual de la càmera
+	ImGui::Text("Speed:");
+	ImGui::Text("Current Speed: %.2f", camera->speed);
+	ImGui::Text("Walk Speed: %.2f", camera->walkSpeed);
+	ImGui::Text("Run Speed: %.2f", camera->runSpeed);
+
+	// Finalitza la finestra
+	ImGui::End();
+
+}
+
+inline void imGuiImplementation::imGuiControls(int windowWidth, int windowHeight)
+{
+	ImGui::SetNextWindowPos(ImVec2(0, 0));
+	ImGui::SetNextWindowSize(ImVec2(windowWidth, windowHeight));
+
+	// Flags per impedir redimensionament, moure, etc.
+	ImGuiWindowFlags windowFlags = ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize |
+		ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse;
+
+	// Crear la finestra de ImGui
+	ImGui::Begin("Ventana a Pantalla Completa", nullptr, windowFlags);
+
+	//-------------------Títol
+	// Obtenir la mida de la finestra actual
+	ImVec2 windowSize = ImGui::GetWindowSize();
+
+	// Calcular la mida del text
+	ImVec2 textSize = ImGui::CalcTextSize("Controls");
+
+	// Calcular la posició X per centrar el text
+	float centerX = (windowSize.x - textSize.x) / 2.0f;
+	float centerYTitle = (windowSize.y - textSize.y) * 1.0f / 10.0f;
+
+	// Posicionar el cursor en X per centrar-lo i Y a la part superior
+	ImGui::SetCursorPosX(centerX);
+	ImGui::SetCursorPosY(centerYTitle); // Ajusta el valor de Y si és necessari
+	ImGui::TextWrapped("Controls");
+
+	//-------------------Controls del joc
+	// Afegir espai entre el títol i els controls
+	ImGui::Spacing();
+	ImGui::Spacing();
+
+	// Afegir el text dels controls del joc
+	ImGui::Text("Controls del joc:");
+	ImGui::BulletText("W, A, S, D: Moure's");
+	ImGui::BulletText("Click esquerre: Interactuar amb botons");
+
+	// Finalitzar la finestra
+	ImGui::End();
+
+	imGuiRender();
+}
+
+inline void imGuiImplementation::imGuiCredits(int windowWidth, int windowHeight)
+{
+
 }
 
 inline void imGuiImplementation::RenderCenteredButton(const char* label, ImVec2 buttonSize)

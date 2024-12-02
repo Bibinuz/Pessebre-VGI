@@ -61,7 +61,7 @@ GLFWwindow* inicialitzaFinestra() {
 	glViewport(0, 0, width, height);
 
 	//Activem el depth test perque les coses mes llunyanes no es dibuixin sobre les properes
-	glEnable(GL_DEPTH_TEST); glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	glEnable(GL_DEPTH_TEST); glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); //SI canvies fill per line es veu amb les linies
 	return window;
 }
 
@@ -75,6 +75,7 @@ int main() {
 	// Definim tres càmeres amb diferents posicions
 	Camera cameraEstatica(width, height, glm::vec3(0.0f, 6.0f, 0.0f)); // Càmera inicial
 	cameraEstatica.cameraActive = false;
+	cameraEstatica.cameraEstatica = true;
 	Camera camera2(width, height, glm::vec3(10.0f, 6.0f, 10.0f)); // Segona càmera
 	Camera camera3(width, height, glm::vec3(-10.0f, 6.0f, -10.0f)); // Tercera càmera
 	std::vector<Camera> Cameres;
@@ -217,12 +218,21 @@ int main() {
 			ImGui::End();
 			//Per mostrar fps
 			varImgui.imGuiShowFPS();
+			varImgui.imGuiCamPosition(camera);
 			break;
 
 		case StaticCamera:
 			// Codi per activar una càmera estàtica
-			varImgui.cameraSelector(Cameres, camera);
+			varImgui.imGuiStaticCamera(camera, cameraEstatica);
 			ImGui::Begin("Static Camera");
+			if (ImGui::Button("Tornar al menu")) {
+				varImgui.op = Menu;  // Torna al menú principal
+			}
+			ImGui::End();
+			break;
+		case Controls:
+			varImgui.imGuiControls(windowWidth, windowHeight);
+			ImGui::Begin("Controls");
 			if (ImGui::Button("Tornar al menu")) {
 				varImgui.op = Menu;  // Torna al menú principal
 			}
