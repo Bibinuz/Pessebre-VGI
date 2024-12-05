@@ -73,13 +73,14 @@ int main() {
 	get_resolution(width, height);
 
 	// Definim tres càmeres amb diferents posicions
-	Camera cameraEstatica(width, height, glm::vec3(0.0f, 6.0f, 0.0f)); // Càmera inicial
+	Camera cameraEstatica(width, height, glm::vec3(0.0f,4.0f, 18.00f)); // Càmera inicial
 	cameraEstatica.cameraActive = false;
 	cameraEstatica.cameraEstatica = true;
+	Camera camera1(width, height, glm::vec3(0.0f, 6.0f, 0.0f));
 	Camera camera2(width, height, glm::vec3(10.0f, 6.0f, 10.0f)); // Segona càmera
 	Camera camera3(width, height, glm::vec3(-10.0f, 6.0f, -10.0f)); // Tercera càmera
 	std::vector<Camera> Cameres;
-	Cameres.push_back(cameraEstatica); Cameres.push_back(camera2); Cameres.push_back(camera3);
+	Cameres.push_back(camera1); Cameres.push_back(camera2); Cameres.push_back(camera3);
 	Camera* camera = &cameraEstatica; // Inicialitzem la càmera activa
 
 
@@ -195,7 +196,7 @@ int main() {
 		case Juga:
 			//varImgui.cameraSelector(Cameres, camera);//------------SELECTOR DE CAMARES
 			ImGui::SetNextWindowPos(ImVec2(1650, 10));
-
+			camera = &Cameres[0];
 			ImGui::Begin("Juga",nullptr,ImGuiWindowFlags_NoResize|ImGuiWindowFlags_NoTitleBar|ImGuiWindowFlags_NoBackground|ImGuiWindowFlags_AlwaysAutoResize);
 			//ImGui::Text("%d/%d Caganers",caganers,TOTAL_CAGANERS); ImGui::SameLine();//----------------CAGANERS 
 			//if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {//__________________________Per a sortir al menu principal amb ESC
@@ -238,7 +239,14 @@ int main() {
 			}
 			ImGui::End();
 			break;
-
+		case Credits:
+			varImgui.imGuiCredits(windowWidth, windowHeight);
+			ImGui::Begin("Credits");
+			if (ImGui::Button("Tornar al menu")) {
+				varImgui.op = Menu;  // Torna al menú principal
+			}
+			ImGui::End();
+			break;
 		case Menu:
 			varImgui.imGuiMainMenu(windowWidth, windowHeight);
 			break;
@@ -264,7 +272,7 @@ int main() {
 		glViewport(0, 0, width, height);
 
 		// Imprimim el frame rate
-		std::cout << 1 / (glfwGetTime() - i) << std::endl;
+		//std::cout << 1 / (glfwGetTime() - i) << std::endl;
 	}
 
 	//Netegem tot el que hem utilitzat
