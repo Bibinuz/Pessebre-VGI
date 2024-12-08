@@ -73,6 +73,8 @@ int main() {
 	get_resolution(width, height);
 
 	// Definim tres càmeres amb diferents posicions
+	Camera camBackground(width, height, glm::vec3(0.0f, 4.0f, 18.00f));
+	camBackground.cameraActive = false;
 	Camera cameraEstatica(width, height, glm::vec3(0.0f,4.0f, 18.00f)); // Càmera inicial
 	cameraEstatica.cameraActive = false;
 	cameraEstatica.cameraEstatica = true;
@@ -161,7 +163,6 @@ int main() {
 	// Configuració d'ImGui
 	imGuiImplementation varImgui(window);
 
-
 	int windowWidth, windowHeight;
 	int caganers=0;
 	// Bucle principal
@@ -248,10 +249,12 @@ int main() {
 			ImGui::End();
 			break;
 		case Menu:
-			varImgui.imGuiMainMenu(windowWidth, windowHeight);
+			camera = &camBackground;
+			varImgui.imGuiMainMenu(windowWidth, windowHeight, camera);
 			break;
 		case Exit:
-			varImgui.imGuiMainMenu(windowWidth, windowHeight);
+			camera = &camBackground;
+			varImgui.imGuiMainMenu(windowWidth, windowHeight, camera);
 			break;
 
 			

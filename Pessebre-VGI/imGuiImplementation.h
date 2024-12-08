@@ -5,6 +5,11 @@
 #include <vector>
 #include "Camera.h"
 #include "Model.h"
+#ifndef M_PI
+#define M_PI 3.14159265358979323846
+#endif
+
+
 //#define STB_IMAGE_IMPLEMENTATION
 //#include "stb_image.h"
 
@@ -30,7 +35,7 @@ public:
 	void imGuiInitNewFrame();
 	void cameraSelector(std::vector<Camera>& Cameres, Camera*& c);
 	void imGuiRender();
-	void imGuiMainMenu(int windowWidth, int windowHeight);
+	void imGuiMainMenu(int windowWidth, int windowHeight, Camera*& c);
 	void imGuiShowFPS();
 	void imGuiStaticCamera(Camera*& c, Camera& estaticCam) {c = &estaticCam; };
 	void imGuiCamPosition(const Camera* camera);
@@ -38,12 +43,16 @@ public:
 	void imGuiCredits(int windowWidth, int windowHeight);
 	void loadBackgroundImage(const char* imagePath);
 	void RenderCenteredButton(const char* label, ImVec2 buttonSize);
+	void rotateCameraAroundScene(Camera& camera, float radius, float speed);
+	void renderScene(GLFWwindow* window);
 
 	MenuOption op = Menu;
+	//Camera cam;
 
 private:
 	ImGuiIO io;
 	unsigned int backgroundTextureID;
+	
 };
 
 imGuiImplementation::imGuiImplementation(GLFWwindow* window)
@@ -54,7 +63,7 @@ imGuiImplementation::imGuiImplementation(GLFWwindow* window)
 	ImGui::StyleColorsDark();
 	ImGui_ImplGlfw_InitForOpenGL(window, true);
 	ImGui_ImplOpenGL3_Init("#version 330");
-	loadBackgroundImage("fonsMenu.png");
+	//loadBackgroundImage("fonsMenu.png");
 }
 
 imGuiImplementation::~imGuiImplementation()
@@ -91,41 +100,43 @@ inline void imGuiImplementation::imGuiRender()
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
 
-inline void imGuiImplementation::imGuiMainMenu(int windowWidth, int windowHeight)
+inline void imGuiImplementation::imGuiMainMenu(int windowWidth, int windowHeight, Camera*& c)
 {
+	rotateCameraAroundScene(*c, 20.0f, 0.2f);
+
 	ImGui::SetNextWindowPos(ImVec2(0, 0));
 	ImGui::SetNextWindowSize(ImVec2(windowWidth, windowHeight));
 
 	// Flags para impedir redimensionamiento, mover, etc.
 	ImGuiWindowFlags windowFlags = ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize |
-		ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse;
+		ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoBackground;
+
 
 	// Crear la ventana de ImGui
 	ImGui::Begin("Ventana a Pantalla Completa", nullptr, windowFlags);
 
 	// ------------------- Título
 	ImVec2 windowSize = ImGui::GetWindowSize();
-	ImGui::Image((ImTextureID)(intptr_t)backgroundTextureID, windowSize);
-
+	//ImGui::Image((ImTextureID)(intptr_t)backgroundTextureID, windowSize);
+	ImGui::SetWindowFontScale(5);
 	ImVec2 textSize = ImGui::CalcTextSize("El Pesebre");
-
 	float centerX = (windowSize.x - textSize.x) / 2.0f;
 	float centerYTitle = (windowSize.y - textSize.y) * 1.0f / 10.0f;
 
 	ImGui::SetCursorPosX(centerX);
 	ImGui::SetCursorPosY(centerYTitle);
 	ImGui::TextWrapped("El Pesebre");
-
+	ImGui::SetWindowFontScale(2);
 	// ------------ Crear Botones
 	ImVec2 buttonSize(200, 60);
 
 	centerX = (windowSize.x - buttonSize.x) / 2.0f;
-	float centerYTop = (windowSize.y - buttonSize.y) * 1.5f / 10.0f;
-	float centerYCenter = (windowSize.y - buttonSize.y) * 2.5f / 10.0f;
-	float centerYBotom = (windowSize.y - buttonSize.y) * 3.5f / 10.0f;
-	float centerYControls = (windowSize.y - buttonSize.y) * 4.5f / 10.0f;
-	float centerYCredits = (windowSize.y - buttonSize.y) * 5.5f / 10.0f;
-	float centerYExit = (windowSize.y - buttonSize.y) * 6.5f / 10.0f;
+	float centerYTop = (windowSize.y - buttonSize.y) * 3.0f / 10.0f;
+	float centerYCenter = (windowSize.y - buttonSize.y) * 4.0f / 10.0f;
+	float centerYBotom = (windowSize.y - buttonSize.y) * 5.0f / 10.0f;
+	float centerYControls = (windowSize.y - buttonSize.y) * 6.0f / 10.0f;
+	float centerYCredits = (windowSize.y - buttonSize.y) * 7.0f / 10.0f;
+	float centerYExit = (windowSize.y - buttonSize.y) * 8.0f / 10.0f;
 
 	// Cambiar el color de los botones a azul oscuro
 	ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.0f, 0.1f, 0.3f, 1.0f));        // Color del botón
@@ -301,46 +312,58 @@ inline void imGuiImplementation::imGuiCredits(int windowWidth, int windowHeight)
 	// Crear la finestra de ImGui
 	ImGui::Begin("Ventana a Pantalla Completa", nullptr, windowFlags);
 
-	//-------------------Títol
-	// Obtenir la mida de la finestra actual
+	// Obtenir la mida de la finestra
 	ImVec2 windowSize = ImGui::GetWindowSize();
 
-	// Calcular la mida del text
-	ImVec2 textSize = ImGui::CalcTextSize("Controls");
+	// ------------------- Text "Credits" centrat
+	ImVec2 creditsTextSize = ImGui::CalcTextSize("Credits");
+	float centerX = (windowSize.x - creditsTextSize.x) / 2.0f; // Centrat horitzontalment
+	float centerY = (windowSize.y - creditsTextSize.y) / 3.0f; // Ajust vertical per situar-lo més amunt
+	ImGui::SetWindowFontScale(3);
+	ImGui::SetCursorPos(ImVec2(centerX, centerY));
+	ImGui::Text("Credits");
 
-	// Calcular la posició X per centrar el text
-	float centerX = (windowSize.x - textSize.x) / 2.0f;
-	float centerYTitle = (windowSize.y - textSize.y) * 1.0f / 10.0f;
+	// ------------------- Text "Desenvolupadors:" centrat sota "Credits"
+	ImVec2 devsTextSize = ImGui::CalcTextSize("Desenvolupadors:");
+	float devsCenterX = (windowSize.x - devsTextSize.x) / 2.0f;
+	float devsCenterY = centerY + creditsTextSize.y + 20; // Afegir espai sota "Credits"
 
-	// Posicionar el cursor en X per centrar-lo i Y a la part superior
-	ImGui::SetCursorPosX(centerX);
-	ImGui::SetCursorPosY(centerYTitle); // Ajusta el valor de Y si és necessari
-	ImGui::TextWrapped("Credits");
-
-	//-------------------Controls del joc
-	// Afegir espai entre el títol i els controls
-	ImGui::Spacing();
-	ImGui::Spacing();
-
-	// Afegir el text dels controls del joc
+	ImGui::SetCursorPos(ImVec2(devsCenterX - 60, devsCenterY));
 	ImGui::Text("Desenvolupadors:");
+
+	// ------------------- Llista de desenvolupadors
+	float listCenterX = windowSize.x / 2.0f - 100.0f; // Ajust horitzontal perquè quedi a prop del text
+	float listStartY = devsCenterY + devsTextSize.y + 10; // Espai sota "Desenvolupadors:"
+
+	ImGui::SetCursorPos(ImVec2(listCenterX, listStartY));
 	ImGui::BulletText("Gerard Purti");
+	ImGui::SetCursorPos(ImVec2(listCenterX, listStartY + 35));
 	ImGui::BulletText("Jordi Viera");
+	ImGui::SetCursorPos(ImVec2(listCenterX, listStartY + 70));
 	ImGui::BulletText("Biel Alavedra");
-	ImGui::BulletText("Lucas Aviño");
+	ImGui::SetCursorPos(ImVec2(listCenterX, listStartY + 105));
+	ImGui::BulletText("Lucas Avino");
+	ImGui::SetCursorPos(ImVec2(listCenterX, listStartY + 140));
 	ImGui::BulletText("Marcal Armengol");
+	ImGui::SetCursorPos(ImVec2(listCenterX, listStartY + 175));
 	ImGui::BulletText("Pere Llaurado");
 
-	ImVec2 buttonSize(200, 60);
-	if (ImGui::Button("Tornar al menu")) {
+	// ------------------- Botó centrat
+	ImGui::SetWindowFontScale(2);
+	ImVec2 buttonSize(300, 60);
+	float buttonCenterX = (windowSize.x - buttonSize.x) / 2.0f;
+	float buttonCenterY = listStartY + 240; // Ajust vertical sota la llista
+	ImGui::SetCursorPos(ImVec2(buttonCenterX, buttonCenterY));
+	if (ImGui::Button("Tornar al menu", buttonSize)) {
 		op = Menu;
 	}
-
+	
 	// Finalitzar la finestra
 	ImGui::End();
 
 	imGuiRender();
 }
+
 
 inline void imGuiImplementation::RenderCenteredButton(const char* label, ImVec2 buttonSize)
 {
@@ -421,6 +444,32 @@ void imGuiImplementation::loadBackgroundImage(const char* imagePath)
 
 	stbi_image_free(data);
 }
+
+
+void imGuiImplementation::rotateCameraAroundScene(Camera& camera, float radius, float speed)
+{
+	static float angle = 0.0f; // Angle inicial
+
+	// Calcula les noves coordenades de la càmera
+	float x = radius * cos(angle);
+	float z = radius * sin(angle);
+
+	// Estableix la nova posició de la càmera
+	camera.Position = glm::vec3(x, camera.Position.y, z);
+
+	// Actualitza l'orientació de la càmera per mirar cap al centre de l'escena (0,0,0)
+	camera.Orientation = glm::normalize(glm::vec3(-x, 0.0f, -z));
+
+	// Incrementa l'angle segons la velocitat especificada
+	angle += speed * ImGui::GetIO().DeltaTime;
+
+	// Assegura't que l'angle no excedeix els 360 graus
+	if (angle > 2 * M_PI) {
+		angle -= 2 * M_PI;
+	}
+}
+
+
 
 
 
