@@ -5,472 +5,508 @@
 #include <vector>
 #include "Camera.h"
 #include "Model.h"
+#include <iostream> // Añadido para manejo de entradas y salidas
+
+// Asegúrate de incluir el encabezado de tu cargador de OpenGL aquí si es necesario.
+// Por ejemplo, si usas GLAD, podrías tener:
+// #include <glad/glad.h>
+
 #ifndef M_PI
 #define M_PI 3.14159265358979323846
 #endif
 
-
-//#define STB_IMAGE_IMPLEMENTATION
-//#include "stb_image.h"
-
-
+// No definimos STB_IMAGE_IMPLEMENTATION aquí para evitar múltiples definiciones
+#include "stb_image.h" // Incluido sin definir STB_IMAGE_IMPLEMENTATION
 
 enum MenuOption
 {
-	Menu,
-	Juga,
-	Manager,
-	StaticCamera,
-	Controls,
-	Credits,
-	Exit
+    Menu,
+    Juga,
+    Manager,
+    StaticCamera,
+    Controls,
+    Credits,
+    Exit
 };
 
 class imGuiImplementation
 {
 public:
-	imGuiImplementation(GLFWwindow* window);
-	~imGuiImplementation();
+    imGuiImplementation(GLFWwindow* window);
+    ~imGuiImplementation();
 
-	void imGuiInitNewFrame();
-	void cameraSelector(std::vector<Camera>& Cameres, Camera*& c);
-	void imGuiRender();
-	void imGuiMainMenu(int windowWidth, int windowHeight, Camera*& c);
-	void imGuiShowFPS();
-	void imGuiStaticCamera(Camera*& c, Camera& estaticCam) {c = &estaticCam; };
-	void imGuiCamPosition(const Camera* camera);
-	void imGuiControls(int windowWidth, int windowHeight);
-	void imGuiCredits(int windowWidth, int windowHeight);
-	void loadBackgroundImage(const char* imagePath);
-	void RenderCenteredButton(const char* label, ImVec2 buttonSize);
-	void rotateCameraAroundScene(Camera& camera, float radius, float speed);
-	void renderScene(GLFWwindow* window);
+    void imGuiInitNewFrame();
+    void cameraSelector(std::vector<Camera>& Cameres, Camera*& c);
+    void imGuiRender();
+    void imGuiMainMenu(int windowWidth, int windowHeight, Camera*& c);
+    void imGuiShowFPS();
+    void imGuiStaticCamera(Camera*& c, Camera& estaticCam) { c = &estaticCam; };
+    void imGuiCamPosition(const Camera* camera);
+    void imGuiControls(int windowWidth, int windowHeight);
+    void imGuiCredits(int windowWidth, int windowHeight);
+    void loadBackgroundImage(const char* imagePath);
+    void RenderCenteredButton(const char* label, ImVec2 buttonSize);
+    void rotateCameraAroundScene(Camera& camera, float radius, float speed);
+    void renderScene(GLFWwindow* window);
 
-	MenuOption op = Menu;
-	//Camera cam;
+    MenuOption op = Menu;
+    //Camera cam;
 
 private:
-	ImGuiIO io;
-	unsigned int backgroundTextureID;
-	
+    ImGuiIO io;
+    unsigned int backgroundTextureID;
+    int backgroundWidth;  // Ancho de la imagen de fondo
+    int backgroundHeight; // Alto de la imagen de fondo
+
+    // Nuevos identificadores de textura para los botones
+    unsigned int buttonJugarTextureID;
+    unsigned int buttonManagerTextureID;
+    unsigned int buttonStaticCameraTextureID;
+    unsigned int buttonControlsTextureID;
+    unsigned int buttonCreditsTextureID;
+    unsigned int buttonExitTextureID;
 };
 
 imGuiImplementation::imGuiImplementation(GLFWwindow* window)
+    : backgroundTextureID(0), backgroundWidth(0), backgroundHeight(0) // Inicialización de variables
 {
-	IMGUI_CHECKVERSION();
-	ImGui::CreateContext();
-	io = ImGui::GetIO(); (void)io;
-	ImGui::StyleColorsDark();
-	ImGui_ImplGlfw_InitForOpenGL(window, true);
-	ImGui_ImplOpenGL3_Init("#version 330");
-	//loadBackgroundImage("fonsMenu.png");
+    IMGUI_CHECKVERSION();
+    ImGui::CreateContext();
+    io = ImGui::GetIO(); (void)io;
+    ImGui::StyleColorsDark();
+    ImGui_ImplGlfw_InitForOpenGL(window, true);
+    ImGui_ImplOpenGL3_Init("#version 330");
+
+    // Cargar la imagen de fondo (título) desde la ruta especificada
+    loadBackgroundImage("C:/Users/gfxgp/Desktop/Pessebre-VGI (3)/Pessebre-VGI/Pessebre-VGI/Menu/pessebre.png");
 }
 
 imGuiImplementation::~imGuiImplementation()
 {
+    // Eliminar la textura si se cargó correctamente
+    if (backgroundTextureID != 0) {
+        glDeleteTextures(1, &backgroundTextureID);
+    }
+
+    // Limpiar ImGui
+    //dfjgwhh
+    ImGui_ImplOpenGL3_Shutdown();
+    ImGui_ImplGlfw_Shutdown();
+    ImGui::DestroyContext();
 }
 
 inline void imGuiImplementation::imGuiInitNewFrame()
 {
-	// Iniciem el nou frame d'ImGui
-	ImGui_ImplOpenGL3_NewFrame();
-	ImGui_ImplGlfw_NewFrame();
-	ImGui::NewFrame();
-
+    // Iniciar el nuevo frame de ImGui
+    ImGui_ImplOpenGL3_NewFrame();
+    ImGui_ImplGlfw_NewFrame();
+    ImGui::NewFrame();
 }
 
 inline void imGuiImplementation::cameraSelector(std::vector<Camera>& Cameres, Camera*& c)
 {
-	ImGui::Begin("Camera Selector");
-	if (ImGui::Button("Camera 1")) {
-		c = &Cameres[0];
-	}
-	if (ImGui::Button("Camera 2")) {
-		c = &Cameres[1];
-	}
-	if (ImGui::Button("Camera 3")) {
-		c = &Cameres[2];
-	}
-	ImGui::End();
+    ImGui::Begin("Camera Selector");
+    if (ImGui::Button("Camera 1")) {
+        c = &Cameres[0];
+    }
+    if (ImGui::Button("Camera 2")) {
+        c = &Cameres[1];
+    }
+    if (ImGui::Button("Camera 3")) {
+        c = &Cameres[2];
+    }
+    ImGui::End();
 }
 
 inline void imGuiImplementation::imGuiRender()
 {
-	ImGui::Render();
-	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+    ImGui::Render();
+    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
 
 inline void imGuiImplementation::imGuiMainMenu(int windowWidth, int windowHeight, Camera*& c)
 {
-	rotateCameraAroundScene(*c, 20.0f, 0.2f);
+    rotateCameraAroundScene(*c, 20.0f, 0.2f);
 
-	ImGui::SetNextWindowPos(ImVec2(0, 0));
-	ImGui::SetNextWindowSize(ImVec2(windowWidth, windowHeight));
+    ImGui::SetNextWindowPos(ImVec2(0, 0));
+    ImGui::SetNextWindowSize(ImVec2(windowWidth, windowHeight));
 
-	// Flags para impedir redimensionamiento, mover, etc.
-	ImGuiWindowFlags windowFlags = ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize |
-		ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoBackground;
+    // Flags para impedir redimensionamiento, mover, etc.
+    ImGuiWindowFlags windowFlags = ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize |
+        ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoBackground;
 
+    // Crear la ventana de ImGui
+    ImGui::Begin("Ventana a Pantalla Completa", nullptr, windowFlags);
 
-	// Crear la ventana de ImGui
-	ImGui::Begin("Ventana a Pantalla Completa", nullptr, windowFlags);
+    // ------------------- Título como imagen
+    if (backgroundTextureID != 0) {
+        ImVec2 windowSize = ImGui::GetWindowSize();
 
-	// ------------------- Título
-	ImVec2 windowSize = ImGui::GetWindowSize();
-	//ImGui::Image((ImTextureID)(intptr_t)backgroundTextureID, windowSize);
-	ImGui::SetWindowFontScale(5);
-	ImVec2 textSize = ImGui::CalcTextSize("El Pesebre");
-	float centerX = (windowSize.x - textSize.x) / 2.0f;
-	float centerYTitle = (windowSize.y - textSize.y) * 1.0f / 10.0f;
+        // Definir el tamaño de la imagen como el 30% del ancho de la ventana
+        float imageWidth = windowSize.x * 0.3f; // Ajusta el factor de escala según tus necesidades
+        float aspectRatio = (backgroundHeight > 0) ? static_cast<float>(backgroundHeight) / static_cast<float>(backgroundWidth) : 1.0f;
+        float imageHeight = imageWidth * aspectRatio;
 
-	ImGui::SetCursorPosX(centerX);
-	ImGui::SetCursorPosY(centerYTitle);
-	ImGui::TextWrapped("El Pesebre");
-	ImGui::SetWindowFontScale(2);
-	// ------------ Crear Botones
-	ImVec2 buttonSize(200, 60);
+        // Definir el tamaño de la imagen con el escalado
+        ImVec2 imageSize(imageWidth, imageHeight);
 
-	centerX = (windowSize.x - buttonSize.x) / 2.0f;
-	float centerYTop = (windowSize.y - buttonSize.y) * 3.0f / 10.0f;
-	float centerYCenter = (windowSize.y - buttonSize.y) * 4.0f / 10.0f;
-	float centerYBotom = (windowSize.y - buttonSize.y) * 5.0f / 10.0f;
-	float centerYControls = (windowSize.y - buttonSize.y) * 6.0f / 10.0f;
-	float centerYCredits = (windowSize.y - buttonSize.y) * 7.0f / 10.0f;
-	float centerYExit = (windowSize.y - buttonSize.y) * 8.0f / 10.0f;
+        // Calcular la posición para centrar la imagen
+        float centerX = (windowSize.x - imageSize.x) / 2.0f;
+        float centerYTitle = (windowSize.y - imageSize.y) * 1.0f / 10.0f;
 
-	// Cambiar el color de los botones a azul oscuro
-	ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.0f, 0.1f, 0.3f, 1.0f));        // Color del botón
-	ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.0f, 0.2f, 0.5f, 1.0f)); // Color al pasar el ratón por encima
-	ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.0f, 0.3f, 0.6f, 1.0f));  // Color al hacer clic
+        // Establecer la posición del cursor para la imagen
+        ImGui::SetCursorPosX(centerX);
+        ImGui::SetCursorPosY(centerYTitle);
 
-	// Crear los botones con el color aplicado
-	ImGui::SetCursorPosX(centerX);
-	ImGui::SetCursorPosY(centerYTop);
-	if (ImGui::Button("Jugar", buttonSize)) {
-		op = Juga;
-	}
+        // Dibujar la imagen escalada
+        // Asegúrate de que el tipo de ImTextureID sea compatible. Si sigue habiendo errores, considera redefinir ImTextureID.
+        ImGui::Image(static_cast<ImTextureID>(backgroundTextureID), imageSize);
+    }
 
-	ImGui::SetCursorPosX(centerX);
-	ImGui::SetCursorPosY(centerYCenter);
-	if (ImGui::Button("Manager", buttonSize)) {
-		op = Manager;
-	}
+    // ------------ Crear Botones
+    ImVec2 buttonSize(200, 60);
 
-	ImGui::SetCursorPosX(centerX);
-	ImGui::SetCursorPosY(centerYBotom);
-	if (ImGui::Button("Camera Estatica", buttonSize)) {
-		op = StaticCamera;
-	}
+    ImVec2 windowSize = ImGui::GetWindowSize();
+    float centerX = (windowSize.x - buttonSize.x) / 2.0f;
+    float centerYTop = (windowSize.y - buttonSize.y) * 3.0f / 10.0f;
+    float centerYCenter = (windowSize.y - buttonSize.y) * 4.0f / 10.0f;
+    float centerYBotom = (windowSize.y - buttonSize.y) * 5.0f / 10.0f;
+    float centerYControls = (windowSize.y - buttonSize.y) * 6.0f / 10.0f;
+    float centerYCredits = (windowSize.y - buttonSize.y) * 7.0f / 10.0f;
+    float centerYExit = (windowSize.y - buttonSize.y) * 8.0f / 10.0f;
 
-	ImGui::SetCursorPosX(centerX);
-	ImGui::SetCursorPosY(centerYControls);
-	if (ImGui::Button("Controls", buttonSize)) {
-		op = Controls;
-	}
+    // Cambiar el color de los botones a azul oscuro
+    ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.0f, 0.1f, 0.3f, 1.0f));        // Color del botón
+    ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.0f, 0.2f, 0.5f, 1.0f)); // Color al pasar el ratón por encima
+    ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.0f, 0.3f, 0.6f, 1.0f));  // Color al hacer clic
 
-	ImGui::SetCursorPosX(centerX);
-	ImGui::SetCursorPosY(centerYCredits);
-	if (ImGui::Button("Credits", buttonSize)) {
-		op = Credits;
-	}
+    // Crear los botones con el color aplicado
+    ImGui::SetCursorPosX(centerX);
+    ImGui::SetCursorPosY(centerYTop);
+    if (ImGui::Button("Jugar", buttonSize)) {
+        op = Juga;
+    }
 
-	ImGui::SetCursorPosX(centerX);
-	ImGui::SetCursorPosY(centerYExit);
-	if (ImGui::Button("Exit", buttonSize)) {
-		op = Exit;
-	}
+    ImGui::SetCursorPosX(centerX);
+    ImGui::SetCursorPosY(centerYCenter);
+    if (ImGui::Button("Manager", buttonSize)) {
+        op = Manager;
+    }
 
-	// Restaurar el color original
-	ImGui::PopStyleColor(3);
+    ImGui::SetCursorPosX(centerX);
+    ImGui::SetCursorPosY(centerYBotom);
+    if (ImGui::Button("Camera Estatica", buttonSize)) {
+        op = StaticCamera;
+    }
 
-	ImGui::End();
-	imGuiRender();
+    ImGui::SetCursorPosX(centerX);
+    ImGui::SetCursorPosY(centerYControls);
+    if (ImGui::Button("Controls", buttonSize)) {
+        op = Controls;
+    }
+
+    ImGui::SetCursorPosX(centerX);
+    ImGui::SetCursorPosY(centerYCredits);
+    if (ImGui::Button("Credits", buttonSize)) {
+        op = Credits;
+    }
+
+    ImGui::SetCursorPosX(centerX);
+    ImGui::SetCursorPosY(centerYExit);
+    if (ImGui::Button("Exit", buttonSize)) {
+        op = Exit;
+    }
+
+    // Restaurar el color original
+    ImGui::PopStyleColor(3);
+
+    ImGui::End();
+    imGuiRender();
 }
 
 
 inline void imGuiImplementation::imGuiShowFPS()
 {
-	static float timeElapsed = 0.0f;  // Tiempo acumulado
-	static int frameCount = 0;  // Contador de frames
-	static float fps = 0.0f;  // FPS promedio
+    static float timeElapsed = 0.0f;  // Tiempo acumulado
+    static int frameCount = 0;  // Contador de frames
+    static float fps = 0.0f;  // FPS promedio
 
-	// Acumulamos el tiempo de cada frame
-	timeElapsed += ImGui::GetIO().DeltaTime;  // DeltaTime es el tiempo entre frames
+    // Acumulamos el tiempo de cada frame
+    timeElapsed += ImGui::GetIO().DeltaTime;  // DeltaTime es el tiempo entre frames
 
-	// Incrementamos el contador de frames
-	frameCount++;
+    // Incrementamos el contador de frames
+    frameCount++;
 
-	// Cada 5 segundos, calculamos la media de los FPS
-	if (timeElapsed >= 1.0f) {
-		fps = frameCount / timeElapsed;  // FPS = frames / tiempo
-		timeElapsed = 0.0f;  // Reiniciamos el tiempo
-		frameCount = 0;  // Reiniciamos el contador de frames
-	}
+    // Cada 1 segundo, calculamos la media de los FPS
+    if (timeElapsed >= 1.0f) {
+        fps = frameCount / timeElapsed;  // FPS = frames / tiempo
+        timeElapsed = 0.0f;  // Reiniciamos el tiempo
+        frameCount = 0;  // Reiniciamos el contador de frames
+    }
 
-	// Mostrar la ventana de FPS
-	ImGui::SetNextWindowPos(ImVec2(10, 10));  // Posicionar la ventana en la esquina superior izquierda
-	ImGui::Begin("FPS Counter", nullptr, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoInputs | ImGuiWindowFlags_AlwaysAutoResize);
-	ImGui::Text("Average FPS (last 1s): %.1f", fps);  // Mostrar el FPS promedio
-	ImGui::End();
+    // Mostrar la ventana de FPS
+    ImGui::SetNextWindowPos(ImVec2(10, 10));  // Posicionar la ventana en la esquina superior izquierda
+    ImGui::Begin("FPS Counter", nullptr, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoInputs | ImGuiWindowFlags_AlwaysAutoResize);
+    ImGui::Text("Average FPS (last 1s): %.1f", fps);  // Mostrar el FPS promedio
+    ImGui::End();
 }
 
 inline void imGuiImplementation::imGuiCamPosition(const Camera* camera)
 {
-	// Inicia una nova finestra d'ImGui
-	ImGui::Begin("Camera Info");
+    // Iniciar una nueva ventana de ImGui
+    ImGui::Begin("Camera Info");
 
-	// Mostra les coordenades de la càmera
-	ImGui::Text("Position:");
-	ImGui::Text("X: %.2f", camera->Position.x);
-	ImGui::Text("Y: %.2f", camera->Position.y);
-	ImGui::Text("Z: %.2f", camera->Position.z);
+    // Mostrar las coordenadas de la cámara
+    ImGui::Text("Position:");
+    ImGui::Text("X: %.2f", camera->Position.x);
+    ImGui::Text("Y: %.2f", camera->Position.y);
+    ImGui::Text("Z: %.2f", camera->Position.z);
 
-	// Mostra la direcció (Orientation) de la càmera
-	ImGui::Text("Orientation:");
-	ImGui::Text("X: %.2f", camera->Orientation.x);
-	ImGui::Text("Y: %.2f", camera->Orientation.y);
-	ImGui::Text("Z: %.2f", camera->Orientation.z);
+    // Mostrar la dirección (Orientation) de la cámara
+    ImGui::Text("Orientation:");
+    ImGui::Text("X: %.2f", camera->Orientation.x);
+    ImGui::Text("Y: %.2f", camera->Orientation.y);
+    ImGui::Text("Z: %.2f", camera->Orientation.z);
 
-	// Mostra el vector Up
-	ImGui::Text("Up:");
-	ImGui::Text("X: %.2f", camera->Up.x);
-	ImGui::Text("Y: %.2f", camera->Up.y);
-	ImGui::Text("Z: %.2f", camera->Up.z);
+    // Mostrar el vector Up
+    ImGui::Text("Up:");
+    ImGui::Text("X: %.2f", camera->Up.x);
+    ImGui::Text("Y: %.2f", camera->Up.y);
+    ImGui::Text("Z: %.2f", camera->Up.z);
 
-	// Mostra si la càmera està activa o estàtica
-	ImGui::Text("Camera Active: %s", camera->cameraActive ? "Yes" : "No");
-	ImGui::Text("Static Camera: %s", camera->cameraEstatica ? "Yes" : "No");
+    // Mostrar si la cámara está activa o estática
+    ImGui::Text("Camera Active: %s", camera->cameraActive ? "Yes" : "No");
+    ImGui::Text("Static Camera: %s", camera->cameraEstatica ? "Yes" : "No");
 
-	// Mostra la velocitat actual de la càmera
-	ImGui::Text("Speed:");
-	ImGui::Text("Current Speed: %.2f", camera->speed);
-	ImGui::Text("Walk Speed: %.2f", camera->walkSpeed);
-	ImGui::Text("Run Speed: %.2f", camera->runSpeed);
+    // Mostrar la velocidad actual de la cámara
+    ImGui::Text("Speed:");
+    ImGui::Text("Current Speed: %.2f", camera->speed);
+    ImGui::Text("Walk Speed: %.2f", camera->walkSpeed);
+    ImGui::Text("Run Speed: %.2f", camera->runSpeed);
 
-	// Finalitza la finestra
-	ImGui::End();
-
+    // Finalizar la ventana
+    ImGui::End();
 }
 
 inline void imGuiImplementation::imGuiControls(int windowWidth, int windowHeight)
 {
-	ImGui::SetNextWindowPos(ImVec2(0, 0));
-	ImGui::SetNextWindowSize(ImVec2(windowWidth, windowHeight));
+    ImGui::SetNextWindowPos(ImVec2(0, 0));
+    ImGui::SetNextWindowSize(ImVec2(windowWidth, windowHeight));
 
-	// Flags per impedir redimensionament, moure, etc.
-	ImGuiWindowFlags windowFlags = ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize |
-		ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse;
+    // Flags para impedir redimensionamiento, mover, etc.
+    ImGuiWindowFlags windowFlags = ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize |
+        ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse;
 
-	// Crear la finestra de ImGui
-	ImGui::Begin("Ventana a Pantalla Completa", nullptr, windowFlags);
+    // Crear la ventana de ImGui
+    ImGui::Begin("Ventana a Pantalla Completa", nullptr, windowFlags);
 
-	//-------------------Títol
-	// Obtenir la mida de la finestra actual
-	ImVec2 windowSize = ImGui::GetWindowSize();
+    //-------------------Títol
+    // Obtener el tamaño de la ventana actual
+    ImVec2 windowSize = ImGui::GetWindowSize();
 
-	// Calcular la mida del text
-	ImVec2 textSize = ImGui::CalcTextSize("Controls");
+    // Calcular el tamaño del texto
+    ImVec2 textSize = ImGui::CalcTextSize("Controls");
 
-	// Calcular la posició X per centrar el text
-	float centerX = (windowSize.x - textSize.x) / 2.0f;
-	float centerYTitle = (windowSize.y - textSize.y) * 1.0f / 10.0f;
+    // Calcular la posición X para centrar el texto
+    float centerX = (windowSize.x - textSize.x) / 2.0f;
+    float centerYTitle = (windowSize.y - textSize.y) * 1.0f / 10.0f;
 
-	// Posicionar el cursor en X per centrar-lo i Y a la part superior
-	ImGui::SetCursorPosX(centerX);
-	ImGui::SetCursorPosY(centerYTitle); // Ajusta el valor de Y si és necessari
-	ImGui::TextWrapped("Controls");
+    // Posicionar el cursor en X para centrarlo y Y en la parte superior
+    ImGui::SetCursorPosX(centerX);
+    ImGui::SetCursorPosY(centerYTitle); // Ajusta el valor de Y si es necesario
+    ImGui::TextWrapped("Controls");
 
-	//-------------------Controls del joc
-	// Afegir espai entre el títol i els controls
-	ImGui::Spacing();
-	ImGui::Spacing();
+    //-------------------Controls del juego
+    // Añadir espacio entre el título y los controles
+    ImGui::Spacing();
+    ImGui::Spacing();
 
-	// Afegir el text dels controls del joc
-	ImGui::Text("Controls del joc:");
-	ImGui::BulletText("W, A, S, D: Moure's");
-	ImGui::BulletText("Click esquerre: Interactuar amb botons");
-	ImVec2 buttonSize(200, 60);
-	if (ImGui::Button("Tornar al menu")) {
-		op = Menu;
-	}
+    // Añadir el texto de los controles del juego
+    ImGui::Text("Controls del juego:");
+    ImGui::BulletText("W, A, S, D: Moverse");
+    ImGui::BulletText("Click izquierdo: Interactuar con botones");
+    ImVec2 buttonSize(200, 60);
+    if (ImGui::Button("Tornar al menu")) {
+        op = Menu;
+    }
 
-	// Finalitzar la finestra
-	ImGui::End();
+    // Finalizar la ventana
+    ImGui::End();
 
-	imGuiRender();
+    imGuiRender();
 }
 
 inline void imGuiImplementation::imGuiCredits(int windowWidth, int windowHeight)
 {
-	ImGui::SetNextWindowPos(ImVec2(0, 0));
-	ImGui::SetNextWindowSize(ImVec2(windowWidth, windowHeight));
+    ImGui::SetNextWindowPos(ImVec2(0, 0));
+    ImGui::SetNextWindowSize(ImVec2(windowWidth, windowHeight));
 
-	// Flags per impedir redimensionament, moure, etc.
-	ImGuiWindowFlags windowFlags = ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize |
-		ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse;
+    // Flags para impedir redimensionamiento, mover, etc.
+    ImGuiWindowFlags windowFlags = ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize |
+        ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse;
 
-	// Crear la finestra de ImGui
-	ImGui::Begin("Ventana a Pantalla Completa", nullptr, windowFlags);
+    // Crear la ventana de ImGui
+    ImGui::Begin("Ventana a Pantalla Completa", nullptr, windowFlags);
 
-	// Obtenir la mida de la finestra
-	ImVec2 windowSize = ImGui::GetWindowSize();
+    // Obtener el tamaño de la ventana
+    ImVec2 windowSize = ImGui::GetWindowSize();
 
-	// ------------------- Text "Credits" centrat
-	ImVec2 creditsTextSize = ImGui::CalcTextSize("Credits");
-	float centerX = (windowSize.x - creditsTextSize.x) / 2.0f; // Centrat horitzontalment
-	float centerY = (windowSize.y - creditsTextSize.y) / 3.0f; // Ajust vertical per situar-lo més amunt
-	ImGui::SetWindowFontScale(3);
-	ImGui::SetCursorPos(ImVec2(centerX, centerY));
-	ImGui::Text("Credits");
+    // ------------------- Texto "Credits" centrado
+    ImVec2 creditsTextSize = ImGui::CalcTextSize("Credits");
+    float centerX = (windowSize.x - creditsTextSize.x) / 2.0f; // Centrado horizontalmente
+    float centerY = (windowSize.y - creditsTextSize.y) / 3.0f; // Ajuste vertical para situarlo más arriba
+    ImGui::SetWindowFontScale(3);
+    ImGui::SetCursorPos(ImVec2(centerX, centerY));
+    ImGui::Text("Credits");
 
-	// ------------------- Text "Desenvolupadors:" centrat sota "Credits"
-	ImVec2 devsTextSize = ImGui::CalcTextSize("Desenvolupadors:");
-	float devsCenterX = (windowSize.x - devsTextSize.x) / 2.0f;
-	float devsCenterY = centerY + creditsTextSize.y + 20; // Afegir espai sota "Credits"
+    // ------------------- Texto "Desenvolupadors:" centrado debajo de "Credits"
+    ImVec2 devsTextSize = ImGui::CalcTextSize("Desenvolupadors:");
+    float devsCenterX = (windowSize.x - devsTextSize.x) / 2.0f;
+    float devsCenterY = centerY + creditsTextSize.y + 20; // Añadir espacio debajo de "Credits"
 
-	ImGui::SetCursorPos(ImVec2(devsCenterX - 60, devsCenterY));
-	ImGui::Text("Desenvolupadors:");
+    ImGui::SetCursorPos(ImVec2(devsCenterX - 60, devsCenterY));
+    ImGui::Text("Desenvolupadors:");
 
-	// ------------------- Llista de desenvolupadors
-	float listCenterX = windowSize.x / 2.0f - 100.0f; // Ajust horitzontal perquè quedi a prop del text
-	float listStartY = devsCenterY + devsTextSize.y + 10; // Espai sota "Desenvolupadors:"
+    // ------------------- Lista de desarrolladores
+    float listCenterX = windowSize.x / 2.0f - 100.0f; // Ajuste horizontal para que quede cerca del texto
+    float listStartY = devsCenterY + devsTextSize.y + 10; // Espacio debajo de "Desenvolupadors:"
 
-	ImGui::SetCursorPos(ImVec2(listCenterX, listStartY));
-	ImGui::BulletText("Gerard Purti");
-	ImGui::SetCursorPos(ImVec2(listCenterX, listStartY + 35));
-	ImGui::BulletText("Jordi Viera");
-	ImGui::SetCursorPos(ImVec2(listCenterX, listStartY + 70));
-	ImGui::BulletText("Biel Alavedra");
-	ImGui::SetCursorPos(ImVec2(listCenterX, listStartY + 105));
-	ImGui::BulletText("Lucas Avino");
-	ImGui::SetCursorPos(ImVec2(listCenterX, listStartY + 140));
-	ImGui::BulletText("Marcal Armengol");
-	ImGui::SetCursorPos(ImVec2(listCenterX, listStartY + 175));
-	ImGui::BulletText("Pere Llaurado");
+    ImGui::SetCursorPos(ImVec2(listCenterX, listStartY));
+    ImGui::BulletText("Gerard Purti");
+    ImGui::SetCursorPos(ImVec2(listCenterX, listStartY + 35));
+    ImGui::BulletText("Jordi Viera");
+    ImGui::SetCursorPos(ImVec2(listCenterX, listStartY + 70));
+    ImGui::BulletText("Biel Alavedra");
+    ImGui::SetCursorPos(ImVec2(listCenterX, listStartY + 105));
+    ImGui::BulletText("Lucas Avino");
+    ImGui::SetCursorPos(ImVec2(listCenterX, listStartY + 140));
+    ImGui::BulletText("Marcal Armengol");
+    ImGui::SetCursorPos(ImVec2(listCenterX, listStartY + 175));
+    ImGui::BulletText("Pere Llaurado");
 
-	// ------------------- Botó centrat
-	ImGui::SetWindowFontScale(2);
-	ImVec2 buttonSize(300, 60);
-	float buttonCenterX = (windowSize.x - buttonSize.x) / 2.0f;
-	float buttonCenterY = listStartY + 240; // Ajust vertical sota la llista
-	ImGui::SetCursorPos(ImVec2(buttonCenterX, buttonCenterY));
-	if (ImGui::Button("Tornar al menu", buttonSize)) {
-		op = Menu;
-	}
-	
-	// Finalitzar la finestra
-	ImGui::End();
+    // ------------------- Botón centrado
+    ImGui::SetWindowFontScale(2);
+    ImVec2 buttonSizeCredits(300, 60);
+    float buttonCenterX = (windowSize.x - buttonSizeCredits.x) / 2.0f;
+    float buttonCenterY = listStartY + 240; // Ajuste vertical debajo de la lista
+    ImGui::SetCursorPos(ImVec2(buttonCenterX, buttonCenterY));
+    if (ImGui::Button("Tornar al menu", buttonSizeCredits)) {
+        op = Menu;
+    }
 
-	imGuiRender();
+    // Finalizar la ventana
+    ImGui::End();
+
+    imGuiRender();
 }
-
 
 inline void imGuiImplementation::RenderCenteredButton(const char* label, ImVec2 buttonSize)
 {
-	// Obtener el tamaño de la ventana de ImGui
-	ImVec2 windowSize = ImGui::GetWindowSize();
+    // Obtener el tamaño de la ventana de ImGui
+    ImVec2 windowSize = ImGui::GetWindowSize();
 
-	// Calcular la posición X para centrar el botón horizontalmente
-	float centerX = (windowSize.x - buttonSize.x) / 2.0f;
+    // Calcular la posición X para centrar el botón horizontalmente
+    float centerX = (windowSize.x - buttonSize.x) / 2.0f;
 
-	// Establecer la posición del cursor en X para centrar el botón
-	ImGui::SetCursorPosX(centerX);
+    // Establecer la posición del cursor en X para centrar el botón
+    ImGui::SetCursorPosX(centerX);
 
-	// Dibujar el botón centrado
-	ImGui::Button(label, buttonSize);
+    // Dibujar el botón centrado
+    ImGui::Button(label, buttonSize);
 }
-
 
 void imGuiImplementation::loadBackgroundImage(const char* imagePath)
 {
-	glGenTextures(1, &backgroundTextureID);
-	glBindTexture(GL_TEXTURE_2D, backgroundTextureID);
+    glGenTextures(1, &backgroundTextureID);
+    glBindTexture(GL_TEXTURE_2D, backgroundTextureID);
 
-	int width, height, nrChannels;
-	unsigned char* data = stbi_load(imagePath, &width, &height, &nrChannels, 0);
-	if (!data) {
-		std::cerr << "Error: No s'ha pogut carregar la imatge: " << imagePath << std::endl;
-		return;
-	}
+    int width, height, nrChannels;
+    unsigned char* data = stbi_load(imagePath, &width, &height, &nrChannels, 0);
+    if (!data) {
+        std::cerr << "Error: No se pudo cargar la imagen: " << imagePath << std::endl;
+        return;
+    }
 
-	std::cout << "Imatge carregada correctament: " << imagePath << std::endl;
-	std::cout << "Dimensions: " << width << "x" << height << ", Canals: " << nrChannels << std::endl;
+    std::cout << "Imagen cargada correctamente: " << imagePath << std::endl;
+    std::cout << "Dimensiones: " << width << "x" << height << ", Canales: " << nrChannels << std::endl;
 
-	if (width <= 0 || height <= 0) {
-		std::cerr << "Error: Dimensions incorrectes per a la textura (width=" << width << ", height=" << height << ")." << std::endl;
-		stbi_image_free(data); // Allibera la memòria
-		return;
-	}
+    if (width <= 0 || height <= 0) {
+        std::cerr << "Error: Dimensiones incorrectas para la textura (width=" << width << ", height=" << height << ")." << std::endl;
+        stbi_image_free(data); // Liberar la memoria
+        return;
+    }
 
-	int maxTextureSize;
-	glGetIntegerv(GL_MAX_TEXTURE_SIZE, &maxTextureSize);
+    int maxTextureSize;
+    glGetIntegerv(GL_MAX_TEXTURE_SIZE, &maxTextureSize);
 
-	if (width > maxTextureSize || height > maxTextureSize) {
-		std::cerr << "Error: La mida de la textura excedeix el límit de la GPU (màxim=" << maxTextureSize << ")." << std::endl;
-		stbi_image_free(data); // Allibera la memòria
-		return;
-	}
+    if (width > maxTextureSize || height > maxTextureSize) {
+        std::cerr << "Error: El tamaño de la textura excede el límite de la GPU (máximo=" << maxTextureSize << ")." << std::endl;
+        stbi_image_free(data); // Liberar la memoria
+        return;
+    }
 
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-	if (nrChannels == 3) {
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-	}
-	else if (nrChannels == 4) {
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
-	}
-	else {
-		std::cerr << "Error: Nombre de canals no suportat (" << nrChannels << ")." << std::endl;
-		stbi_image_free(data); // Allibera la memòria
-		return;
-	}
+    // Guardar las dimensiones de la imagen
+    backgroundWidth = width;
+    backgroundHeight = height;
 
-	GLenum error = glGetError();
-	if (error != GL_NO_ERROR) {
-		std::cerr << "Error després de glTexImage2D: " << error << std::endl;
-		stbi_image_free(data); // Allibera la memòria
-		return;
-	}
+    if (nrChannels == 3) {
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+    }
+    else if (nrChannels == 4) {
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+    }
+    else {
+        std::cerr << "Error: Número de canales no soportado (" << nrChannels << ")." << std::endl;
+        stbi_image_free(data); // Liberar la memoria
+        return;
+    }
 
-	glGenerateMipmap(GL_TEXTURE_2D);
+    GLenum error = glGetError();
+    if (error != GL_NO_ERROR) {
+        std::cerr << "Error después de glTexImage2D: " << error << std::endl;
+        stbi_image_free(data); // Liberar la memoria
+        return;
+    }
 
-	error = glGetError();
-	if (error != GL_NO_ERROR) {
-		std::cerr << "Error després de glGenerateMipmap: " << error << std::endl;
-	}
+    glGenerateMipmap(GL_TEXTURE_2D);
 
-	stbi_image_free(data);
+    error = glGetError();
+    if (error != GL_NO_ERROR) {
+        std::cerr << "Error después de glGenerateMipmap: " << error << std::endl;
+    }
+
+    stbi_image_free(data);
 }
-
 
 void imGuiImplementation::rotateCameraAroundScene(Camera& camera, float radius, float speed)
 {
-	static float angle = 0.0f; // Angle inicial
+    static float angle = 0.0f; // Ángulo inicial
 
-	// Calcula les noves coordenades de la càmera
-	float x = radius * cos(angle);
-	float z = radius * sin(angle);
+    // Calcula las nuevas coordenadas de la cámara
+    float x = radius * cos(angle);
+    float z = radius * sin(angle);
 
-	// Estableix la nova posició de la càmera
-	camera.Position = glm::vec3(x, camera.Position.y, z);
+    // Establece la nueva posición de la cámara
+    camera.Position = glm::vec3(x, camera.Position.y, z);
 
-	// Actualitza l'orientació de la càmera per mirar cap al centre de l'escena (0,0,0)
-	camera.Orientation = glm::normalize(glm::vec3(-x, 0.0f, -z));
+    // Actualiza la orientación de la cámara para mirar hacia el centro de la escena (0,0,0)
+    camera.Orientation = glm::normalize(glm::vec3(-x, 0.0f, -z));
 
-	// Incrementa l'angle segons la velocitat especificada
-	angle += speed * ImGui::GetIO().DeltaTime;
+    // Incrementa el ángulo según la velocidad especificada
+    angle += speed * ImGui::GetIO().DeltaTime;
 
-	// Assegura't que l'angle no excedeix els 360 graus
-	if (angle > 2 * M_PI) {
-		angle -= 2 * M_PI;
-	}
+    // Asegura que el ángulo no exceda los 360 grados
+    if (angle > 2 * M_PI) {
+        angle -= 2 * M_PI;
+    }
 }
 
-
-
-
-
-
+void imGuiImplementation::renderScene(GLFWwindow* window)
+{
+    // Implementación de renderizado de la escena si es necesario
+}
