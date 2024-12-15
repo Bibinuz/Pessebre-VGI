@@ -18,7 +18,7 @@ struct Llum {
 	float intensitat;
 	Mesh* mesh;
 	glm::mat4 model;
-	Shadowmap shadowmap;
+	Shadowmap* shadowmap;
 };
 
 void get_resolution(int& width, int& height);
@@ -34,5 +34,3 @@ void SetupModels(std::vector<Model>& models, std::vector<glm::mat4>& modelMatric
 void DrawModels(Shader& shader, const std::vector<Model>& models, const std::vector<glm::mat4>& modelMatrices, std::vector<Llum>& llums, Camera& camera);
 
 void DrawLights(Shader& shader, std::vector<Llum>& llums, Camera& camera);
-
-void DrawDepthMap(Shader& shader, const std::vector<Model>& models, const std::vector<glm::mat4>& modelMatrices, glm::vec3& lightPos, glm::mat4& lightSpaceMatrix);

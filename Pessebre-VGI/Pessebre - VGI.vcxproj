@@ -192,6 +192,9 @@
     <None Include="default.frag" />
     <None Include="depth.frag" />
     <None Include="depth.vert" />
+    <None Include="depthCube.frag" />
+    <None Include="depthCube.geom" />
+    <None Include="depthCube.vert" />
     <None Include="light.frag" />
     <None Include="light.vert" />
     <None Include="object.frag" />

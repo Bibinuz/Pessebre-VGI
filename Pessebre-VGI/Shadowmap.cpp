@@ -12,7 +12,8 @@ Shadowmap::Shadowmap()
 Shadowmap::Shadowmap(short res, unsigned int u)
 {
 	unit = BASE_SHADOW_UNIT + u;
-	resolution = 1 << res;
+	escalaRes = res;
+	resolution = 1 << escalaRes;
 	lightSpaceMatrix = glm::mat4(1.0);
 
 	glGenFramebuffers(1, &depthMapFBO);
@@ -36,13 +37,14 @@ Shadowmap::Shadowmap(short res, unsigned int u)
 
 void Shadowmap::RenderitzarShadowMap(glm::vec3& lightPos, Shader& shader,const std::vector<Model>& models, const std::vector<glm::mat4>& modelMatrices)
 {
+	resolution = 1 << escalaRes;
 	glViewport(0, 0, resolution, resolution);
 	glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
 	glClear(GL_DEPTH_BUFFER_BIT);
 	glm::mat4 lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, 0.1f, 100.0f);
-	glm::mat4 lightView = glm::lookAt(lightPos,//Aqui va la posicio de la camera
-	glm::vec3(0.0f, 0.0f, 0.0f), //Aqui va cap a on mira la camera
-	glm::vec3(0.0f, 1.0f, 0.0f));//Direccio amunt
+	glm::mat4 lightView = glm::lookAt(	lightPos,//Aqui va la posicio de la camera
+										glm::vec3(0.0f, 0.0f, 0.0f), //Aqui va cap a on mira la camera
+										glm::vec3(0.0f, 1.0f, 0.0f));//Direccio amunt
 	lightSpaceMatrix = lightProjection * lightView;
 	DrawDepthMap(shader, models, modelMatrices, lightPos);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -50,7 +52,7 @@ void Shadowmap::RenderitzarShadowMap(glm::vec3& lightPos, Shader& shader,const s
 
 void Shadowmap::DrawDepthMap(Shader& shader, const std::vector<Model>& models, const std::vector<glm::mat4>& modelMatrices, glm::vec3& lightPos) {
 	shader.Activate();
-	glUniform3fv(glGetUniformLocation(shader.ID, "aPos"), 1, glm::value_ptr(lightPos));
+	glUniform3f(glGetUniformLocation(shader.ID, "aPos"), lightPos.x, lightPos.y, lightPos.z);
 	glUniformMatrix4fv(glGetUniformLocation(shader.ID, "lightSpaceMatrix"), 1, GL_FALSE, glm::value_ptr(lightSpaceMatrix));
 
 	for (size_t i = 0; i < models.size(); i++)

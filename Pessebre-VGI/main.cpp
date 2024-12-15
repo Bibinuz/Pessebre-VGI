@@ -1,12 +1,14 @@
 #pragma once
 #include "skybox.h"
 #include "funcionsEscena.h"
-#include "shadowmaps.h"
 //#include "imgui/imgui.h"
 //#include "imgui/imgui_impl_glfw.h"
 //#include "imgui/imgui_impl_opengl3.h"
 #include "imGuiImplementation.h"
 #include "Shadowmap.h"
+#include "CubShadowMap.h"
+
+#define print std::cout<<
 
 int TOTAL_CAGANERS=5;
 
@@ -38,7 +40,7 @@ GLuint lightIndices[] =
 	4, 6, 7
 };
 
-GLFWwindow* inicialitzaFinestra() {
+static GLFWwindow* inicialitzaFinestra() {
 
 	glfwInit();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -63,7 +65,9 @@ GLFWwindow* inicialitzaFinestra() {
 	glViewport(0, 0, width, height);
 
 	//Activem el depth test perque les coses mes llunyanes no es dibuixin sobre les properes
-	glEnable(GL_DEPTH_TEST); glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	glEnable(GL_DEPTH_TEST); 
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
 	return window;
 }
 
@@ -101,6 +105,9 @@ int main() {
 	Shader shaderProgram("default.vert", "default.frag");
 	Shader lightShader("light.vert", "light.frag");
 	Shader skyboxShader("skybox.vert", "skybox.frag");
+	Shader depthShader("depth.vert", "depth.frag");
+	Shader depthCubeShader("depthCube.vert", "depthCube.geom", "depthCube.frag");
+
 	
 	std::vector<Vertex> lightVerts(lightVertices, lightVertices + sizeof(lightVertices) / sizeof(Vertex));
 	std::vector<GLuint> lightInd(lightIndices, lightIndices + sizeof(lightIndices) / sizeof(GLuint));
@@ -124,7 +131,7 @@ int main() {
 	modelLlum1 = glm::translate(modelLlum1, posLlum1);
 
 
-	glm::vec3 posLlum2 = glm::vec3(0, 5, -5);
+	glm::vec3 posLlum2 = glm::vec3(0.0, 0.05, 0.0);
 	glm::mat4 modelLlum2 = glm::mat4(1.0f);
 	modelLlum2 = glm::translate(modelLlum2, posLlum2);
 	
@@ -138,17 +145,20 @@ int main() {
 
 	std::vector<Llum> llums;
 		
-	llums.push_back({ true, posLlum1, color1, Direccional, 1.5, &llum1, modelLlum1});
-	llums.push_back({ false, posLlum2, color2, Punt, 1, &llum2, modelLlum2});
-	llums.push_back({ false, posLlum3, color3, Punt, 1, &llum3, modelLlum3 });
+	llums.push_back({ false, posLlum1, color1, Direccional, 1, &llum1, modelLlum1});
+	llums.push_back({ true, posLlum2, color2, Punt, 1.5, &llum2, modelLlum2});
+	llums.push_back({ false, posLlum3, color3, Direccional, 1, &llum3, modelLlum3 });
 
 	/* Shadow maps */
-	Shader depthShader("depth.vert", "depth.frag");
-
 	for (int i = 0; i < llums.size(); i++) {
-		llums[i].shadowmap = Shadowmap(10, i);
+		print "Afegint Llum: " << i << std::endl;
+		if (llums[i].tipus == Direccional)
+			llums[i].shadowmap = new Shadowmap(10, i);
+		else if (llums[i].tipus == Punt)
+			llums[i].shadowmap = new CubShadowMap(10, i);
 	}
-
+	
+	print "Inicialitzant Skybox" << std::endl;
 
 	//Instànciem una skybox
 	Skybox skybox;
@@ -165,6 +175,9 @@ int main() {
 	int caganers=0;
 
 	// Bucle principal
+	bool menysRes = true;
+	bool mesRes = true;
+	GLuint64 frameNum = 0;
 	while (!glfwWindowShouldClose(window)&&varImgui.op!=Exit) {
 		// Calculem el temps per al frame rate
 		//float i = glfwGetTime();
@@ -176,14 +189,19 @@ int main() {
 		// Since the cubemap will always have a depth of 1.0, we need that equal sign so it doesn't get discarded
 		glDepthFunc(GL_LEQUAL);
 		
-		glCullFace(GL_FRONT);
 		for (Llum& llum : llums)
 		{
-			llum.shadowmap.RenderitzarShadowMap(llum.lightPos, depthShader, models, modelMatrices);
+			if (llum.sw_light)
+			{
+				if (llum.tipus == Direccional) {
+					llum.shadowmap->RenderitzarShadowMap(llum.lightPos, depthShader, models, modelMatrices);
+				}
+				else if (llum.tipus == Punt) {
+					llum.shadowmap->RenderitzarShadowMap(llum.lightPos, depthCubeShader, models, modelMatrices);
+				}
+			}
 		}
-		glCullFace(GL_BACK);
 		glViewport(0, 0, width, height);
-		
 		// Inputs i actualització de la càmera
 		camera->Inputs(window);
 		camera->UpdateMatrix(45.0f, 0.1f, 100.0f);
@@ -266,36 +284,58 @@ int main() {
 		// Imprimim el frame rate
 		//std::cout << 1 / (glfwGetTime() - i) << std::endl;
 
-
+		int controlLlum = 1;
 		if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
 		{
-			llums[0].lightPos.x += 0.1;
-			llums[0].model = glm::translate(glm::mat4(1.0), llums[0].lightPos);
+			llums[controlLlum].lightPos.x += 0.01;
+			llums[controlLlum].model = glm::translate(glm::mat4(1.0), llums[controlLlum].lightPos);
 		}
 		if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
 		{
-			llums[0].lightPos.x -= 0.1;
-			llums[0].model = glm::translate(glm::mat4(1.0), llums[0].lightPos);
-		}
-		if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
-		{ 
-			llums[0].lightPos.z += 0.1;
-			llums[0].model = glm::translate(glm::mat4(1.0), llums[0].lightPos);
+			llums[controlLlum].lightPos.x -= 0.01;
+			llums[controlLlum].model = glm::translate(glm::mat4(1.0), llums[controlLlum].lightPos);
 		}
 		if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
-		{
-			llums[0].lightPos.z -= 0.1;
-			llums[0].model = glm::translate(glm::mat4(1.0), llums[0].lightPos);
-		}
-		if (glfwGetKey(window, GLFW_KEY_PAGE_UP) == GLFW_PRESS)
-		{
-			llums[0].lightPos.y += 0.1;
-			llums[0].model = glm::translate(glm::mat4(1.0), llums[0].lightPos);
-		}
-		if (glfwGetKey(window, GLFW_KEY_PAGE_DOWN) == GLFW_PRESS)
 		{ 
-			llums[0].lightPos.y -= 0.1;
-			llums[0].model = glm::translate(glm::mat4(1.0), llums[0].lightPos);
+			llums[controlLlum].lightPos.z += 0.01;
+			llums[controlLlum].model = glm::translate(glm::mat4(1.0), llums[controlLlum].lightPos);
+		}
+		if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
+		{
+			llums[controlLlum].lightPos.z -= 0.01;
+			llums[controlLlum].model = glm::translate(glm::mat4(1.0), llums[controlLlum].lightPos);
+		}
+		if (glfwGetKey(window, GLFW_KEY_Y) == GLFW_PRESS)
+		{
+			llums[controlLlum].lightPos.y += 0.01;
+			llums[controlLlum].model = glm::translate(glm::mat4(1.0), llums[controlLlum].lightPos);
+		}
+		if (glfwGetKey(window, GLFW_KEY_U) == GLFW_PRESS)
+		{ 
+			llums[controlLlum].lightPos.y -= 0.01;
+			llums[controlLlum].model = glm::translate(glm::mat4(1.0), llums[controlLlum].lightPos);
+		}
+
+		if (glfwGetKey(window, GLFW_KEY_MINUS) == GLFW_PRESS && menysRes)
+		{
+			menysRes = false;
+			for (Llum& llum : llums)
+				llum.shadowmap = new Shadowmap(llum.shadowmap->escalaRes - 1, llum.shadowmap->unit-22);
+		}
+		if (glfwGetKey(window, GLFW_KEY_EQUAL) == GLFW_PRESS&& mesRes)
+		{
+			mesRes = false;
+			for (Llum& llum : llums)
+				llum.shadowmap = new Shadowmap(llum.shadowmap->escalaRes + 1, llum.shadowmap->unit - 22);
+			
+		}
+		if (glfwGetKey(window, GLFW_KEY_EQUAL) == GLFW_RELEASE)
+		{
+			mesRes = true;
+		}
+		if (glfwGetKey(window, GLFW_KEY_MINUS) == GLFW_RELEASE)
+		{
+			menysRes = true;
 		}
 	}
 

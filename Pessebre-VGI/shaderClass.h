@@ -19,6 +19,7 @@ public:
 	Shader();
 
 	Shader(const char* vertexFile, const char* fragmentFile);
+	Shader(const char* vertexFile, const char* geometryFile, const char* fragmentFile);
 
 	void compileErrors(unsigned int shader, const char* type);
 	void Activate();

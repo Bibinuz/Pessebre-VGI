@@ -128,6 +128,15 @@
     <None Include="depth.vert">
       <Filter>Resource Files\Shaders</Filter>
     </None>
+    <None Include="depthCube.vert">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="depthCube.geom">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="depthCube.frag">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="shaderClass.h">

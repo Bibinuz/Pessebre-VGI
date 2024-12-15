@@ -51,7 +51,7 @@ void SetupModels(std::vector<Model>& models, std::vector<glm::mat4>& modelMatric
 
 	std::vector<ModelData> modelDataList = {
 		{ "models3d/superficie.obj", glm::vec3(0.0f, 0.1f, 0.0f), glm::vec3(0.5f, 0.5f, 0.5f), 0.0f, glm::vec3(0.0f, 1.0f, 0.0f) },
-		{ "models3d/iglesia.obj", glm::vec3(0.0f, 0.05f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), 0.0f, glm::vec3(0.0f, 1.0f, 0.0f) },
+		{ "models3d/iglesia.obj", glm::vec3(0.0f, 0.05f, -5.0f), glm::vec3(1.0f, 1.0f, 1.0f), 0.0f, glm::vec3(0.0f, 1.0f, 0.0f) },
 		{ "models3d/dona1.obj", glm::vec3(1.0f, 0.05f, 1.0f), glm::vec3(0.5f, 0.5f, 0.5f), 0.0f, glm::vec3(0.0f, 1.0f, 0.0f) },
 		{ "models3d/moli.obj", glm::vec3(-5.0f, 0.05f, 0.0f), glm::vec3(0.75f, 0.75f, 0.75f),  0.0f, glm::vec3(0.0f, 1.0f, 0.0f) },
 		{ "models3d/gallina.obj", glm::vec3(-3.0f, 0.05f, 3.0f), glm::vec3(0.5f, 0.5f, 0.5f), glm::radians(140.0f), glm::vec3(0.0f, 1.0f, 0.0f) },
@@ -72,21 +72,29 @@ void DrawModels(Shader& shader, const std::vector<Model>& models, const std::vec
 	shader.Activate(); 
 	
 	// He mogut tot aquest codi de DrawModelsWithShader a aqui perque les llums son les mateixes per a tots els objectes, no fa falta passarles totes cada vegada que es passen els uniforms al shader, augment considerable de fps
-	glUniform1i(glGetUniformLocation(shader.ID, "numLights"), llums.size());
 
+	glUniform1i(glGetUniformLocation(shader.ID, "numLights"), llums.size());
 	for (int i = 0; i < llums.size(); i++)
 	{
+
+		glUniform1i(glGetUniformLocation(shader.ID, ("lights[" + std::to_string(i) + "].tipus").c_str()),      llums[i].tipus);
 		glUniform1i(glGetUniformLocation(shader.ID, ("lights[" + std::to_string(i) + "].sw_light").c_str()),   llums[i].sw_light);
+		glUniform1f(glGetUniformLocation(shader.ID, ("lights[" + std::to_string(i) + "].intensitat").c_str()), llums[i].intensitat);
 		glUniform3f(glGetUniformLocation(shader.ID, ("lights[" + std::to_string(i) + "].lightPos").c_str()),   llums[i].lightPos.x, llums[i].lightPos.y, llums[i].lightPos.z);
 		glUniform4f(glGetUniformLocation(shader.ID, ("lights[" + std::to_string(i) + "].lightColor").c_str()), llums[i].lightCol.r, llums[i].lightCol.g, llums[i].lightCol.b, llums[i].lightCol.a);
-		glUniform1i(glGetUniformLocation(shader.ID, ("lights[" + std::to_string(i) + "].tipus").c_str()),      llums[i].tipus);
-		glUniform1f(glGetUniformLocation(shader.ID, ("lights[" + std::to_string(i) + "].intensitat").c_str()), llums[i].intensitat);
 
-		glActiveTexture(GL_TEXTURE0 + llums[i].shadowmap.unit);
-		glBindTexture(GL_TEXTURE_2D, llums[i].shadowmap.depthMap);
+		int unit = llums[i].shadowmap->unit;
 
-		glUniform1i(glGetUniformLocation(shader.ID, ("lights[" + std::to_string(i) + "].depthMap").c_str()),   llums[i].shadowmap.unit);
-		glUniformMatrix4fv(glGetUniformLocation(shader.ID, ("lights[" + std::to_string(i) + "].lightSpaceMatrix").c_str()), 1, GL_FALSE, glm::value_ptr(llums[i].shadowmap.lightSpaceMatrix));
+		glActiveTexture(GL_TEXTURE0 + unit);
+		if (llums[i].tipus == Direccional) {
+			glBindTexture(GL_TEXTURE_2D, llums[i].shadowmap->depthMap);
+			glUniform1i(glGetUniformLocation(shader.ID, ("lights[" + std::to_string(i) + "].depthMap").c_str()), unit);
+			glUniformMatrix4fv(glGetUniformLocation(shader.ID, ("lights[" + std::to_string(i) + "].lightSpaceMatrix").c_str()), 1, GL_FALSE, glm::value_ptr(llums[i].shadowmap->lightSpaceMatrix));
+		}
+		else if (llums[i].tipus == Punt) {
+			glBindTexture(GL_TEXTURE_CUBE_MAP, llums[i].shadowmap->depthMap);
+			glUniform1i(glGetUniformLocation(shader.ID, ("lights[" + std::to_string(i) + "].depthCubeMap").c_str()), unit);
+		}
 
 	}
 

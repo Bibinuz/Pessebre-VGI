@@ -9,7 +9,8 @@ const unsigned int BASE_SHADOW_UNIT = 22; //22 23 24 25 26 27 28 29 30 31 Posici
 class Shadowmap
 {
 public:
-	short resolution;
+	short escalaRes;
+	unsigned int resolution;
 	unsigned int depthMap;
 	unsigned int depthMapFBO;
 	unsigned int unit;
@@ -18,10 +19,15 @@ public:
 	Shadowmap();
 
 	Shadowmap(short res, unsigned int u);
+	
+	virtual void quiSoc()
+	{
+		std::cout << "Soc ShadowMap" << std::endl;
+	};
 
-	void RenderitzarShadowMap(glm::vec3& lightPos, Shader& shader, const std::vector<Model>& models, const std::vector<glm::mat4>& modelMatrices);
+	virtual void RenderitzarShadowMap(glm::vec3& lightPos, Shader& shader, const std::vector<Model>& models, const std::vector<glm::mat4>& modelMatrices);
 
-	void DrawDepthMap(Shader& shader, const std::vector<Model>& models, const std::vector<glm::mat4>& modelMatrices, glm::vec3& lightPos);
+	virtual void DrawDepthMap(Shader& shader, const std::vector<Model>& models, const std::vector<glm::mat4>& modelMatrices, glm::vec3& lightPos);
 	
 };
 
