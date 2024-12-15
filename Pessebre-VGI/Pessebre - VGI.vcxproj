@@ -217,6 +217,7 @@
     <ClInclude Include="shaderClass.h" />
     <ClInclude Include="Shadowmap.h" />
     <ClInclude Include="skybox.h" />
+    <ClInclude Include="stb_image.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="VAO.h" />
     <ClInclude Include="VBO.h" />

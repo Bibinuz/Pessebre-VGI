@@ -1,62 +1,14 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\Biel\\source\\gitRepos\\Pessebre-VGI\\Pessebre-VGI\\",
+  "WorkspaceRootPath": "C:\\Users\\Lenovo\\Desktop\\UAB\\3r 1r semestre\\VGI\\Pessebre-VGI\\Pessebre-VGI\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{8B73D535-518E-43E0-AE13-E74346276F72}|Pessebre - VGI.vcxproj|C:\\Users\\Biel\\source\\gitRepos\\Pessebre-VGI\\Pessebre-VGI\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "AbsoluteMoniker": "D:0:0:{8B73D535-518E-43E0-AE13-E74346276F72}|Pessebre - VGI.vcxproj|C:\\Users\\Lenovo\\Desktop\\UAB\\3r 1r semestre\\VGI\\Pessebre-VGI\\Pessebre-VGI\\imGuiImplementation.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{8B73D535-518E-43E0-AE13-E74346276F72}|Pessebre - VGI.vcxproj|solutionrelative:imGuiImplementation.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8B73D535-518E-43E0-AE13-E74346276F72}|Pessebre - VGI.vcxproj|C:\\Users\\Lenovo\\Desktop\\UAB\\3r 1r semestre\\VGI\\Pessebre-VGI\\Pessebre-VGI\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{8B73D535-518E-43E0-AE13-E74346276F72}|Pessebre - VGI.vcxproj|solutionrelative:main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{8B73D535-518E-43E0-AE13-E74346276F72}|Pessebre - VGI.vcxproj|C:\\Users\\Biel\\source\\gitRepos\\Pessebre-VGI\\Pessebre-VGI\\Shadowmap.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{8B73D535-518E-43E0-AE13-E74346276F72}|Pessebre - VGI.vcxproj|solutionrelative:Shadowmap.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{8B73D535-518E-43E0-AE13-E74346276F72}|Pessebre - VGI.vcxproj|C:\\Users\\Biel\\source\\gitRepos\\Pessebre-VGI\\Pessebre-VGI\\Shadowmap.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{8B73D535-518E-43E0-AE13-E74346276F72}|Pessebre - VGI.vcxproj|solutionrelative:Shadowmap.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{8B73D535-518E-43E0-AE13-E74346276F72}|Pessebre - VGI.vcxproj|C:\\Users\\Biel\\source\\gitRepos\\Pessebre-VGI\\Pessebre-VGI\\default.frag||{8B382828-6202-11D1-8870-0000F87579D2}",
-      "RelativeMoniker": "D:0:0:{8B73D535-518E-43E0-AE13-E74346276F72}|Pessebre - VGI.vcxproj|solutionrelative:default.frag||{8B382828-6202-11D1-8870-0000F87579D2}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{8B73D535-518E-43E0-AE13-E74346276F72}|Pessebre - VGI.vcxproj|C:\\Users\\Biel\\source\\gitRepos\\Pessebre-VGI\\Pessebre-VGI\\funcionsEscena.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{8B73D535-518E-43E0-AE13-E74346276F72}|Pessebre - VGI.vcxproj|solutionrelative:funcionsEscena.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{8B73D535-518E-43E0-AE13-E74346276F72}|Pessebre - VGI.vcxproj|C:\\Users\\Biel\\source\\gitRepos\\Pessebre-VGI\\Pessebre-VGI\\default.vert||{8B382828-6202-11D1-8870-0000F87579D2}",
-      "RelativeMoniker": "D:0:0:{8B73D535-518E-43E0-AE13-E74346276F72}|Pessebre - VGI.vcxproj|solutionrelative:default.vert||{8B382828-6202-11D1-8870-0000F87579D2}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{8B73D535-518E-43E0-AE13-E74346276F72}|Pessebre - VGI.vcxproj|C:\\Users\\Biel\\source\\gitRepos\\Pessebre-VGI\\Pessebre-VGI\\Mesh.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{8B73D535-518E-43E0-AE13-E74346276F72}|Pessebre - VGI.vcxproj|solutionrelative:Mesh.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{8B73D535-518E-43E0-AE13-E74346276F72}|Pessebre - VGI.vcxproj|C:\\Users\\Biel\\source\\gitRepos\\Pessebre-VGI\\Pessebre-VGI\\funcionsEscena.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{8B73D535-518E-43E0-AE13-E74346276F72}|Pessebre - VGI.vcxproj|solutionrelative:funcionsEscena.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{8B73D535-518E-43E0-AE13-E74346276F72}|Pessebre - VGI.vcxproj|C:\\Users\\Biel\\source\\gitRepos\\Pessebre-VGI\\Pessebre-VGI\\shaderClass.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{8B73D535-518E-43E0-AE13-E74346276F72}|Pessebre - VGI.vcxproj|solutionrelative:shaderClass.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{8B73D535-518E-43E0-AE13-E74346276F72}|Pessebre - VGI.vcxproj|C:\\Users\\Biel\\source\\gitRepos\\Pessebre-VGI\\Pessebre-VGI\\Model.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{8B73D535-518E-43E0-AE13-E74346276F72}|Pessebre - VGI.vcxproj|solutionrelative:Model.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{8B73D535-518E-43E0-AE13-E74346276F72}|Pessebre - VGI.vcxproj|C:\\Users\\Biel\\source\\gitRepos\\Pessebre-VGI\\Pessebre-VGI\\Texture.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{8B73D535-518E-43E0-AE13-E74346276F72}|Pessebre - VGI.vcxproj|solutionrelative:Texture.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{8B73D535-518E-43E0-AE13-E74346276F72}|Pessebre - VGI.vcxproj|C:\\Users\\Biel\\source\\gitRepos\\Pessebre-VGI\\Pessebre-VGI\\Texture.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{8B73D535-518E-43E0-AE13-E74346276F72}|Pessebre - VGI.vcxproj|solutionrelative:Texture.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{8B73D535-518E-43E0-AE13-E74346276F72}|Pessebre - VGI.vcxproj|C:\\Users\\Biel\\source\\gitRepos\\Pessebre-VGI\\Pessebre-VGI\\Model.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{8B73D535-518E-43E0-AE13-E74346276F72}|Pessebre - VGI.vcxproj|solutionrelative:Model.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{8B73D535-518E-43E0-AE13-E74346276F72}|Pessebre - VGI.vcxproj|C:\\Users\\Biel\\source\\gitRepos\\Pessebre-VGI\\Pessebre-VGI\\Mesh.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{8B73D535-518E-43E0-AE13-E74346276F72}|Pessebre - VGI.vcxproj|solutionrelative:Mesh.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     }
   ],
   "DocumentGroupContainers": [
@@ -66,182 +18,40 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 14,
+          "SelectedChildIndex": 3,
           "Children": [
-            {
-              "$type": "Bookmark",
-              "Name": "ST:128:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
-            },
             {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "Shadowmap.cpp",
-              "DocumentMoniker": "C:\\Users\\Biel\\source\\gitRepos\\Pessebre-VGI\\Pessebre-VGI\\Shadowmap.cpp",
-              "RelativeDocumentMoniker": "Shadowmap.cpp",
-              "ToolTip": "C:\\Users\\Biel\\source\\gitRepos\\Pessebre-VGI\\Pessebre-VGI\\Shadowmap.cpp",
-              "RelativeToolTip": "Shadowmap.cpp",
-              "ViewState": "AgIAAB4AAAAAAAAAAAAAADIAAAAqAAAAAAAAAA==",
+              "Title": "main.cpp",
+              "DocumentMoniker": "C:\\Users\\Lenovo\\Desktop\\UAB\\3r 1r semestre\\VGI\\Pessebre-VGI\\Pessebre-VGI\\main.cpp",
+              "RelativeDocumentMoniker": "main.cpp",
+              "ToolTip": "C:\\Users\\Lenovo\\Desktop\\UAB\\3r 1r semestre\\VGI\\Pessebre-VGI\\Pessebre-VGI\\main.cpp",
+              "RelativeToolTip": "main.cpp",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAB0BAAAVAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2024-12-01T17:06:33.916Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-10-28T09:52:11.99Z",
+              "IsPinned": true
             },
             {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "Shadowmap.h",
-              "DocumentMoniker": "C:\\Users\\Biel\\source\\gitRepos\\Pessebre-VGI\\Pessebre-VGI\\Shadowmap.h",
-              "RelativeDocumentMoniker": "Shadowmap.h",
-              "ToolTip": "C:\\Users\\Biel\\source\\gitRepos\\Pessebre-VGI\\Pessebre-VGI\\Shadowmap.h",
-              "RelativeToolTip": "Shadowmap.h",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABoAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2024-12-01T16:51:22.151Z",
-              "EditorCaption": ""
+              "$type": "Bookmark",
+              "Name": "ST:128:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
             },
             {
-              "$type": "Document",
-              "DocumentIndex": 9,
-              "Title": "Model.h",
-              "DocumentMoniker": "C:\\Users\\Biel\\source\\gitRepos\\Pessebre-VGI\\Pessebre-VGI\\Model.h",
-              "RelativeDocumentMoniker": "Model.h",
-              "ToolTip": "C:\\Users\\Biel\\source\\gitRepos\\Pessebre-VGI\\Pessebre-VGI\\Model.h",
-              "RelativeToolTip": "Model.h",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2024-12-01T16:55:02.394Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 8,
-              "Title": "shaderClass.h",
-              "DocumentMoniker": "C:\\Users\\Biel\\source\\gitRepos\\Pessebre-VGI\\Pessebre-VGI\\shaderClass.h",
-              "RelativeDocumentMoniker": "shaderClass.h",
-              "ToolTip": "C:\\Users\\Biel\\source\\gitRepos\\Pessebre-VGI\\Pessebre-VGI\\shaderClass.h",
-              "RelativeToolTip": "shaderClass.h",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAUwAsAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2024-12-01T16:52:00.132Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 12,
-              "Title": "Model.cpp",
-              "DocumentMoniker": "C:\\Users\\Biel\\source\\gitRepos\\Pessebre-VGI\\Pessebre-VGI\\Model.cpp",
-              "RelativeDocumentMoniker": "Model.cpp",
-              "ToolTip": "C:\\Users\\Biel\\source\\gitRepos\\Pessebre-VGI\\Pessebre-VGI\\Model.cpp",
-              "RelativeToolTip": "Model.cpp",
-              "ViewState": "AgIAAGkAAAAAAAAAAAAAAIYAAAAoAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2024-11-27T16:05:09.458Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 10,
-              "Title": "Texture.cpp",
-              "DocumentMoniker": "C:\\Users\\Biel\\source\\gitRepos\\Pessebre-VGI\\Pessebre-VGI\\Texture.cpp",
-              "RelativeDocumentMoniker": "Texture.cpp",
-              "ToolTip": "C:\\Users\\Biel\\source\\gitRepos\\Pessebre-VGI\\Pessebre-VGI\\Texture.cpp",
-              "RelativeToolTip": "Texture.cpp",
-              "ViewState": "AgIAAAMAAAAAAAAAAAAAABkAAAAqAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2024-11-27T15:36:25.816Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 11,
-              "Title": "Texture.h",
-              "DocumentMoniker": "C:\\Users\\Biel\\source\\gitRepos\\Pessebre-VGI\\Pessebre-VGI\\Texture.h",
-              "RelativeDocumentMoniker": "Texture.h",
-              "ToolTip": "C:\\Users\\Biel\\source\\gitRepos\\Pessebre-VGI\\Pessebre-VGI\\Texture.h",
-              "RelativeToolTip": "Texture.h",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABYAAAAQAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2024-11-27T11:54:59.695Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 13,
-              "Title": "Mesh.cpp",
-              "DocumentMoniker": "C:\\Users\\Biel\\source\\gitRepos\\Pessebre-VGI\\Pessebre-VGI\\Mesh.cpp",
-              "RelativeDocumentMoniker": "Mesh.cpp",
-              "ToolTip": "C:\\Users\\Biel\\source\\gitRepos\\Pessebre-VGI\\Pessebre-VGI\\Mesh.cpp",
-              "RelativeToolTip": "Mesh.cpp",
-              "ViewState": "AgIAAAgAAAAAAAAAAAAvwDMAAAAVAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2024-11-27T11:39:45.308Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "Mesh.h",
-              "DocumentMoniker": "C:\\Users\\Biel\\source\\gitRepos\\Pessebre-VGI\\Pessebre-VGI\\Mesh.h",
-              "RelativeDocumentMoniker": "Mesh.h",
-              "ToolTip": "C:\\Users\\Biel\\source\\gitRepos\\Pessebre-VGI\\Pessebre-VGI\\Mesh.h",
-              "RelativeToolTip": "Mesh.h",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2024-11-27T11:39:41.325Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "default.vert",
-              "DocumentMoniker": "C:\\Users\\Biel\\source\\gitRepos\\Pessebre-VGI\\Pessebre-VGI\\default.vert",
-              "RelativeDocumentMoniker": "default.vert",
-              "ToolTip": "C:\\Users\\Biel\\source\\gitRepos\\Pessebre-VGI\\Pessebre-VGI\\default.vert",
-              "RelativeToolTip": "default.vert",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAALAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
-              "WhenOpened": "2024-11-27T11:38:19.964Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "default.frag",
-              "DocumentMoniker": "C:\\Users\\Biel\\source\\gitRepos\\Pessebre-VGI\\Pessebre-VGI\\default.frag",
-              "RelativeDocumentMoniker": "default.frag",
-              "ToolTip": "C:\\Users\\Biel\\source\\gitRepos\\Pessebre-VGI\\Pessebre-VGI\\default.frag",
-              "RelativeToolTip": "default.frag",
-              "ViewState": "AgIAADEAAAAAAAAAAAAAAFYAAAAvAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
-              "WhenOpened": "2024-11-23T17:22:46.51Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "funcionsEscena.cpp",
-              "DocumentMoniker": "C:\\Users\\Biel\\source\\gitRepos\\Pessebre-VGI\\Pessebre-VGI\\funcionsEscena.cpp",
-              "RelativeDocumentMoniker": "funcionsEscena.cpp",
-              "ToolTip": "C:\\Users\\Biel\\source\\gitRepos\\Pessebre-VGI\\Pessebre-VGI\\funcionsEscena.cpp",
-              "RelativeToolTip": "funcionsEscena.cpp",
-              "ViewState": "AgIAADcAAAAAAAAAAAAAAEgAAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2024-11-21T12:48:27.446Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 7,
-              "Title": "funcionsEscena.h",
-              "DocumentMoniker": "C:\\Users\\Biel\\source\\gitRepos\\Pessebre-VGI\\Pessebre-VGI\\funcionsEscena.h",
-              "RelativeDocumentMoniker": "funcionsEscena.h",
-              "ToolTip": "C:\\Users\\Biel\\source\\gitRepos\\Pessebre-VGI\\Pessebre-VGI\\funcionsEscena.h",
-              "RelativeToolTip": "funcionsEscena.h",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAAOAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2024-11-21T12:36:31.608Z"
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{aa2115a1-9712-457b-9047-dbb71ca2cdd2}"
             },
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "main.cpp",
-              "DocumentMoniker": "C:\\Users\\Biel\\source\\gitRepos\\Pessebre-VGI\\Pessebre-VGI\\main.cpp",
-              "RelativeDocumentMoniker": "main.cpp",
-              "ToolTip": "C:\\Users\\Biel\\source\\gitRepos\\Pessebre-VGI\\Pessebre-VGI\\main.cpp",
-              "RelativeToolTip": "main.cpp",
-              "ViewState": "AgIAAKMAAAAAAAAAAAAAALsAAAAFAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2024-10-28T09:52:11.99Z",
+              "Title": "imGuiImplementation.h",
+              "DocumentMoniker": "C:\\Users\\Lenovo\\Desktop\\UAB\\3r 1r semestre\\VGI\\Pessebre-VGI\\Pessebre-VGI\\imGuiImplementation.h",
+              "RelativeDocumentMoniker": "imGuiImplementation.h",
+              "ToolTip": "C:\\Users\\Lenovo\\Desktop\\UAB\\3r 1r semestre\\VGI\\Pessebre-VGI\\Pessebre-VGI\\imGuiImplementation.h",
+              "RelativeToolTip": "imGuiImplementation.h",
+              "ViewState": "AgIAALcAAAAAAAAAAAAAAMEAAACHAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2024-11-21T12:00:17.965Z",
               "EditorCaption": ""
             }
           ]

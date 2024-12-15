@@ -20,10 +20,11 @@ public:
 	glm::mat4 cameraMatrix = glm::mat4(1.0f);
 
 	bool cameraActive = true;
+	bool cameraEstatica = false;
 
 	int width;
 	int height;
-
+	
 	float speed;
 	float walkSpeed = 0.01f;
 	float runSpeed = 4*walkSpeed;
