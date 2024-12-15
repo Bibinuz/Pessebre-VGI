@@ -4,7 +4,7 @@
 
 #include"Model.h"
 
-const unsigned int BASE_SHADOW_UNIT = 22; //22 23 24 25 26 27 28 29 30 31 Posicions per a tots els depth maps -> 10 llums maxim, 10 depth maps diferents
+const unsigned int BASE_SHADOW_UNIT = 4; 
 
 class Shadowmap
 {
@@ -13,7 +13,11 @@ public:
 	unsigned int depthMap;
 	unsigned int depthMapFBO;
 	unsigned int unit;
+	glm::mat4 lightProj;
 	glm::mat4 lightSpaceMatrix;
+	glm::vec3 lightDir;
+	glm::vec3 lightUp;
+
 
 	Shadowmap();
 

@@ -50,7 +50,7 @@ void SetupModels(std::vector<Model>& models, std::vector<glm::mat4>& modelMatric
 	};
 
 	std::vector<ModelData> modelDataList = {
-		{ "models3d/superficie.obj", glm::vec3(0.0f, 0.1f, 0.0f), glm::vec3(0.5f, 0.5f, 0.5f), 0.0f, glm::vec3(0.0f, 1.0f, 0.0f) },
+		{ "models3d/superficie.obj", glm::vec3(0.0f, 0.1f, 0.0f), glm::vec3(1.5f, 0.5f, 1.5f), 0.0f, glm::vec3(0.0f, 1.0f, 0.0f) },
 		{ "models3d/iglesia.obj", glm::vec3(0.0f, 0.05f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), 0.0f, glm::vec3(0.0f, 1.0f, 0.0f) },
 		{ "models3d/dona1.obj", glm::vec3(1.0f, 0.05f, 1.0f), glm::vec3(0.5f, 0.5f, 0.5f), 0.0f, glm::vec3(0.0f, 1.0f, 0.0f) },
 		{ "models3d/moli.obj", glm::vec3(-5.0f, 0.05f, 0.0f), glm::vec3(0.75f, 0.75f, 0.75f),  0.0f, glm::vec3(0.0f, 1.0f, 0.0f) },

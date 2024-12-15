@@ -37,15 +37,17 @@ float specularLight = 0.50f;
 float inner_cone = 0.95f;
 float outer_cone = 0.9f;
 
-int ShadowCalculation(vec4 FragPosLightSpace, int i, vec3 normal, vec3 lightDir)
+float ShadowCalculation(int i, vec3 normal, vec3 lightDir)
 {
 	vec3 projCoords = FragPosLightSpace.xyz / FragPosLightSpace.w;
 	projCoords = projCoords * 0.5 + 0.5;
-
+	if(projCoords.z > 1.0)
+		return 0.0;
 	float closestDepth = texture(lights[i].depthMap, projCoords.xy).r;
 	float currentDepth = projCoords.z;
-	float bias = max(0.05 * (1.0 - dot(normal, lightDir)), 0.005);
-	int shadow = currentDepth-0.0005 > closestDepth ? 1 : 0;
+	float bias = max(0.005 * (1.0 - dot(normal, lightDir)), 0.0005);
+	float shadow = currentDepth-0.0005 > closestDepth ? 1.0 : 0.0;
+
 	return shadow;
 
 }
@@ -54,21 +56,43 @@ int ShadowCalculation(vec4 FragPosLightSpace, int i, vec3 normal, vec3 lightDir)
 vec4 calculLightAmount(float diffuse, float inten, float specular, int i, vec3 normal, vec3 lightDir)
 {
 	vec4 lightAmount;
-	int shadow = ShadowCalculation(FragPosLightSpace, i, normal, lightDir);
+	float shadow = ShadowCalculation(i, normal, lightDir);
 	
-	if(shadow == 0)
-	{
-		lightAmount = texture(diffuse0, texCoord) * ((diffuse*inten) + texture(specular0, texCoord).r * specular  * inten) * lights[i].lightColor;
-		lightAmount = lightAmount*lights[i].intensitat;
-	}
-	else
-	{
-		lightAmount = texture(diffuse0, texCoord) * lights[i].lightColor*(0.5+ambient);
-	} 
+	lightAmount =  texture(diffuse0, texCoord) * (diffuse*inten*(1.0-shadow)+ambient) + inten * (1.0-shadow) * specular*0.05;
+
+	lightAmount = lightAmount*lights[i].intensitat;
 	return lightAmount;
 }
 
+float PointShadowCalculation(int i, vec3 normal, vec3 lightDir)
+{
+	FragPosLightSpace = lights[i].lightSpaceMatrix * vec4(crntPos, 1.0);
+	vec3 projCoords = FragPosLightSpace.xyz / FragPosLightSpace.w;
+	projCoords = projCoords * 0.5 + 0.5;
+	if(projCoords.z > 1.0)
+		return 0.0;
+	float closestDepth = texture(lights[i].depthMap, projCoords.xy).r;
+	float currentDepth = projCoords.z;
+	float bias = max(0.005 * (1.0 - dot(normal, lightDir)), 0.0005);
+	float shadow = currentDepth-0.0005 > closestDepth ? 1.0 : 0.0;
 
+	return shadow;
+
+}
+
+vec4 calculPointLightAmount(float diffuse, float inten, float specular, int i, vec3 normal, vec3 lightDir)
+{
+	vec4 lightAmount;
+	float shadow = 0.0;
+	for(int j = 0; j<6;j++)
+	{
+		shadow += PointShadowCalculation(i+j, normal, lightDir);
+	}
+	shadow = shadow > 0.9 ? 1.0 : 0.0;
+	lightAmount =  texture(diffuse0, texCoord) * (diffuse*inten*(1.0-shadow)+ambient) + inten * (1.0-shadow) * specular*0.05;
+	lightAmount = lightAmount*lights[i].intensitat;
+	return lightAmount;
+}
 
 vec4 pointLight(int i)
 { 	
@@ -79,22 +103,24 @@ vec4 pointLight(int i)
 	
 	vec3 normal = normalize(normal);
 	vec3 lightDirection = normalize(lights[i].lightPos - crntPos);	
+
 	float diffuse = max(dot(normal, lightDirection), 0.0f);
 	
 	vec3 viewDirection = normalize(camPos - crntPos);
 	vec3 reflectionDirection = reflect(-lightDirection, normal);
 	float specAmount = pow(max(dot(viewDirection, reflectionDirection), 0.0f), 16);
 	float specular = specAmount * specularLight;
-	
-	return calculLightAmount(diffuse, inten, specular, i, normal, lightDirection);
 
+	vec4 lightAmount = calculPointLightAmount(diffuse, inten, specular, i, normal, lightDirection);
+
+	return lightAmount;
 
 }
 
 vec4 direcLight(int i)
 {	
 	vec3 normal = normalize(normal);
-	vec3 lightDirection = normalize(vec3(1.0f, 1.0f, 0.0f));	
+	vec3 lightDirection = normalize(lights[i].lightPos-crntPos);
 	float diffuse = max(dot(normal, lightDirection), 0.0f);
 	
 	vec3 viewDirection = normalize(camPos - crntPos);
@@ -131,17 +157,18 @@ void main()
 	{
 		if(lights[i].sw_light)
 		{
-			FragPosLightSpace = lights[i].lightSpaceMatrix * vec4(crntPos, 1.0);
 
 			switch(lights[i].tipus)
 			{
 				case 0:
 					FragColor+=pointLight(i);
+					i+=5;
 					break;
 				case 1:
 					FragColor+=spotLight(i);
 					break;
 				case 2:
+					FragPosLightSpace = lights[i].lightSpaceMatrix * vec4(crntPos, 1.0);
 					FragColor+=direcLight(i);
 					break;
 				default:

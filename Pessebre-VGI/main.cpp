@@ -1,7 +1,6 @@
 #pragma once
 #include "skybox.h"
 #include "funcionsEscena.h"
-#include "shadowmaps.h"
 //#include "imgui/imgui.h"
 //#include "imgui/imgui_impl_glfw.h"
 //#include "imgui/imgui_impl_opengl3.h"
@@ -124,7 +123,7 @@ int main() {
 	modelLlum1 = glm::translate(modelLlum1, posLlum1);
 
 
-	glm::vec3 posLlum2 = glm::vec3(0, 5, -5);
+	glm::vec3 posLlum2 = glm::vec3(0, 25, -10);
 	glm::mat4 modelLlum2 = glm::mat4(1.0f);
 	modelLlum2 = glm::translate(modelLlum2, posLlum2);
 	
@@ -136,17 +135,52 @@ int main() {
 	glm::vec4 color2 = glm::vec4(1, 1, 1, 1);
 	glm::vec4 color3 = glm::vec4(1, 1, 1, 1);
 
+	std::vector<Llum> ls;
 	std::vector<Llum> llums;
 		
-	llums.push_back({ true, posLlum1, color1, Direccional, 1.5, &llum1, modelLlum1});
-	llums.push_back({ false, posLlum2, color2, Punt, 1, &llum2, modelLlum2});
-	llums.push_back({ false, posLlum3, color3, Punt, 1, &llum3, modelLlum3 });
+	ls.push_back({ true, posLlum1, color1, Punt, 2, &llum1, modelLlum1});
+	ls.push_back({ true, posLlum2, color2, Direccional, 1, &llum2, modelLlum2});
+	ls.push_back({ true, posLlum3, color3, Direccional, 1, &llum3, modelLlum3 });
 
 	/* Shadow maps */
 	Shader depthShader("depth.vert", "depth.frag");
 
-	for (int i = 0; i < llums.size(); i++) {
-		llums[i].shadowmap = Shadowmap(10, i);
+	int diff = 0;
+	for (int i = 0; i-diff < ls.size(); i++) {
+		if (ls[i-diff].tipus == Direccional)
+		{
+			ls[i-diff].shadowmap = Shadowmap(11, i);
+			ls[i-diff].shadowmap.lightProj = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, 0.5f, 100.0f);
+			llums.push_back(ls[i-diff]);
+		}
+		else if (ls[i-diff].tipus == Punt)
+		{
+			Llum aux[6];
+			for (int j = 0; j < 6; j++)
+			{
+				aux[j] = { ls[i-diff].sw_light, ls[i-diff].lightPos, ls[i-diff].lightCol, Punt, ls[i-diff].intensitat, ls[i-diff].mesh, ls[i-diff].model };
+				aux[j].shadowmap = Shadowmap(11, i + j);
+				aux[j].shadowmap.lightProj = glm::perspective(90.0f, 1.0f, 0.5f, 100.0f);
+				//aux[j].shadowmap.lightProj = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, 0.1f, 100.0f);
+
+				llums.push_back(aux[j]);
+			}
+			llums[i+0].shadowmap.lightDir = glm::vec3( 1.0, 0.0, 0.0);
+			llums[i+1].shadowmap.lightDir = glm::vec3(-1.0, 0.0, 0.0);
+			llums[i+2].shadowmap.lightDir = glm::vec3( 0.0, 1.0, 0.0);
+			llums[i+3].shadowmap.lightDir = glm::vec3( 0.0,-1.0, 0.0);
+			llums[i+4].shadowmap.lightDir = glm::vec3( 0.0, 0.0, 1.0);
+			llums[i+5].shadowmap.lightDir = glm::vec3( 0.0, 0.0,-1.0);
+			
+			llums[i+0].shadowmap.lightUp = glm::vec3( 0.0,-1.0, 0.0);
+			llums[i+1].shadowmap.lightUp = glm::vec3( 0.0,-1.0, 0.0);
+			llums[i+2].shadowmap.lightUp = glm::vec3( 0.0, 0.0, 1.0);
+			llums[i+3].shadowmap.lightUp = glm::vec3( 0.0, 0.0,-1.0);
+			llums[i+4].shadowmap.lightUp = glm::vec3( 0.0,-1.0, 0.0);
+			llums[i+5].shadowmap.lightUp = glm::vec3( 0.0,-1.0, 0.0);
+			i += 5;
+			diff += 5;
+		}
 	}
 
 
@@ -177,9 +211,9 @@ int main() {
 		glDepthFunc(GL_LEQUAL);
 		
 		glCullFace(GL_FRONT);
-		for (Llum& llum : llums)
+		for (int i = 0; i < llums.size(); i++)
 		{
-			llum.shadowmap.RenderitzarShadowMap(llum.lightPos, depthShader, models, modelMatrices);
+			llums[i].shadowmap.RenderitzarShadowMap(llums[i].lightPos, depthShader, models, modelMatrices);
 		}
 		glCullFace(GL_BACK);
 		glViewport(0, 0, width, height);
@@ -269,33 +303,45 @@ int main() {
 
 		if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
 		{
-			llums[0].lightPos.x += 0.1;
-			llums[0].model = glm::translate(glm::mat4(1.0), llums[0].lightPos);
+			for (int i = 0; i < 6; i++) {
+				llums[i].lightPos.x += 0.01;
+				llums[i].model = glm::translate(glm::mat4(1.0), llums[i].lightPos);
+			}
 		}
 		if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
 		{
-			llums[0].lightPos.x -= 0.1;
-			llums[0].model = glm::translate(glm::mat4(1.0), llums[0].lightPos);
+			for (int i = 0; i < 6; i++) {
+				llums[i].lightPos.x -= 0.01;
+				llums[i].model = glm::translate(glm::mat4(1.0), llums[i].lightPos);
+			}
 		}
 		if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
-		{ 
-			llums[0].lightPos.z += 0.1;
-			llums[0].model = glm::translate(glm::mat4(1.0), llums[0].lightPos);
+		{
+			for (int i = 0; i < 6; i++) {
+				llums[i].lightPos.z += 0.01;
+				llums[i].model = glm::translate(glm::mat4(1.0), llums[i].lightPos);
+			}
 		}
 		if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
 		{
-			llums[0].lightPos.z -= 0.1;
-			llums[0].model = glm::translate(glm::mat4(1.0), llums[0].lightPos);
+			for (int i = 0; i < 6; i++) {
+				llums[i].lightPos.z -= 0.01;
+				llums[i].model = glm::translate(glm::mat4(1.0), llums[i].lightPos);
+			}
 		}
 		if (glfwGetKey(window, GLFW_KEY_PAGE_UP) == GLFW_PRESS)
 		{
-			llums[0].lightPos.y += 0.1;
-			llums[0].model = glm::translate(glm::mat4(1.0), llums[0].lightPos);
+			for (int i = 0; i < 6; i++) {
+				llums[i].lightPos.y += 0.01;
+				llums[i].model = glm::translate(glm::mat4(1.0), llums[i].lightPos);
+			}
 		}
 		if (glfwGetKey(window, GLFW_KEY_PAGE_DOWN) == GLFW_PRESS)
-		{ 
-			llums[0].lightPos.y -= 0.1;
-			llums[0].model = glm::translate(glm::mat4(1.0), llums[0].lightPos);
+		{
+			for (int i = 0; i < 6; i++) {
+				llums[i].lightPos.y -= 0.01;
+				llums[i].model = glm::translate(glm::mat4(1.0), llums[i].lightPos);
+			}
 		}
 	}
 
