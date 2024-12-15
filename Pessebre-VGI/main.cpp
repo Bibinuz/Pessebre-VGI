@@ -118,7 +118,7 @@ int main() {
 
 	glm::vec3 camPos = camera->Position;
 
-	glm::vec3 posLlum1 = glm::vec3(0, 10, 10);
+	glm::vec3 posLlum1 = glm::vec3(0, 5, 0);
 	glm::mat4 modelLlum1 = glm::mat4(1.0f);
 	modelLlum1 = glm::translate(modelLlum1, posLlum1);
 
@@ -140,16 +140,17 @@ int main() {
 		
 	ls.push_back({ true, posLlum1, color1, Punt, 2, &llum1, modelLlum1});
 	ls.push_back({ true, posLlum2, color2, Direccional, 1, &llum2, modelLlum2});
-	ls.push_back({ true, posLlum3, color3, Direccional, 1, &llum3, modelLlum3 });
+	ls.push_back({ true, posLlum3, color3, Foco, 1, &llum3, modelLlum3 });
 
 	/* Shadow maps */
 	Shader depthShader("depth.vert", "depth.frag");
 
 	int diff = 0;
+	int resolutionShadowMap = 11;
 	for (int i = 0; i-diff < ls.size(); i++) {
 		if (ls[i-diff].tipus == Direccional)
 		{
-			ls[i-diff].shadowmap = Shadowmap(11, i);
+			ls[i-diff].shadowmap = Shadowmap(resolutionShadowMap, i);
 			ls[i-diff].shadowmap.lightProj = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, 0.5f, 100.0f);
 			llums.push_back(ls[i-diff]);
 		}
@@ -159,7 +160,7 @@ int main() {
 			for (int j = 0; j < 6; j++)
 			{
 				aux[j] = { ls[i-diff].sw_light, ls[i-diff].lightPos, ls[i-diff].lightCol, Punt, ls[i-diff].intensitat, ls[i-diff].mesh, ls[i-diff].model };
-				aux[j].shadowmap = Shadowmap(11, i + j);
+				aux[j].shadowmap = Shadowmap(resolutionShadowMap, i + j);
 				aux[j].shadowmap.lightProj = glm::perspective(90.0f, 1.0f, 0.5f, 100.0f);
 				//aux[j].shadowmap.lightProj = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, 0.1f, 100.0f);
 
@@ -181,6 +182,15 @@ int main() {
 			i += 5;
 			diff += 5;
 		}
+		else if (ls[i - diff].tipus == Foco)
+		{
+			ls[i - diff].shadowmap = Shadowmap(resolutionShadowMap, i);
+			//ls[i - diff].shadowmap.lightProj = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, 0.5f, 100.0f);
+			ls[i - diff].shadowmap.lightProj = glm::perspective(90.0f, 1.0f, 0.5f, 100.0f);
+			ls[i - diff].shadowmap.lightDir = glm::vec3( 0.0,-1.0, 0.0);
+			ls[i - diff].shadowmap.lightUp  = glm::vec3( 0.0, 0.0,-1.0);
+			llums.push_back(ls[i - diff]);
+		}
 	}
 
 
@@ -197,6 +207,8 @@ int main() {
 
 	int windowWidth, windowHeight;
 	int caganers=0;
+	int llumAControlar = 0;
+	int numLlumsAControlar = 6;
 
 	// Bucle principal
 	while (!glfwWindowShouldClose(window)&&varImgui.op!=Exit) {
@@ -300,45 +312,62 @@ int main() {
 		// Imprimim el frame rate
 		//std::cout << 1 / (glfwGetTime() - i) << std::endl;
 
+		if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS)
+		{
+			llumAControlar = 0;
+			numLlumsAControlar = 6;
+		}
+		if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS)
+		{
+			llumAControlar = 6;
+			numLlumsAControlar = 1;
+		}
+		if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS)
+		{
+			llumAControlar = 7;
+			numLlumsAControlar = 1;
+		}
+
+
 
 		if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
 		{
-			for (int i = 0; i < 6; i++) {
+			for (int i = llumAControlar; i < llumAControlar+numLlumsAControlar; i++) {
 				llums[i].lightPos.x += 0.01;
 				llums[i].model = glm::translate(glm::mat4(1.0), llums[i].lightPos);
 			}
 		}
 		if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
 		{
-			for (int i = 0; i < 6; i++) {
+			for (int i = llumAControlar; i < llumAControlar+numLlumsAControlar; i++) {
 				llums[i].lightPos.x -= 0.01;
 				llums[i].model = glm::translate(glm::mat4(1.0), llums[i].lightPos);
 			}
 		}
 		if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
 		{
-			for (int i = 0; i < 6; i++) {
-				llums[i].lightPos.z += 0.01;
+			for (int i = llumAControlar; i < llumAControlar+numLlumsAControlar; i++) {
+				llums[i].lightPos.z -= 0.01;
 				llums[i].model = glm::translate(glm::mat4(1.0), llums[i].lightPos);
 			}
 		}
 		if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
 		{
-			for (int i = 0; i < 6; i++) {
-				llums[i].lightPos.z -= 0.01;
+			for (int i = llumAControlar; i < llumAControlar+numLlumsAControlar; i++) {
+				llums[i].lightPos.z += 0.01;
 				llums[i].model = glm::translate(glm::mat4(1.0), llums[i].lightPos);
 			}
 		}
 		if (glfwGetKey(window, GLFW_KEY_PAGE_UP) == GLFW_PRESS)
 		{
-			for (int i = 0; i < 6; i++) {
+			for (int i = llumAControlar; i < llumAControlar+numLlumsAControlar; i++) {
 				llums[i].lightPos.y += 0.01;
 				llums[i].model = glm::translate(glm::mat4(1.0), llums[i].lightPos);
 			}
 		}
 		if (glfwGetKey(window, GLFW_KEY_PAGE_DOWN) == GLFW_PRESS)
 		{
-			for (int i = 0; i < 6; i++) {
+			for (int i = llumAControlar; i < llumAControlar+numLlumsAControlar; i++) {
 				llums[i].lightPos.y -= 0.01;
 				llums[i].model = glm::translate(glm::mat4(1.0), llums[i].lightPos);
 			}

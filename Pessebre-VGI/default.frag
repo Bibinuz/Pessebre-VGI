@@ -37,7 +37,12 @@ float specularLight = 0.50f;
 float inner_cone = 0.95f;
 float outer_cone = 0.9f;
 
-float ShadowCalculation(int i, vec3 normal, vec3 lightDir)
+float diffuse;
+float specular;
+vec3 normalSup;
+vec3 lightDirection;
+
+float ShadowCalculation(int i)
 {
 	vec3 projCoords = FragPosLightSpace.xyz / FragPosLightSpace.w;
 	projCoords = projCoords * 0.5 + 0.5;
@@ -45,26 +50,25 @@ float ShadowCalculation(int i, vec3 normal, vec3 lightDir)
 		return 0.0;
 	float closestDepth = texture(lights[i].depthMap, projCoords.xy).r;
 	float currentDepth = projCoords.z;
-	float bias = max(0.005 * (1.0 - dot(normal, lightDir)), 0.0005);
+	float bias = max(0.005 * (1.0 - dot(normalSup, lightDirection)), 0.0005);
 	float shadow = currentDepth-0.0005 > closestDepth ? 1.0 : 0.0;
-
+	
 	return shadow;
 
 }
 
-
-vec4 calculLightAmount(float diffuse, float inten, float specular, int i, vec3 normal, vec3 lightDir)
+vec4 calculLightAmount(float inten, int i)
 {
+	FragPosLightSpace = lights[i].lightSpaceMatrix * vec4(crntPos, 1.0);
+	float shadow = ShadowCalculation(i);
 	vec4 lightAmount;
-	float shadow = ShadowCalculation(i, normal, lightDir);
-	
-	lightAmount =  texture(diffuse0, texCoord) * (diffuse*inten*(1.0-shadow)+ambient) + inten * (1.0-shadow) * specular*0.05;
-
+	lightAmount =  texture(diffuse0, texCoord) * (diffuse*inten*(1.0-shadow)+ambient) + inten * (1.0-shadow) * specular*0.2;
 	lightAmount = lightAmount*lights[i].intensitat;
+
 	return lightAmount;
 }
 
-float PointShadowCalculation(int i, vec3 normal, vec3 lightDir)
+float PointShadowCalculation(int i)
 {
 	FragPosLightSpace = lights[i].lightSpaceMatrix * vec4(crntPos, 1.0);
 	vec3 projCoords = FragPosLightSpace.xyz / FragPosLightSpace.w;
@@ -73,23 +77,23 @@ float PointShadowCalculation(int i, vec3 normal, vec3 lightDir)
 		return 0.0;
 	float closestDepth = texture(lights[i].depthMap, projCoords.xy).r;
 	float currentDepth = projCoords.z;
-	float bias = max(0.005 * (1.0 - dot(normal, lightDir)), 0.0005);
+	float bias = max(0.005 * (1.0 - dot(normalSup, lightDirection)), 0.0005);
 	float shadow = currentDepth-0.0005 > closestDepth ? 1.0 : 0.0;
 
 	return shadow;
 
 }
 
-vec4 calculPointLightAmount(float diffuse, float inten, float specular, int i, vec3 normal, vec3 lightDir)
+vec4 calculPointLightAmount(float inten, int i)
 {
 	vec4 lightAmount;
 	float shadow = 0.0;
 	for(int j = 0; j<6;j++)
 	{
-		shadow += PointShadowCalculation(i+j, normal, lightDir);
+		shadow += PointShadowCalculation(i+j);
 	}
 	shadow = shadow > 0.9 ? 1.0 : 0.0;
-	lightAmount =  texture(diffuse0, texCoord) * (diffuse*inten*(1.0-shadow)+ambient) + inten * (1.0-shadow) * specular*0.05;
+	lightAmount =  texture(diffuse0, texCoord) * (diffuse*inten*(1.0-shadow)+ambient) + inten * (1.0-shadow) * specular*0.2;
 	lightAmount = lightAmount*lights[i].intensitat;
 	return lightAmount;
 }
@@ -101,17 +105,7 @@ vec4 pointLight(int i)
 	
 	float inten = 1.0f/(a*dist*dist + b*dist + c);
 	
-	vec3 normal = normalize(normal);
-	vec3 lightDirection = normalize(lights[i].lightPos - crntPos);	
-
-	float diffuse = max(dot(normal, lightDirection), 0.0f);
-	
-	vec3 viewDirection = normalize(camPos - crntPos);
-	vec3 reflectionDirection = reflect(-lightDirection, normal);
-	float specAmount = pow(max(dot(viewDirection, reflectionDirection), 0.0f), 16);
-	float specular = specAmount * specularLight;
-
-	vec4 lightAmount = calculPointLightAmount(diffuse, inten, specular, i, normal, lightDirection);
+	vec4 lightAmount = calculPointLightAmount(inten, i);
 
 	return lightAmount;
 
@@ -119,34 +113,29 @@ vec4 pointLight(int i)
 
 vec4 direcLight(int i)
 {	
-	vec3 normal = normalize(normal);
-	vec3 lightDirection = normalize(lights[i].lightPos-crntPos);
-	float diffuse = max(dot(normal, lightDirection), 0.0f);
-	
-	vec3 viewDirection = normalize(camPos - crntPos);
-	vec3 reflectionDirection = reflect(-lightDirection, normal);
-	float specAmount = pow(max(dot(viewDirection, reflectionDirection), 0.0f), 16);
-	float specular = specAmount * specularLight;
-	
-	return calculLightAmount(diffuse, 1, specular, i, normal, lightDirection);
-
+	return calculLightAmount(1, i);
 }
 
-vec4  spotLight(int i){
-	vec3 normal = normalize(normal);
-	vec3 lightDirection = normalize(lights[i].lightPos - crntPos);	
-	float diffuse = max(dot(normal, lightDirection), 0.0f);
-	
-	vec3 viewDirection = normalize(camPos - crntPos);
-	vec3 reflectionDirection = reflect(-lightDirection, normal);
-	float specAmount = pow(max(dot(viewDirection, reflectionDirection), 0.0f), 16);
-	float specular = specAmount * specularLight;
-	
+vec4  spotLight(int i)
+{
 	float angle = dot(vec3(0.0f, -1.0f, 0.0f), -lightDirection);
 	float inten =  clamp((angle-outer_cone) / (inner_cone - outer_cone), 0.0f, 1.0f); 
-
-	return calculLightAmount(diffuse, inten, specular, i, normal, lightDirection);
+	
+	return calculLightAmount(inten, i);
 }
+
+void CalculComponentsPrincipals(int i)
+{
+		normalSup = normalize(normal);
+		lightDirection = normalize(lights[i].lightPos - crntPos);	
+		diffuse = max(dot(normalSup, lightDirection), 0.0f);
+	
+		vec3 viewDirection = normalize(camPos - crntPos);
+		vec3 reflectionDirection = reflect(-lightDirection, normalSup);
+		float specAmount = pow(max(dot(viewDirection, reflectionDirection), 0.0f), 16);
+		specular = specAmount * specularLight;
+}
+
 
 void main()
 {
@@ -157,7 +146,7 @@ void main()
 	{
 		if(lights[i].sw_light)
 		{
-
+			CalculComponentsPrincipals(i);
 			switch(lights[i].tipus)
 			{
 				case 0:
@@ -168,7 +157,6 @@ void main()
 					FragColor+=spotLight(i);
 					break;
 				case 2:
-					FragPosLightSpace = lights[i].lightSpaceMatrix * vec4(crntPos, 1.0);
 					FragColor+=direcLight(i);
 					break;
 				default:
