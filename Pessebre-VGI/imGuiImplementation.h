@@ -42,7 +42,7 @@ public:
     void loadMarcoImage(const char* imagePath); // Nueva función para cargar el marco
     void RenderCenteredButton(const char* label, ImVec2 buttonSize);
     void rotateCameraAroundScene(Camera& camera, float radius, float speed);
-    void renderScene(GLFWwindow* window);
+    GLuint LoadTextureFromFile(const char* path);
 
     MenuOption op = Menu;
 
@@ -130,6 +130,14 @@ inline void imGuiImplementation::imGuiRender()
 
 inline void imGuiImplementation::imGuiMainMenu(int windowWidth, int windowHeight, Camera*& c)
 {
+    // Carregar textures només una vegada
+    static GLuint jugarTextureID = LoadTextureFromFile("Menu/jugar.png");
+    static GLuint managerTextureID = LoadTextureFromFile("Menu/manager.png");
+    static GLuint staticCameraTextureID = LoadTextureFromFile("Menu/estatica.png");
+    static GLuint controlsTextureID = LoadTextureFromFile("Menu/controls.png");
+    static GLuint creditsTextureID = LoadTextureFromFile("Menu/credits.png");
+    static GLuint exitTextureID = LoadTextureFromFile("Menu/exit.png");
+
     rotateCameraAroundScene(*c, 20.0f, 0.2f);
 
     ImGui::SetNextWindowPos(ImVec2(0, 0));
@@ -148,7 +156,7 @@ inline void imGuiImplementation::imGuiMainMenu(int windowWidth, int windowHeight
         ImGui::Image((ImTextureID)(uintptr_t)marcoTextureID, windowSize);
     }
 
-    // ------------------- Título como imagen
+    // ------------------- Títol com a imatge
     if (backgroundTextureID != 0) {
         float imageWidth = windowSize.x * 0.3f;
         float aspectRatio = (backgroundHeight > 0) ? static_cast<float>(backgroundHeight) / static_cast<float>(backgroundWidth) : 1.0f;
@@ -163,49 +171,47 @@ inline void imGuiImplementation::imGuiMainMenu(int windowWidth, int windowHeight
         ImGui::Image((ImTextureID)(uintptr_t)backgroundTextureID, imageSize);
     }
 
-    // ------------ Crear Botones en 2 columnas x 3 filas
-    ImVec2 buttonSize(200, 60);
+    // ------------ Crear Botons amb Imatges en 2 columnes x 3 files
+    ImVec2 buttonSize(300, 90); // Amplada = 300, Alçada = 90
+    float spacing = 30.0f;      // Espai vertical entre botons
+    float horizontalSpacing = 70.0f; // Espai horizontal entre columnes
 
-    // Cambiar el color de los botones a azul oscuro
-    ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.0f, 0.1f, 0.3f, 1.0f));        // Color del botón
-    ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.0f, 0.2f, 0.5f, 1.0f)); // Color al pasar el ratón por encima
-    ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.0f, 0.3f, 0.6f, 1.0f));  // Color al hacer clic
+    // Calculem la posició inicial
+    float totalHeight = (buttonSize.y * 3) + (spacing * 2); // 3 botons + 2 espais
+    float startY = (windowSize.y - totalHeight) / 2.0f;
 
-    // Vamos a colocar 6 botones en 2 columnas y 3 filas:
-    // Columna 1: Jugar, Manager, Camera Estatica
-    // Columna 2: Controls, Credits, Exit
-
-    float spacing = 20.0f; // Espacio vertical entre botones
-    float totalHeight = (buttonSize.y * 3) + (spacing * 2); // Altura total de 3 botones + espacios
-    float startY = (windowSize.y - totalHeight) / 2.0f;     // Posición Y inicial centrada
-
-    float horizontalSpacing = 50.0f; // Espacio horizontal entre columnas
     float totalWidth = (buttonSize.x * 2) + horizontalSpacing;
-    float startX = (windowSize.x - totalWidth) / 2.0f; // Posición X inicial centrada para primera columna
+    float startX = (windowSize.x - totalWidth) / 2.0f;
+
+    // Ajustar estil per eliminar fons i marges dels botons
+    ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 0, 0));
+    ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0, 0, 0, 0));
+    ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0, 0, 0, 0));
+    ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0, 0));
 
     // Primera columna
     ImGui::SetCursorPos(ImVec2(startX, startY));
-    if (ImGui::Button("Jugar", buttonSize)) { op = Juga; }
+    if (ImGui::ImageButton("jugar_btn", (ImTextureID)(uintptr_t)jugarTextureID, buttonSize, ImVec2(0, 0), ImVec2(1, 1))) { op = Juga; }
 
     ImGui::SetCursorPos(ImVec2(startX, startY + buttonSize.y + spacing));
-    if (ImGui::Button("Manager", buttonSize)) { op = Manager; }
+    if (ImGui::ImageButton("manager_btn", (ImTextureID)(uintptr_t)managerTextureID, buttonSize, ImVec2(0, 0), ImVec2(1, 1))) { op = Manager; }
 
     ImGui::SetCursorPos(ImVec2(startX, startY + (buttonSize.y + spacing) * 2));
-    if (ImGui::Button("Camera Estatica", buttonSize)) { op = StaticCamera; }
+    if (ImGui::ImageButton("camera_btn", (ImTextureID)(uintptr_t)staticCameraTextureID, buttonSize, ImVec2(0, 0), ImVec2(1, 1))) { op = StaticCamera; }
 
-    // Segunda columna (a la derecha de la primera)
+    // Segona columna
     float secondColumnX = startX + buttonSize.x + horizontalSpacing;
 
     ImGui::SetCursorPos(ImVec2(secondColumnX, startY));
-    if (ImGui::Button("Controls", buttonSize)) { op = Controls; }
+    if (ImGui::ImageButton("controls_btn", (ImTextureID)(uintptr_t)controlsTextureID, buttonSize, ImVec2(0, 0), ImVec2(1, 1))) { op = Controls; }
 
     ImGui::SetCursorPos(ImVec2(secondColumnX, startY + buttonSize.y + spacing));
-    if (ImGui::Button("Credits", buttonSize)) { op = Credits; }
+    if (ImGui::ImageButton("credits_btn", (ImTextureID)(uintptr_t)creditsTextureID, buttonSize, ImVec2(0, 0), ImVec2(1, 1))) { op = Credits; }
 
     ImGui::SetCursorPos(ImVec2(secondColumnX, startY + (buttonSize.y + spacing) * 2));
-    if (ImGui::Button("Exit", buttonSize)) { op = Exit; }
+    if (ImGui::ImageButton("exit_btn", (ImTextureID)(uintptr_t)exitTextureID, buttonSize, ImVec2(0, 0), ImVec2(1, 1))) { op = Exit; }
 
-    // Restaurar el color original de los botones
+    ImGui::PopStyleVar();
     ImGui::PopStyleColor(3);
 
     ImGui::End();
@@ -465,7 +471,37 @@ void imGuiImplementation::rotateCameraAroundScene(Camera& camera, float radius, 
     }
 }
 
-void imGuiImplementation::renderScene(GLFWwindow* window)
+
+GLuint imGuiImplementation::LoadTextureFromFile(const char* path)
 {
-    // Implementación de renderizado de la escena si es necesario
+    GLuint textureID;
+    glGenTextures(1, &textureID);
+
+    int width, height, nrChannels;
+    unsigned char* data = stbi_load(path, &width, &height, &nrChannels, 0);
+    if (data)
+    {
+        GLenum format = (nrChannels == 4) ? GL_RGBA : GL_RGB;
+
+        glBindTexture(GL_TEXTURE_2D, textureID);
+        glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
+        glGenerateMipmap(GL_TEXTURE_2D);
+
+        // Paràmetres de la textura
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+        stbi_image_free(data);
+    }
+    else
+    {
+        std::cerr << "Failed to load texture: " << path << std::endl;
+        stbi_image_free(data);
+    }
+
+    return textureID;   
 }
+
+
