@@ -1,3 +1,5 @@
+// imGuiImplementation.h
+
 #pragma once
 #include "imgui/imgui.h"
 #include "imgui/imgui_impl_glfw.h"
@@ -5,8 +7,8 @@
 #include <vector>
 #include "Camera.h"
 #include "Model.h"
-#include <iostream> // Añadido para manejo de entradas y salidas
-#include "stb_image.h" // Incluido sin definir STB_IMAGE_IMPLEMENTATION
+#include <iostream>
+#include "stb_image.h"
 
 #ifndef M_PI
 #define M_PI 3.14159265358979323846
@@ -39,24 +41,26 @@ public:
     void imGuiControls(int windowWidth, int windowHeight);
     void imGuiCredits(int windowWidth, int windowHeight);
     void loadBackgroundImage(const char* imagePath);
-    void loadMarcoImage(const char* imagePath); // Nueva función para cargar el marco
+    void loadMarcoImage(const char* imagePath);
     void RenderCenteredButton(const char* label, ImVec2 buttonSize);
     void rotateCameraAroundScene(Camera& camera, float radius, float speed);
     GLuint LoadTextureFromFile(const char* path);
 
     MenuOption op = Menu;
 
+    // Ara el deixem públic per poder accedir-hi des de main.cpp
+    unsigned int buttonReturnTextureID; // Nueva textura para "Tornar al menu"
+
 private:
     ImGuiIO io;
     unsigned int backgroundTextureID;
-    int backgroundWidth;  // Ancho de la imagen de fondo
-    int backgroundHeight; // Alto de la imagen de fondo
+    int backgroundWidth;
+    int backgroundHeight;
 
-    unsigned int marcoTextureID;  // Textura del marco
-    int marcoWidth;               // Ancho del marco
-    int marcoHeight;              // Alto del marco
+    unsigned int marcoTextureID;
+    int marcoWidth;
+    int marcoHeight;
 
-    // Identificadores de textura para los botones (no usados actualmente, pero definidos)
     unsigned int buttonJugarTextureID;
     unsigned int buttonManagerTextureID;
     unsigned int buttonStaticCameraTextureID;
@@ -64,6 +68,8 @@ private:
     unsigned int buttonCreditsTextureID;
     unsigned int buttonExitTextureID;
 };
+
+
 
 imGuiImplementation::imGuiImplementation(GLFWwindow* window)
     : backgroundTextureID(0), backgroundWidth(0), backgroundHeight(0),
@@ -80,6 +86,9 @@ imGuiImplementation::imGuiImplementation(GLFWwindow* window)
     loadBackgroundImage("Menu/pessebre2.png");
     // Cargar la imagen del marco
     loadMarcoImage("Menu/marco.png");
+
+    // Carregar la textura del botó "Tornar al menu"
+    buttonReturnTextureID = LoadTextureFromFile("Menu/back.png");
 }
 
 imGuiImplementation::~imGuiImplementation()
@@ -172,7 +181,7 @@ inline void imGuiImplementation::imGuiMainMenu(int windowWidth, int windowHeight
     }
 
     // ------------ Crear Botons amb Imatges en 2 columnes x 3 files
-    ImVec2 buttonSize(300, 90); // Amplada = 300, Alçada = 90
+    ImVec2 buttonSize(300, 100); // Amplada = 300, Alçada = 90
     float spacing = 30.0f;      // Espai vertical entre botons
     float horizontalSpacing = 70.0f; // Espai horizontal entre columnes
 
@@ -295,10 +304,24 @@ inline void imGuiImplementation::imGuiControls(int windowWidth, int windowHeight
     ImGui::Text("Controls del juego:");
     ImGui::BulletText("W, A, S, D: Moverse");
     ImGui::BulletText("Click izquierdo: Interactuar con botones");
-    ImVec2 buttonSize(200, 60);
-    if (ImGui::Button("Tornar al menu")) {
+
+    // Botó de tornar al menú com a imatge
+    ImVec2 buttonSize(100, 100);
+    float buttonCenterX = (windowSize.x - buttonSize.x) / 2.0f;
+    float buttonCenterY = (windowSize.y - buttonSize.y) * 8.0f / 10.0f;
+    ImGui::SetCursorPos(ImVec2(buttonCenterX, buttonCenterY));
+
+    ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 0, 0));
+    ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0, 0, 0, 0));
+    ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0, 0, 0, 0));
+    ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0, 0));
+
+    if (ImGui::ImageButton("return_btn_controls", (ImTextureID)(uintptr_t)buttonReturnTextureID, buttonSize, ImVec2(0, 0), ImVec2(1, 1))) {
         op = Menu;
     }
+
+    ImGui::PopStyleVar();
+    ImGui::PopStyleColor(3);
 
     ImGui::End();
     imGuiRender();
@@ -347,13 +370,23 @@ inline void imGuiImplementation::imGuiCredits(int windowWidth, int windowHeight)
     ImGui::BulletText("Pere Llaurado");
 
     ImGui::SetWindowFontScale(2);
-    ImVec2 buttonSizeCredits(300, 60);
+    ImVec2 buttonSizeCredits(100, 100);
     float buttonCenterX = (windowSize.x - buttonSizeCredits.x) / 2.0f;
     float buttonCenterY = listStartY + 240;
     ImGui::SetCursorPos(ImVec2(buttonCenterX, buttonCenterY));
-    if (ImGui::Button("Tornar al menu", buttonSizeCredits)) {
+
+    // Botó de tornar al menú com a imatge
+    ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 0, 0));
+    ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0, 0, 0, 0));
+    ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0, 0, 0, 0));
+    ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0, 0));
+
+    if (ImGui::ImageButton("return_btn_credits", (ImTextureID)(uintptr_t)buttonReturnTextureID, buttonSizeCredits, ImVec2(0, 0), ImVec2(1, 1))) {
         op = Menu;
     }
+
+    ImGui::PopStyleVar();
+    ImGui::PopStyleColor(3);
 
     ImGui::End();
     imGuiRender();
@@ -501,7 +534,5 @@ GLuint imGuiImplementation::LoadTextureFromFile(const char* path)
         stbi_image_free(data);
     }
 
-    return textureID;   
+    return textureID;
 }
-
-
