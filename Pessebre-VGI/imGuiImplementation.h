@@ -48,8 +48,7 @@ public:
 
     MenuOption op = Menu;
 
-    // Ara el deixem públic per poder accedir-hi des de main.cpp
-    unsigned int buttonReturnTextureID; // Nueva textura para "Tornar al menu"
+    unsigned int buttonReturnTextureID;
 
 private:
     ImGuiIO io;
@@ -68,7 +67,6 @@ private:
     unsigned int buttonCreditsTextureID;
     unsigned int buttonExitTextureID;
 };
-
 
 
 imGuiImplementation::imGuiImplementation(GLFWwindow* window)
@@ -93,17 +91,14 @@ imGuiImplementation::imGuiImplementation(GLFWwindow* window)
 
 imGuiImplementation::~imGuiImplementation()
 {
-    // Eliminar la textura de fondo si se cargó correctamente
     if (backgroundTextureID != 0) {
         glDeleteTextures(1, &backgroundTextureID);
     }
 
-    // Eliminar la textura del marco si se cargó correctamente
     if (marcoTextureID != 0) {
         glDeleteTextures(1, &marcoTextureID);
     }
 
-    // Limpiar ImGui
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
     ImGui::DestroyContext();
@@ -139,7 +134,6 @@ inline void imGuiImplementation::imGuiRender()
 
 inline void imGuiImplementation::imGuiMainMenu(int windowWidth, int windowHeight, Camera*& c)
 {
-    // Carregar textures només una vegada
     static GLuint jugarTextureID = LoadTextureFromFile("Menu/jugar.png");
     static GLuint managerTextureID = LoadTextureFromFile("Menu/manager.png");
     static GLuint staticCameraTextureID = LoadTextureFromFile("Menu/estatica.png");
@@ -159,13 +153,13 @@ inline void imGuiImplementation::imGuiMainMenu(int windowWidth, int windowHeight
 
     ImVec2 windowSize = ImGui::GetWindowSize();
 
-    // Dibujamos el marco a tamaño completo de la ventana
+    // Marc
     if (marcoTextureID != 0) {
         ImGui::SetCursorPos(ImVec2(0, 0));
         ImGui::Image((ImTextureID)(uintptr_t)marcoTextureID, windowSize);
     }
 
-    // ------------------- Títol com a imatge
+    // Títol
     if (backgroundTextureID != 0) {
         float imageWidth = windowSize.x * 0.3f;
         float aspectRatio = (backgroundHeight > 0) ? static_cast<float>(backgroundHeight) / static_cast<float>(backgroundWidth) : 1.0f;
@@ -180,19 +174,17 @@ inline void imGuiImplementation::imGuiMainMenu(int windowWidth, int windowHeight
         ImGui::Image((ImTextureID)(uintptr_t)backgroundTextureID, imageSize);
     }
 
-    // ------------ Crear Botons amb Imatges en 2 columnes x 3 files
-    ImVec2 buttonSize(300, 100); // Amplada = 300, Alçada = 90
-    float spacing = 30.0f;      // Espai vertical entre botons
-    float horizontalSpacing = 70.0f; // Espai horizontal entre columnes
+    ImVec2 buttonSize(300, 100);
+    float spacing = 30.0f;
+    float horizontalSpacing = 70.0f;
 
-    // Calculem la posició inicial
-    float totalHeight = (buttonSize.y * 3) + (spacing * 2); // 3 botons + 2 espais
+    float totalHeight = (buttonSize.y * 3) + (spacing * 2);
     float startY = (windowSize.y - totalHeight) / 2.0f;
 
     float totalWidth = (buttonSize.x * 2) + horizontalSpacing;
     float startX = (windowSize.x - totalWidth) / 2.0f;
 
-    // Ajustar estil per eliminar fons i marges dels botons
+    // Ajustem l'estil dels botons perquè no tinguin fons i puguem aplicar el nostre efecte
     ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 0, 0));
     ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0, 0, 0, 0));
     ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0, 0, 0, 0));
@@ -200,25 +192,43 @@ inline void imGuiImplementation::imGuiMainMenu(int windowWidth, int windowHeight
 
     // Primera columna
     ImGui::SetCursorPos(ImVec2(startX, startY));
-    if (ImGui::ImageButton("jugar_btn", (ImTextureID)(uintptr_t)jugarTextureID, buttonSize, ImVec2(0, 0), ImVec2(1, 1))) { op = Juga; }
+    if (ImGui::ImageButton("jugar_btn", (ImTextureID)(uintptr_t)jugarTextureID, buttonSize)) { op = Juga; }
+    if (ImGui::IsItemHovered()) {
+        ImGui::GetWindowDrawList()->AddRectFilled(ImGui::GetItemRectMin(), ImGui::GetItemRectMax(), IM_COL32(0, 0, 0, 100));
+    }
 
     ImGui::SetCursorPos(ImVec2(startX, startY + buttonSize.y + spacing));
-    if (ImGui::ImageButton("manager_btn", (ImTextureID)(uintptr_t)managerTextureID, buttonSize, ImVec2(0, 0), ImVec2(1, 1))) { op = Manager; }
+    if (ImGui::ImageButton("manager_btn", (ImTextureID)(uintptr_t)managerTextureID, buttonSize)) { op = Manager; }
+    if (ImGui::IsItemHovered()) {
+        ImGui::GetWindowDrawList()->AddRectFilled(ImGui::GetItemRectMin(), ImGui::GetItemRectMax(), IM_COL32(0, 0, 0, 100));
+    }
 
     ImGui::SetCursorPos(ImVec2(startX, startY + (buttonSize.y + spacing) * 2));
-    if (ImGui::ImageButton("camera_btn", (ImTextureID)(uintptr_t)staticCameraTextureID, buttonSize, ImVec2(0, 0), ImVec2(1, 1))) { op = StaticCamera; }
+    if (ImGui::ImageButton("camera_btn", (ImTextureID)(uintptr_t)staticCameraTextureID, buttonSize)) { op = StaticCamera; }
+    if (ImGui::IsItemHovered()) {
+        ImGui::GetWindowDrawList()->AddRectFilled(ImGui::GetItemRectMin(), ImGui::GetItemRectMax(), IM_COL32(0, 0, 0, 100));
+    }
 
     // Segona columna
     float secondColumnX = startX + buttonSize.x + horizontalSpacing;
 
     ImGui::SetCursorPos(ImVec2(secondColumnX, startY));
-    if (ImGui::ImageButton("controls_btn", (ImTextureID)(uintptr_t)controlsTextureID, buttonSize, ImVec2(0, 0), ImVec2(1, 1))) { op = Controls; }
+    if (ImGui::ImageButton("controls_btn", (ImTextureID)(uintptr_t)controlsTextureID, buttonSize)) { op = Controls; }
+    if (ImGui::IsItemHovered()) {
+        ImGui::GetWindowDrawList()->AddRectFilled(ImGui::GetItemRectMin(), ImGui::GetItemRectMax(), IM_COL32(0, 0, 0, 100));
+    }
 
     ImGui::SetCursorPos(ImVec2(secondColumnX, startY + buttonSize.y + spacing));
-    if (ImGui::ImageButton("credits_btn", (ImTextureID)(uintptr_t)creditsTextureID, buttonSize, ImVec2(0, 0), ImVec2(1, 1))) { op = Credits; }
+    if (ImGui::ImageButton("credits_btn", (ImTextureID)(uintptr_t)creditsTextureID, buttonSize)) { op = Credits; }
+    if (ImGui::IsItemHovered()) {
+        ImGui::GetWindowDrawList()->AddRectFilled(ImGui::GetItemRectMin(), ImGui::GetItemRectMax(), IM_COL32(0, 0, 0, 100));
+    }
 
     ImGui::SetCursorPos(ImVec2(secondColumnX, startY + (buttonSize.y + spacing) * 2));
-    if (ImGui::ImageButton("exit_btn", (ImTextureID)(uintptr_t)exitTextureID, buttonSize, ImVec2(0, 0), ImVec2(1, 1))) { op = Exit; }
+    if (ImGui::ImageButton("exit_btn", (ImTextureID)(uintptr_t)exitTextureID, buttonSize)) { op = Exit; }
+    if (ImGui::IsItemHovered()) {
+        ImGui::GetWindowDrawList()->AddRectFilled(ImGui::GetItemRectMin(), ImGui::GetItemRectMax(), IM_COL32(0, 0, 0, 100));
+    }
 
     ImGui::PopStyleVar();
     ImGui::PopStyleColor(3);
@@ -305,7 +315,6 @@ inline void imGuiImplementation::imGuiControls(int windowWidth, int windowHeight
     ImGui::BulletText("W, A, S, D: Moverse");
     ImGui::BulletText("Click izquierdo: Interactuar con botones");
 
-    // Botó de tornar al menú com a imatge
     ImVec2 buttonSize(100, 100);
     float buttonCenterX = (windowSize.x - buttonSize.x) / 2.0f;
     float buttonCenterY = (windowSize.y - buttonSize.y) * 8.0f / 10.0f;
@@ -316,8 +325,11 @@ inline void imGuiImplementation::imGuiControls(int windowWidth, int windowHeight
     ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0, 0, 0, 0));
     ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0, 0));
 
-    if (ImGui::ImageButton("return_btn_controls", (ImTextureID)(uintptr_t)buttonReturnTextureID, buttonSize, ImVec2(0, 0), ImVec2(1, 1))) {
+    if (ImGui::ImageButton("return_btn_controls", (ImTextureID)(uintptr_t)buttonReturnTextureID, buttonSize)) {
         op = Menu;
+    }
+    if (ImGui::IsItemHovered()) {
+        ImGui::GetWindowDrawList()->AddRectFilled(ImGui::GetItemRectMin(), ImGui::GetItemRectMax(), IM_COL32(0, 0, 0, 100));
     }
 
     ImGui::PopStyleVar();
@@ -375,14 +387,16 @@ inline void imGuiImplementation::imGuiCredits(int windowWidth, int windowHeight)
     float buttonCenterY = listStartY + 240;
     ImGui::SetCursorPos(ImVec2(buttonCenterX, buttonCenterY));
 
-    // Botó de tornar al menú com a imatge
     ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 0, 0));
     ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0, 0, 0, 0));
     ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0, 0, 0, 0));
     ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0, 0));
 
-    if (ImGui::ImageButton("return_btn_credits", (ImTextureID)(uintptr_t)buttonReturnTextureID, buttonSizeCredits, ImVec2(0, 0), ImVec2(1, 1))) {
+    if (ImGui::ImageButton("return_btn_credits", (ImTextureID)(uintptr_t)buttonReturnTextureID, buttonSizeCredits)) {
         op = Menu;
+    }
+    if (ImGui::IsItemHovered()) {
+        ImGui::GetWindowDrawList()->AddRectFilled(ImGui::GetItemRectMin(), ImGui::GetItemRectMax(), IM_COL32(0, 0, 0, 100));
     }
 
     ImGui::PopStyleVar();
@@ -504,7 +518,6 @@ void imGuiImplementation::rotateCameraAroundScene(Camera& camera, float radius, 
     }
 }
 
-
 GLuint imGuiImplementation::LoadTextureFromFile(const char* path)
 {
     GLuint textureID;
@@ -520,7 +533,6 @@ GLuint imGuiImplementation::LoadTextureFromFile(const char* path)
         glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
         glGenerateMipmap(GL_TEXTURE_2D);
 
-        // Paràmetres de la textura
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);

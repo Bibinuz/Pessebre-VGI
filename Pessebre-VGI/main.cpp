@@ -161,13 +161,11 @@ int main() {
 			ImGui::SetNextWindowPos(ImVec2(1650, 10));
 			ImGui::Begin("Juga", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_AlwaysAutoResize);
 
-			// Fem el mateix estil que als altres botons
 			ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 0, 0));
 			ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0, 0, 0, 0));
 			ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0, 0, 0, 0));
 			ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0, 0));
 
-			// Botó "Tornar al menu" amb imatge
 			if (ImGui::ImageButton("return_btn_juga", (ImTextureID)(uintptr_t)varImgui.buttonReturnTextureID, ImVec2(100, 100), ImVec2(0, 0), ImVec2(1, 1))) {
 				varImgui.op = Menu;
 			}
@@ -203,7 +201,9 @@ int main() {
 		case StaticCamera:
 			varImgui.imGuiStaticCamera(camera, cameraEstatica);
 
-			ImGui::Begin("Static Camera");
+			// Fem igual que a Juga i Manager: finestra flotant per al botó
+			ImGui::SetNextWindowPos(ImVec2(1650, 10));
+			ImGui::Begin("Static Camera Button", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_AlwaysAutoResize);
 
 			ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 0, 0));
 			ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0, 0, 0, 0));
@@ -221,14 +221,10 @@ int main() {
 
 		case Controls:
 			varImgui.imGuiControls(windowWidth, windowHeight);
-			// Ja no posem el segon botó textual aquí, 
-			// perquè imGuiControls() ja inclou el botó d'imatge "Tornar al menu"
 			break;
 
 		case Credits:
 			varImgui.imGuiCredits(windowWidth, windowHeight);
-			// Igual que a Controls, no posem un segon botó, 
-			// ja que imGuiCredits() ja té el botó d'imatge
 			break;
 
 		case Menu:
