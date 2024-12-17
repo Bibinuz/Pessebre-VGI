@@ -36,23 +36,10 @@
               "RelativeDocumentMoniker": "main.cpp",
               "ToolTip": "C:\\Users\\Biel\\source\\gitRepos\\Pessebre-VGI\\Pessebre-VGI\\main.cpp*",
               "RelativeToolTip": "main.cpp*",
-              "ViewState": "AgIAADYAAAAAAAAAAAAAAFAAAAAiAAAAAAAAAA==",
+              "ViewState": "AgIAAEIAAAAAAAAAAAAAAE8AAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2024-10-28T09:52:11.99Z",
               "IsPinned": true,
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "default.frag",
-              "DocumentMoniker": "C:\\Users\\Biel\\source\\gitRepos\\Pessebre-VGI\\Pessebre-VGI\\default.frag",
-              "RelativeDocumentMoniker": "default.frag",
-              "ToolTip": "C:\\Users\\Biel\\source\\gitRepos\\Pessebre-VGI\\Pessebre-VGI\\default.frag",
-              "RelativeToolTip": "default.frag",
-              "ViewState": "AgIAAG0AAAAAAAAAAAAUwHUAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
-              "WhenOpened": "2024-12-17T19:22:11.478Z",
               "EditorCaption": ""
             },
             {
@@ -73,6 +60,18 @@
             },
             {
               "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "default.frag",
+              "DocumentMoniker": "C:\\Users\\Biel\\source\\gitRepos\\Pessebre-VGI\\Pessebre-VGI\\default.frag",
+              "RelativeDocumentMoniker": "default.frag",
+              "ToolTip": "C:\\Users\\Biel\\source\\gitRepos\\Pessebre-VGI\\Pessebre-VGI\\default.frag",
+              "RelativeToolTip": "default.frag",
+              "ViewState": "AgIAAG0AAAAAAAAAAAAUwHUAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2024-12-17T19:22:11.478Z"
+            },
+            {
+              "$type": "Document",
               "DocumentIndex": 1,
               "Title": "funcionsEscena.cpp",
               "DocumentMoniker": "C:\\Users\\Biel\\source\\gitRepos\\Pessebre-VGI\\Pessebre-VGI\\funcionsEscena.cpp",
@@ -81,8 +80,7 @@
               "RelativeToolTip": "funcionsEscena.cpp",
               "ViewState": "AgIAACQAAAAAAAAAAAAAADgAAAACAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2024-12-17T12:12:55.199Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-12-17T12:12:55.199Z"
             },
             {
               "$type": "Document",

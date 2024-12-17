@@ -270,7 +270,7 @@ int main() {
 		glfwGetFramebufferSize(window, &windowWidth, &windowHeight);		
 
 		DrawModels(shaderProgram, models, modelMatrices, llums, *camera);
-		DrawLights(lightShader, llums, *camera);
+		//DrawLights(lightShader, llums, *camera);
 		skybox.drawSkybox(skyboxShader, *camera);
 
 		switch (varImgui.op) {
