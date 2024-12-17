@@ -29,8 +29,8 @@ uniform Light lights[NUM_LIGHTS];
 
 //Globals
 vec4 FragPosLightSpace;
-float a = 0.01;
-float b = 0.01;
+float a = 0.001;
+float b = 0.001;
 float c = 1;
 float ambient = 0.1f;
 float specularLight = 0.50f;
@@ -62,7 +62,7 @@ vec4 calculLightAmount(float inten, int i)
 	FragPosLightSpace = lights[i].lightSpaceMatrix * vec4(crntPos, 1.0);
 	float shadow = ShadowCalculation(i);
 	vec4 lightAmount;
-	lightAmount =  texture(diffuse0, texCoord) * (diffuse*inten*(1.0-shadow)+ambient) + inten * (1.0-shadow) * specular*0.2;
+	lightAmount =  lights[i].lightColor * texture(diffuse0, texCoord) * (diffuse*inten*(1.0-shadow)+ambient) + inten * (1.0-shadow) * specular*0.2;
 	lightAmount = lightAmount*lights[i].intensitat;
 
 	return lightAmount;
@@ -93,7 +93,7 @@ vec4 calculPointLightAmount(float inten, int i)
 		shadow += PointShadowCalculation(i+j);
 	}
 	shadow = shadow > 0.9 ? 1.0 : 0.0;
-	lightAmount =  texture(diffuse0, texCoord) * (diffuse*inten*(1.0-shadow)+ambient) + inten * (1.0-shadow) * specular*0.2;
+	lightAmount =  lights[i].lightColor * texture(diffuse0, texCoord) * (diffuse*inten*(1.0-shadow)+ambient) + inten * (1.0-shadow) * specular*0.2;
 	lightAmount = lightAmount*lights[i].intensitat;
 	return lightAmount;
 }

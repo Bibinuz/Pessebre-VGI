@@ -67,7 +67,8 @@ void SetupModels(std::vector<Model>& models, std::vector<glm::mat4>& modelMatric
 		{ "models3d/camellBaixRes.obj",		glm::vec3(-9.0f, 0.0f, -15.0f),		glm::vec3(0.075f),	glm::radians(-60.0f),	glm::vec3(0.0f, 1.0f, 0.0f) },
 		{ "models3d/fonsBaixRes.obj",		glm::vec3(0.0f, 27.7f, 0.0f),		glm::vec3(500.0f),	glm::radians(-180.0f),	glm::vec3(0.0f, 1.0f, 0.0f) },
 		{ "models3d/caganerBaixRes.obj",	glm::vec3(13.0f, 0.0f, 0.0f),		glm::vec3(5.0f),	glm::radians(-120.0f),	glm::vec3(0.0f, 1.0f, 0.0f) },
-		{ "models3d/angelBaixRes.obj",		glm::vec3(7.0f, 10.0f, 2.0f),		glm::vec3(1.5f),	glm::radians(180.0f),	glm::vec3(0.0f, 1.0f, 0.0f) }
+		{ "models3d/angelBaixRes.obj",		glm::vec3(7.0f, 10.0f, 2.0f),		glm::vec3(1.5f),	glm::radians(180.0f),	glm::vec3(0.0f, 1.0f, 0.0f) },
+		{ "models3d/foguera.obj",			glm::vec3(1.0f, 0.25f, -11.0f),		glm::vec3(3.0f),	glm::radians(0.0f),		glm::vec3(0.0f, 1.0f, 0.0f) }
 	};
 
 	// Crear cada modelo

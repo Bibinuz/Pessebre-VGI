@@ -10,8 +10,6 @@
 #include <irrKlang.h> // Añadido para el manejo de música de fondo
 
 
-int TOTAL_CAGANERS = 5;
-
 Vertex lightVertices[] =
 { //     COORDINATES     //
 	Vertex{glm::vec3(-0.1f, -0.1f,  0.1f)},
@@ -76,6 +74,10 @@ int main() {
 	get_resolution(width, height);
 	
 	
+
+	
+	// Aquesta part no hem funciona----------------------------------------------------------------
+	
 	// Crear el motor de sonido
 	irrklang::ISoundEngine* engine = irrklang::createIrrKlangDevice();
 	if (!engine) {
@@ -95,6 +97,8 @@ int main() {
 	else {
 		std::cout << "Music is playing." << std::endl;
 	}
+	
+	//---------------------------------------------------------------------------------------------
 	
 	
 	// Limites de posición para cada cámara (ejemplo)
@@ -149,16 +153,16 @@ int main() {
 
 	glm::vec3 camPos = camera->Position;
 
-	glm::vec3 posLlum1 = glm::vec3(0, 5, 0);
+	glm::vec3 posLlum1 = glm::vec3(1.2f, 3.2f, -11.1f);
 	glm::mat4 modelLlum1 = glm::mat4(1.0f);
 	modelLlum1 = glm::translate(modelLlum1, posLlum1);
 
 
-	glm::vec3 posLlum2 = glm::vec3(0, 25, -10);
+	glm::vec3 posLlum2 = glm::vec3(7.0f, 18.0f, 9.0f);
 	glm::mat4 modelLlum2 = glm::mat4(1.0f);
 	modelLlum2 = glm::translate(modelLlum2, posLlum2);
 	
-	glm::vec3 posLlum3 = glm::vec3(5, 5, 0);
+	glm::vec3 posLlum3 = glm::vec3(0.2f, 5.0f, -2.8f);
 	glm::mat4 modelLlum3 = glm::mat4(1.0f);
 	modelLlum3 = glm::translate(modelLlum3, posLlum3);
 
@@ -169,9 +173,9 @@ int main() {
 	std::vector<Llum> ls;
 	std::vector<Llum> llums;
 		
-	ls.push_back({ true, posLlum1, color1, Punt, 2, &llum1, modelLlum1});
-	ls.push_back({ true, posLlum2, color2, Direccional, 1, &llum1, modelLlum2});
-	ls.push_back({ true, posLlum3, color3, Foco, 1, &llum1, modelLlum3 });
+	ls.push_back({ true, posLlum1, glm::vec4(1.0f, 0.639f, 0.329f, 1.0f), Punt, 3, &llum1, modelLlum1});
+	ls.push_back({ true, posLlum2, color2, Direccional, 1.5, &llum1, modelLlum2});
+	ls.push_back({ true, posLlum3, color3, Foco, 2, &llum1, modelLlum3 });
 
 	/* Shadow maps */
 	Shader depthShader("depth.vert", "depth.frag");
@@ -234,7 +238,6 @@ int main() {
 	imGuiImplementation varImgui(window);
 
 	int windowWidth, windowHeight;
-	int caganers=0;
 	int llumAControlar = 0;
 	int numLlumsAControlar = 6;
 
