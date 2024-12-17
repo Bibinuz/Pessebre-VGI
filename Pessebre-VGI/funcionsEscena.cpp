@@ -24,29 +24,14 @@ void BindTextures(Shader& shader, const Model& model) {
 		glBindTexture(GL_TEXTURE_2D, model.textures[0].id);  // Vincular la primera textura del modelo
 
 		// Asignar la textura al shader (suponiendo que en el shader se usa un sampler2D llamado "texture0")
-		glUniform1i(glGetUniformLocation(shader.ID, "texture0"), 0);
+		glUniform1i(glGetUniformLocation(shader.ID, "diffuse0"), 0);
 	}
 	else {
 		std::cerr << "No se han cargado texturas para el modelo." << std::endl;
 	}
 }
 
-void DrawModelWithShader(Shader& shader, const Model& model, const glm::mat4& modelMatrix, std::vector<Llum>& llums, Camera& camera) {
-	shader.Activate();
-
-	// Configurar propiedades globales del shader
-	glUniform1i(glGetUniformLocation(shader.ID, "numLights"), llums.size());
-
-	for (int i = 0; i < llums.size(); i++)
-	{
-		glUniform1i(glGetUniformLocation(shader.ID, ("lights[" + std::to_string(i) + "].sw_light").c_str()), llums[i].sw_light);
-		glUniform3f(glGetUniformLocation(shader.ID, ("lights[" + std::to_string(i) + "].lightPos").c_str()), llums[i].lightPos.x, llums[i].lightPos.y, llums[i].lightPos.z);
-		glUniform4f(glGetUniformLocation(shader.ID, ("lights[" + std::to_string(i) + "].lightColor").c_str()), llums[i].lightCol.r, llums[i].lightCol.g, llums[i].lightCol.b, llums[i].lightCol.a);
-		glUniform1i(glGetUniformLocation(shader.ID, ("lights[" + std::to_string(i) + "].tipus").c_str()), llums[i].tipus);
-		glUniform1f(glGetUniformLocation(shader.ID, ("lights[" + std::to_string(i) + "].intensitat").c_str()), llums[i].intensitat);
-	}
-
-	glUniform3fv(glGetUniformLocation(shader.ID, "camPos"), 1, glm::value_ptr(camera.Position));
+void DrawModelWithShader(Shader& shader, const Model& model, const glm::mat4& modelMatrix, Camera& camera) {
 
 	// Configurar la matriz de modelo específica y dibujar
 	glUniformMatrix4fv(glGetUniformLocation(shader.ID, "model"), 1, GL_FALSE, glm::value_ptr(modelMatrix));
@@ -94,17 +79,44 @@ void SetupModels(std::vector<Model>& models, std::vector<glm::mat4>& modelMatric
 }
 
 void DrawModels(Shader& shader, const std::vector<Model>& models, const std::vector<glm::mat4>& modelMatrices, std::vector<Llum>& llums, Camera& camera) {
+
+	shader.Activate(); 
+	
+	// He mogut tot aquest codi de DrawModelsWithShader a aqui perque les llums son les mateixes per a tots els objectes, no fa falta passarles totes cada vegada que es passen els uniforms al shader, augment considerable de fps
+	glUniform1i(glGetUniformLocation(shader.ID, "numLights"), llums.size());
+
+	for (int i = 0; i < llums.size(); i++)
+	{
+		glUniform1i(glGetUniformLocation(shader.ID, ("lights[" + std::to_string(i) + "].sw_light").c_str()),   llums[i].sw_light);
+		glUniform3f(glGetUniformLocation(shader.ID, ("lights[" + std::to_string(i) + "].lightPos").c_str()),   llums[i].lightPos.x, llums[i].lightPos.y, llums[i].lightPos.z);
+		glUniform4f(glGetUniformLocation(shader.ID, ("lights[" + std::to_string(i) + "].lightColor").c_str()), llums[i].lightCol.r, llums[i].lightCol.g, llums[i].lightCol.b, llums[i].lightCol.a);
+		glUniform1i(glGetUniformLocation(shader.ID, ("lights[" + std::to_string(i) + "].tipus").c_str()),      llums[i].tipus);
+		glUniform1f(glGetUniformLocation(shader.ID, ("lights[" + std::to_string(i) + "].intensitat").c_str()), llums[i].intensitat);
+
+		glActiveTexture(GL_TEXTURE0 + llums[i].shadowmap.unit);
+		glBindTexture(GL_TEXTURE_2D, llums[i].shadowmap.depthMap);
+
+		glUniform1i(glGetUniformLocation(shader.ID, ("lights[" + std::to_string(i) + "].depthMap").c_str()),   llums[i].shadowmap.unit);
+		glUniformMatrix4fv(glGetUniformLocation(shader.ID, ("lights[" + std::to_string(i) + "].lightSpaceMatrix").c_str()), 1, GL_FALSE, glm::value_ptr(llums[i].shadowmap.lightSpaceMatrix));
+
+	}
+
+	//La posicio de camara tambe es la mateixa per a tots els objectes
+	glUniform3fv(glGetUniformLocation(shader.ID, "camPos"), 1, glm::value_ptr(camera.Position)); 
 	for (size_t i = 0; i < models.size(); ++i) {
-		DrawModelWithShader(shader, models[i], modelMatrices[i], llums, camera);
+		DrawModelWithShader(shader, models[i], modelMatrices[i], camera);
 	}
 }
 
 void DrawLights(Shader& shader, std::vector<Llum>& llums, Camera& camera) {
 	for (Llum& llum : llums)
 	{
-		shader.Activate();
-		glUniformMatrix4fv(glGetUniformLocation(shader.ID, "model"), 1, GL_FALSE, glm::value_ptr(*llum.model));
-		glUniform4f(glGetUniformLocation(shader.ID, "lightColor"), llum.lightCol.r, llum.lightCol.g, llum.lightCol.b, llum.lightCol.a);
-		llum.mesh->Draw(shader, camera);
+		if (llum.sw_light)
+		{
+			shader.Activate();
+			glUniformMatrix4fv(glGetUniformLocation(shader.ID, "model"), 1, GL_FALSE, glm::value_ptr(llum.model));
+			glUniform4f(glGetUniformLocation(shader.ID, "lightColor"), llum.lightCol.r, llum.lightCol.g, llum.lightCol.b, llum.lightCol.a);
+			llum.mesh->Draw(shader, camera);
+		}
 	}
 }

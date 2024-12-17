@@ -5,6 +5,7 @@
 //#include "imgui/imgui_impl_glfw.h"
 //#include "imgui/imgui_impl_opengl3.h"
 #include "imGuiImplementation.h"
+#include "Shadowmap.h"
 
 int TOTAL_CAGANERS=5;
 
@@ -46,7 +47,7 @@ GLFWwindow* inicialitzaFinestra() {
 	int width, height;
 	get_resolution(width, height);
 	//Creem la finsestra i comprobem que no hi hagi hagut cap error
-	GLFWwindow* window = glfwCreateWindow(width, height, "Test", NULL, NULL);
+	GLFWwindow* window = glfwCreateWindow(width, height, "Pessebre VGI", NULL, NULL);
 	if (window == NULL) {
 		std::cout << "Failed to create window\n";
 		glfwTerminate();
@@ -61,7 +62,7 @@ GLFWwindow* inicialitzaFinestra() {
 	glViewport(0, 0, width, height);
 
 	//Activem el depth test perque les coses mes llunyanes no es dibuixin sobre les properes
-	glEnable(GL_DEPTH_TEST); glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	glEnable(GL_DEPTH_TEST); glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); //SI canvies fill per line es veu amb les linies
 	return window;
 }
 
@@ -90,7 +91,7 @@ int main() {
 	Camera camera3(width, height, glm::vec3(-10.0f, 6.0f, -10.0f), minPos3, maxPos3); // Tercera cámara con límites
 
 	std::vector<Camera> Cameres;
-	Cameres.push_back(cameraEstatica); Cameres.push_back(camera2); Cameres.push_back(camera3);
+	Cameres.push_back(camera1); Cameres.push_back(camera2); Cameres.push_back(camera3);
 	Camera* camera = &cameraEstatica; // Inicialitzem la càmera activa
 
 
@@ -98,13 +99,14 @@ int main() {
 
 	//------------------------------// esto no se porque influye en una cara del skybox que le da la vuelta si lo borro ademas influye en el color de algun objeto no entiendo nada;
 
-	Texture textures[]
+	Texture textures[2]
 	{
-		Texture("planks.png", "diffuse", 0, GL_RGBA, GL_UNSIGNED_BYTE),
-		Texture("planks.png", "specular",1, GL_RED, GL_UNSIGNED_BYTE)
+		Texture("", "diffuse", 0, GL_RGBA, GL_UNSIGNED_BYTE),
+		Texture("", "specular",0, GL_RED, GL_UNSIGNED_BYTE)
 	};
-	std::vector<Texture> tex(textures, textures + sizeof(textures) / sizeof(Texture));
 
+
+	std::vector<Texture> tex(textures, textures + sizeof(textures) / sizeof(Texture));
 	//------------------------------//
 
 	Shader shaderProgram("default.vert", "default.frag");
@@ -128,15 +130,16 @@ int main() {
 
 	glm::vec3 camPos = camera->Position;
 
-	glm::vec3 posLlum1 = glm::vec3(3, 3, 0);
+	glm::vec3 posLlum1 = glm::vec3(0, 5, 0);
 	glm::mat4 modelLlum1 = glm::mat4(1.0f);
 	modelLlum1 = glm::translate(modelLlum1, posLlum1);
 
-	glm::vec3 posLlum2 = glm::vec3(0, 3, 3);
+
+	glm::vec3 posLlum2 = glm::vec3(0, 25, -10);
 	glm::mat4 modelLlum2 = glm::mat4(1.0f);
 	modelLlum2 = glm::translate(modelLlum2, posLlum2);
 	
-	glm::vec3 posLlum3 = glm::vec3(-3, 3, 0);
+	glm::vec3 posLlum3 = glm::vec3(5, 5, 0);
 	glm::mat4 modelLlum3 = glm::mat4(1.0f);
 	modelLlum3 = glm::translate(modelLlum3, posLlum3);
 
@@ -144,40 +147,85 @@ int main() {
 	glm::vec4 color2 = glm::vec4(1, 1, 1, 1);
 	glm::vec4 color3 = glm::vec4(1, 1, 1, 1);
 
+	std::vector<Llum> ls;
 	std::vector<Llum> llums;
 		
-	llums.push_back({ true, posLlum1, color1, Punt, 1, &llum1, &modelLlum1});
-	llums.push_back({ true, posLlum2, color2, Foco, 1, &llum2, &modelLlum2});
-	llums.push_back({ true, posLlum3, color3, Punt, 1, &llum3, &modelLlum3 });
+	ls.push_back({ true, posLlum1, color1, Punt, 2, &llum1, modelLlum1});
+	ls.push_back({ true, posLlum2, color2, Direccional, 1, &llum2, modelLlum2});
+	ls.push_back({ true, posLlum3, color3, Foco, 1, &llum3, modelLlum3 });
 
-	//cameraNormal.RotateCamera(-12.0f, glm::vec3(1.0f, 0.0f, 0.0f));
-	//cameraNormal.RotateCamera(-7.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+	/* Shadow maps */
+	Shader depthShader("depth.vert", "depth.frag");
 
+	int diff = 0;
+	int resolutionShadowMap = 11;
+	for (int i = 0; i-diff < ls.size(); i++) {
+		if (ls[i-diff].tipus == Direccional)
+		{
+			ls[i-diff].shadowmap = Shadowmap(resolutionShadowMap, i);
+			ls[i-diff].shadowmap.lightProj = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, 0.5f, 100.0f);
+			llums.push_back(ls[i-diff]);
+		}
+		else if (ls[i-diff].tipus == Punt)
+		{
+			Llum aux[6];
+			for (int j = 0; j < 6; j++)
+			{
+				aux[j] = { ls[i-diff].sw_light, ls[i-diff].lightPos, ls[i-diff].lightCol, Punt, ls[i-diff].intensitat, ls[i-diff].mesh, ls[i-diff].model };
+				aux[j].shadowmap = Shadowmap(resolutionShadowMap, i + j);
+				aux[j].shadowmap.lightProj = glm::perspective(90.0f, 1.0f, 0.5f, 100.0f);
+				//aux[j].shadowmap.lightProj = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, 0.1f, 100.0f);
 
-	//objetosShader.Activate();
+				llums.push_back(aux[j]);
+			}
+			llums[i+0].shadowmap.lightDir = glm::vec3( 1.0, 0.0, 0.0);
+			llums[i+1].shadowmap.lightDir = glm::vec3(-1.0, 0.0, 0.0);
+			llums[i+2].shadowmap.lightDir = glm::vec3( 0.0, 1.0, 0.0);
+			llums[i+3].shadowmap.lightDir = glm::vec3( 0.0,-1.0, 0.0);
+			llums[i+4].shadowmap.lightDir = glm::vec3( 0.0, 0.0, 1.0);
+			llums[i+5].shadowmap.lightDir = glm::vec3( 0.0, 0.0,-1.0);
+			
+			llums[i+0].shadowmap.lightUp = glm::vec3( 0.0,-1.0, 0.0);
+			llums[i+1].shadowmap.lightUp = glm::vec3( 0.0,-1.0, 0.0);
+			llums[i+2].shadowmap.lightUp = glm::vec3( 0.0, 0.0, 1.0);
+			llums[i+3].shadowmap.lightUp = glm::vec3( 0.0, 0.0,-1.0);
+			llums[i+4].shadowmap.lightUp = glm::vec3( 0.0,-1.0, 0.0);
+			llums[i+5].shadowmap.lightUp = glm::vec3( 0.0,-1.0, 0.0);
+			i += 5;
+			diff += 5;
+		}
+		else if (ls[i - diff].tipus == Foco)
+		{
+			ls[i - diff].shadowmap = Shadowmap(resolutionShadowMap, i);
+			//ls[i - diff].shadowmap.lightProj = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, 0.5f, 100.0f);
+			ls[i - diff].shadowmap.lightProj = glm::perspective(90.0f, 1.0f, 0.5f, 100.0f);
+			ls[i - diff].shadowmap.lightDir = glm::vec3( 0.0,-1.0, 0.0);
+			ls[i - diff].shadowmap.lightUp  = glm::vec3( 0.0, 0.0,-1.0);
+			llums.push_back(ls[i - diff]);
+		}
+	}
 
-
-	skyboxShader.Activate();
-	glUniform1i(glGetUniformLocation(skyboxShader.ID, "skybox"), 0);
-
-	//Activem el depth test perque les coses mes llunyanes no es dibuixin sobre les properes
-	//glEnable(GL_DEPTH_TEST);
 
 	//Instànciem una skybox
 	Skybox skybox;
 	//Inicialitzem l'Skybox
 	skybox.initSkybox(skyboxShader);
 
+	skyboxShader.Activate();
+	glUniform1i(glGetUniformLocation(skyboxShader.ID, "skybox"), 0);
+
 	// Configuració d'ImGui
 	imGuiImplementation varImgui(window);
 
-
 	int windowWidth, windowHeight;
 	int caganers=0;
+	int llumAControlar = 0;
+	int numLlumsAControlar = 6;
+
 	// Bucle principal
 	while (!glfwWindowShouldClose(window)&&varImgui.op!=Exit) {
 		// Calculem el temps per al frame rate
-		float i = glfwGetTime();
+		//float i = glfwGetTime();
 
 		// Esborrem el color de fons
 		glClearColor(0.07f, 0.13f, 0.17f, 1.0f);
@@ -185,6 +233,15 @@ int main() {
 
 		// Since the cubemap will always have a depth of 1.0, we need that equal sign so it doesn't get discarded
 		glDepthFunc(GL_LEQUAL);
+		
+		glCullFace(GL_FRONT);
+		for (int i = 0; i < llums.size(); i++)
+		{
+			llums[i].shadowmap.RenderitzarShadowMap(llums[i].lightPos, depthShader, models, modelMatrices);
+		}
+		glCullFace(GL_BACK);
+		glViewport(0, 0, width, height);
+		
 		// Inputs i actualització de la càmera
 		camera->Inputs(window);
 		camera->UpdateMatrix(45.0f, 0.1f, 500.0f);
@@ -192,21 +249,20 @@ int main() {
 		varImgui.imGuiInitNewFrame();
 		//-----------------------------------------------
 
-		glfwGetFramebufferSize(window, &windowWidth, &windowHeight);
 
-		
+		glfwGetFramebufferSize(window, &windowWidth, &windowHeight);		
 
 		DrawModels(shaderProgram, models, modelMatrices, llums, *camera);
 		
 		DrawLights(lightShader, llums, *camera);
-		//Mostrem l'skybox.
+
 		skybox.drawSkybox(skyboxShader, *camera);
 
 		switch (varImgui.op) {
 		case Juga:
 			//varImgui.cameraSelector(Cameres, camera);//------------SELECTOR DE CAMARES
 			ImGui::SetNextWindowPos(ImVec2(1650, 10));
-
+			camera = &Cameres[0];
 			ImGui::Begin("Juga",nullptr,ImGuiWindowFlags_NoResize|ImGuiWindowFlags_NoTitleBar|ImGuiWindowFlags_NoBackground|ImGuiWindowFlags_AlwaysAutoResize);
 			//ImGui::Text("%d/%d Caganers",caganers,TOTAL_CAGANERS); ImGui::SameLine();//----------------CAGANERS 
 			//if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {//__________________________Per a sortir al menu principal amb ESC
@@ -229,23 +285,41 @@ int main() {
 			ImGui::End();
 			//Per mostrar fps
 			varImgui.imGuiShowFPS();
+			varImgui.imGuiCamPosition(camera);
 			break;
 
 		case StaticCamera:
 			// Codi per activar una càmera estàtica
-			varImgui.cameraSelector(Cameres, camera);
+			varImgui.imGuiStaticCamera(camera, cameraEstatica);
 			ImGui::Begin("Static Camera");
 			if (ImGui::Button("Tornar al menu")) {
 				varImgui.op = Menu;  // Torna al menú principal
 			}
 			ImGui::End();
 			break;
-
+		case Controls:
+			varImgui.imGuiControls(windowWidth, windowHeight);
+			ImGui::Begin("Controls");
+			if (ImGui::Button("Tornar al menu")) {
+				varImgui.op = Menu;  // Torna al menú principal
+			}
+			ImGui::End();
+			break;
+		case Credits:
+			varImgui.imGuiCredits(windowWidth, windowHeight);
+			ImGui::Begin("Credits");
+			if (ImGui::Button("Tornar al menu")) {
+				varImgui.op = Menu;  // Torna al menú principal
+			}
+			ImGui::End();
+			break;
 		case Menu:
-			varImgui.imGuiMainMenu(windowWidth, windowHeight);
+			camera = &camBackground;
+			varImgui.imGuiMainMenu(windowWidth, windowHeight, camera);
 			break;
 		case Exit:
-			varImgui.imGuiMainMenu(windowWidth, windowHeight);
+			camera = &camBackground;
+			varImgui.imGuiMainMenu(windowWidth, windowHeight, camera);
 			break;
 
 			
@@ -262,11 +336,72 @@ int main() {
 		glFinish();
 
 		// Actualitzem la mida de la finestra i el viewport
-		glfwGetWindowSize(window, &width, &height);
-		glViewport(0, 0, width, height);
+		//glfwGetWindowSize(window, &width, &height);
+		//glViewport(0, 0, width, height);
 
 		// Imprimim el frame rate
-		std::cout << 1 / (glfwGetTime() - i) << std::endl;
+		//std::cout << 1 / (glfwGetTime() - i) << std::endl;
+
+		if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS)
+		{
+			llumAControlar = 0;
+			numLlumsAControlar = 6;
+		}
+		if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS)
+		{
+			llumAControlar = 6;
+			numLlumsAControlar = 1;
+		}
+		if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS)
+		{
+			llumAControlar = 7;
+			numLlumsAControlar = 1;
+		}
+
+
+
+		if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
+		{
+			for (int i = llumAControlar; i < llumAControlar+numLlumsAControlar; i++) {
+				llums[i].lightPos.x += 0.01;
+				llums[i].model = glm::translate(glm::mat4(1.0), llums[i].lightPos);
+			}
+		}
+		if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
+		{
+			for (int i = llumAControlar; i < llumAControlar+numLlumsAControlar; i++) {
+				llums[i].lightPos.x -= 0.01;
+				llums[i].model = glm::translate(glm::mat4(1.0), llums[i].lightPos);
+			}
+		}
+		if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
+		{
+			for (int i = llumAControlar; i < llumAControlar+numLlumsAControlar; i++) {
+				llums[i].lightPos.z -= 0.01;
+				llums[i].model = glm::translate(glm::mat4(1.0), llums[i].lightPos);
+			}
+		}
+		if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
+		{
+			for (int i = llumAControlar; i < llumAControlar+numLlumsAControlar; i++) {
+				llums[i].lightPos.z += 0.01;
+				llums[i].model = glm::translate(glm::mat4(1.0), llums[i].lightPos);
+			}
+		}
+		if (glfwGetKey(window, GLFW_KEY_PAGE_UP) == GLFW_PRESS)
+		{
+			for (int i = llumAControlar; i < llumAControlar+numLlumsAControlar; i++) {
+				llums[i].lightPos.y += 0.01;
+				llums[i].model = glm::translate(glm::mat4(1.0), llums[i].lightPos);
+			}
+		}
+		if (glfwGetKey(window, GLFW_KEY_PAGE_DOWN) == GLFW_PRESS)
+		{
+			for (int i = llumAControlar; i < llumAControlar+numLlumsAControlar; i++) {
+				llums[i].lightPos.y -= 0.01;
+				llums[i].model = glm::translate(glm::mat4(1.0), llums[i].lightPos);
+			}
+		}
 	}
 
 	//Netegem tot el que hem utilitzat
