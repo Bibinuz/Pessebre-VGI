@@ -7,7 +7,10 @@
 #include "imGuiImplementation.h"
 #include "Shadowmap.h"
 
-int TOTAL_CAGANERS=5;
+#include <irrKlang.h> // Añadido para el manejo de música de fondo
+using namespace irrklang;
+
+int TOTAL_CAGANERS = 5;
 
 Vertex lightVertices[] =
 { //     COORDINATES     //
@@ -56,13 +59,12 @@ GLFWwindow* inicialitzaFinestra() {
 	glfwMaximizeWindow(window);
 	glfwMakeContextCurrent(window);
 
-	//Creem finestra de visualització
+	//Creem context OpenGL
 	gladLoadGL();
-
 	glViewport(0, 0, width, height);
 
-	//Activem el depth test perque les coses mes llunyanes no es dibuixin sobre les properes
-	glEnable(GL_DEPTH_TEST); glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); //SI canvies fill per line es veu amb les linies
+	//Activem el depth test
+	glEnable(GL_DEPTH_TEST); glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	return window;
 }
 
@@ -73,9 +75,34 @@ int main() {
 	int width, height;
 	get_resolution(width, height);
 
+	// Crear el motor de sonido
+	ISoundEngine* engine = createIrrKlangDevice();
+	if (!engine) {
+		std::cout << "Could not startup engine" << std::endl;
+		return 0;
+	}
+
+	// Ajusta esta ruta absoluta al archivo de audio (mp3, wav u ogg) que quieras probar
+	const char* musicPath = "C:/Users/gfxgp/Desktop/Pessebre-VGI (3)/Pessebre-VGI/Pessebre-VGI/audio/musicaNadal.wav";
+	ISound* music = engine->play2D(musicPath, true);
+
+	//engine->setSoundVolume(1.0f);
+	//ISound* music = engine->play2D(musicPath, true);
+	if (!music) {
+		std::cout << "Failed to load music file. Check the path: " << musicPath << std::endl;
+	}
+	else {
+		std::cout << "Music is playing." << std::endl;
+	}
+
+	
 	// Limites de posición para cada cámara (ejemplo)
 	glm::vec3 minPos1(-30.0f, 2.0f, -30.0f);
 	glm::vec3 maxPos1(20.0f, 20.0f, 20.0f);
+	
+	// Definim càmeres
+	Camera camBackground(width, height, glm::vec3(0.0f, 4.0f, 18.00f));
+	camBackground.cameraActive = false;
 
 	Camera cameraEstatica(width, height, glm::vec3(0.0f, 6.0f, -10.0f), minPos1, maxPos1); // Cámara estática con límites
 	cameraEstatica.cameraActive = false;
@@ -92,13 +119,9 @@ int main() {
 
 	std::vector<Camera> Cameres;
 	Cameres.push_back(camera1); Cameres.push_back(camera2); Cameres.push_back(camera3);
-	Camera* camera = &cameraEstatica; // Inicialitzem la càmera activa
-
-
-
+	Camera* camera = &cameraEstatica;
 
 	//------------------------------// esto no se porque influye en una cara del skybox que le da la vuelta si lo borro ademas influye en el color de algun objeto no entiendo nada;
-
 	Texture textures[2]
 	{
 		Texture("", "diffuse", 0, GL_RGBA, GL_UNSIGNED_BYTE),
@@ -112,18 +135,16 @@ int main() {
 	Shader shaderProgram("default.vert", "default.frag");
 	Shader lightShader("light.vert", "light.frag");
 	Shader skyboxShader("skybox.vert", "skybox.frag");
-	
+
 	std::vector<Vertex> lightVerts(lightVertices, lightVertices + sizeof(lightVertices) / sizeof(Vertex));
 	std::vector<GLuint> lightInd(lightIndices, lightIndices + sizeof(lightIndices) / sizeof(GLuint));
 	Mesh llum1(lightVerts, lightInd, tex);
 	Mesh llum2(lightVerts, lightInd, tex);
 	Mesh llum3(lightVerts, lightInd, tex);
 
-
-
 	std::vector<Model> models;
 	std::vector<glm::mat4> modelMatrices;
-	glm::vec4 lightColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
+	glm::vec4 lightColor = glm::vec4(1.0f);
 	glm::vec3 lightPos = glm::vec3(-2.0f, 10.0f, 5.0f);
 
 	SetupModels(models, modelMatrices);
@@ -143,9 +164,12 @@ int main() {
 	glm::mat4 modelLlum3 = glm::mat4(1.0f);
 	modelLlum3 = glm::translate(modelLlum3, posLlum3);
 
-	glm::vec4 color1 = glm::vec4(1, 1, 1, 1);
-	glm::vec4 color2 = glm::vec4(1, 1, 1, 1);
-	glm::vec4 color3 = glm::vec4(1, 1, 1, 1);
+	glm::vec3 posLlum3 = glm::vec3(-3, 3, 0);
+	glm::mat4 modelLlum3 = glm::translate(glm::mat4(1.0f), posLlum3);
+
+	glm::vec4 color1 = glm::vec4(1);
+	glm::vec4 color2 = glm::vec4(1);
+	glm::vec4 color3 = glm::vec4(1);
 
 	std::vector<Llum> ls;
 	std::vector<Llum> llums;
@@ -208,7 +232,6 @@ int main() {
 
 	//Instànciem una skybox
 	Skybox skybox;
-	//Inicialitzem l'Skybox
 	skybox.initSkybox(skyboxShader);
 
 	skyboxShader.Activate();
@@ -225,13 +248,11 @@ int main() {
 	// Bucle principal
 	while (!glfwWindowShouldClose(window)&&varImgui.op!=Exit) {
 		// Calculem el temps per al frame rate
-		//float i = glfwGetTime();
+		float i = glfwGetTime();
 
-		// Esborrem el color de fons
 		glClearColor(0.07f, 0.13f, 0.17f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		// Since the cubemap will always have a depth of 1.0, we need that equal sign so it doesn't get discarded
 		glDepthFunc(GL_LEQUAL);
 		
 		glCullFace(GL_FRONT);
@@ -253,76 +274,91 @@ int main() {
 		glfwGetFramebufferSize(window, &windowWidth, &windowHeight);		
 
 		DrawModels(shaderProgram, models, modelMatrices, llums, *camera);
-		
 		DrawLights(lightShader, llums, *camera);
-
 		skybox.drawSkybox(skyboxShader, *camera);
 
 		switch (varImgui.op) {
 		case Juga:
-			//varImgui.cameraSelector(Cameres, camera);//------------SELECTOR DE CAMARES
-			ImGui::SetNextWindowPos(ImVec2(1650, 10));
 			camera = &Cameres[0];
-			ImGui::Begin("Juga",nullptr,ImGuiWindowFlags_NoResize|ImGuiWindowFlags_NoTitleBar|ImGuiWindowFlags_NoBackground|ImGuiWindowFlags_AlwaysAutoResize);
-			//ImGui::Text("%d/%d Caganers",caganers,TOTAL_CAGANERS); ImGui::SameLine();//----------------CAGANERS 
-			//if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {//__________________________Per a sortir al menu principal amb ESC
-			if (ImGui::Button("Tornar al menu")) {
 
-				varImgui.op = Menu;  // Torna al menú principal
+			ImGui::SetNextWindowPos(ImVec2(1650, 10));
+			ImGui::Begin("Juga", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_AlwaysAutoResize);
+
+			ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 0, 0));
+			ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0, 0, 0, 0));
+			ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0, 0, 0, 0));
+			ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0, 0));
+
+			if (ImGui::ImageButton("return_btn_juga", (ImTextureID)(uintptr_t)varImgui.buttonReturnTextureID, ImVec2(100, 100), ImVec2(0, 0), ImVec2(1, 1))) {
+				varImgui.op = Menu;
 			}
+
+			ImGui::PopStyleVar();
+			ImGui::PopStyleColor(3);
 			ImGui::End();
 			break;
 
 		case Manager:
-			varImgui.cameraSelector(Cameres,camera);
+			varImgui.cameraSelector(Cameres, camera);
 
 			ImGui::SetNextWindowPos(ImVec2(1650, 10));
 			ImGui::Begin("Manager", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_AlwaysAutoResize);
 
-			if (ImGui::Button("Tornar al menu")) {
-				varImgui.op = Menu;  // Torna al menú principal
+			ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 0, 0));
+			ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0, 0, 0, 0));
+			ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0, 0, 0, 0));
+			ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0, 0));
+
+			if (ImGui::ImageButton("return_btn_manager", (ImTextureID)(uintptr_t)varImgui.buttonReturnTextureID, ImVec2(100, 100), ImVec2(0, 0), ImVec2(1, 1))) {
+				varImgui.op = Menu;
 			}
+
+			ImGui::PopStyleVar();
+			ImGui::PopStyleColor(3);
 			ImGui::End();
-			//Per mostrar fps
+
 			varImgui.imGuiShowFPS();
 			varImgui.imGuiCamPosition(camera);
 			break;
 
 		case StaticCamera:
-			// Codi per activar una càmera estàtica
 			varImgui.imGuiStaticCamera(camera, cameraEstatica);
-			ImGui::Begin("Static Camera");
-			if (ImGui::Button("Tornar al menu")) {
-				varImgui.op = Menu;  // Torna al menú principal
+
+			ImGui::SetNextWindowPos(ImVec2(1650, 10));
+			ImGui::Begin("Static Camera Button", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_AlwaysAutoResize);
+
+			ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 0, 0));
+			ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0, 0, 0, 0));
+			ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0, 0, 0, 0));
+			ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0, 0));
+
+			if (ImGui::ImageButton("return_btn_static", (ImTextureID)(uintptr_t)varImgui.buttonReturnTextureID, ImVec2(100, 100), ImVec2(0, 0), ImVec2(1, 1))) {
+				varImgui.op = Menu;
 			}
+
+			ImGui::PopStyleVar();
+			ImGui::PopStyleColor(3);
 			ImGui::End();
 			break;
+
 		case Controls:
 			varImgui.imGuiControls(windowWidth, windowHeight);
-			ImGui::Begin("Controls");
-			if (ImGui::Button("Tornar al menu")) {
-				varImgui.op = Menu;  // Torna al menú principal
-			}
-			ImGui::End();
 			break;
+
 		case Credits:
 			varImgui.imGuiCredits(windowWidth, windowHeight);
-			ImGui::Begin("Credits");
-			if (ImGui::Button("Tornar al menu")) {
-				varImgui.op = Menu;  // Torna al menú principal
-			}
-			ImGui::End();
 			break;
+
 		case Menu:
 			camera = &camBackground;
 			varImgui.imGuiMainMenu(windowWidth, windowHeight, camera);
 			break;
+
 		case Exit:
 			camera = &camBackground;
 			varImgui.imGuiMainMenu(windowWidth, windowHeight, camera);
 			break;
 
-			
 		default:
 			std::cout << "Esperant selecció..." << std::endl;
 			break;
@@ -330,8 +366,6 @@ int main() {
 
 		varImgui.imGuiRender();
 		glfwSwapBuffers(window);
-
-		// Processa els esdeveniments
 		glfwPollEvents();
 		glFinish();
 
@@ -404,16 +438,14 @@ int main() {
 		}
 	}
 
-	//Netegem tot el que hem utilitzat
 	shaderProgram.Delete();
-	//objetosShader.Delete();
 	skyboxShader.Delete();
-
-	//esborrem l'skybox.
 	skybox.cleanup();
-
-	//Destruim la finestra per alliberar la memoria
 	glfwDestroyWindow(window);
 	glfwTerminate();
+
+	// Liberar el motor de sonido al terminar
+	engine->drop();
+
 	return 0;
 }
