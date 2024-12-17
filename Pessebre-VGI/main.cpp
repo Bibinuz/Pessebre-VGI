@@ -6,6 +6,9 @@
 //#include "imgui/imgui_impl_opengl3.h"
 #include "imGuiImplementation.h"
 
+#include <irrKlang.h> // Añadido para el manejo de música de fondo
+using namespace irrklang;
+
 int TOTAL_CAGANERS = 5;
 
 Vertex lightVertices[] =
@@ -70,6 +73,26 @@ int main() {
 
 	int width, height;
 	get_resolution(width, height);
+
+	// Crear el motor de sonido
+	ISoundEngine* engine = createIrrKlangDevice();
+	if (!engine) {
+		std::cout << "Could not startup engine" << std::endl;
+		return 0;
+	}
+
+	// Ajusta esta ruta absoluta al archivo de audio (mp3, wav u ogg) que quieras probar
+	const char* musicPath = "C:/Users/gfxgp/Desktop/Pessebre-VGI (3)/Pessebre-VGI/Pessebre-VGI/audio/musicaNadal.wav";
+	ISound* music = engine->play2D(musicPath, true);
+
+	//engine->setSoundVolume(1.0f);
+	//ISound* music = engine->play2D(musicPath, true);
+	if (!music) {
+		std::cout << "Failed to load music file. Check the path: " << musicPath << std::endl;
+	}
+	else {
+		std::cout << "Music is playing." << std::endl;
+	}
 
 	// Definim càmeres
 	Camera camBackground(width, height, glm::vec3(0.0f, 4.0f, 18.00f));
@@ -155,7 +178,6 @@ int main() {
 
 		switch (varImgui.op) {
 		case Juga:
-			// Càmera
 			camera = &Cameres[0];
 
 			ImGui::SetNextWindowPos(ImVec2(1650, 10));
@@ -201,7 +223,6 @@ int main() {
 		case StaticCamera:
 			varImgui.imGuiStaticCamera(camera, cameraEstatica);
 
-			// Fem igual que a Juga i Manager: finestra flotant per al botó
 			ImGui::SetNextWindowPos(ImVec2(1650, 10));
 			ImGui::Begin("Static Camera Button", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_AlwaysAutoResize);
 
@@ -256,5 +277,9 @@ int main() {
 	skybox.cleanup();
 	glfwDestroyWindow(window);
 	glfwTerminate();
+
+	// Liberar el motor de sonido al terminar
+	engine->drop();
+
 	return 0;
 }
