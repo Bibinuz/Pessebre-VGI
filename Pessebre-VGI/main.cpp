@@ -72,11 +72,23 @@ int main() {
 	int width, height;
 	get_resolution(width, height);
 
-	// Definim tres càmeres amb diferents posicions
-	Camera cameraEstatica(width, height, glm::vec3(0.0f, 6.0f, 0.0f)); // Càmera inicial
+	// Limites de posición para cada cámara (ejemplo)
+	glm::vec3 minPos1(-30.0f, 2.0f, -30.0f);
+	glm::vec3 maxPos1(20.0f, 20.0f, 20.0f);
+
+	Camera cameraEstatica(width, height, glm::vec3(0.0f, 6.0f, -10.0f), minPos1, maxPos1); // Cámara estática con límites
 	cameraEstatica.cameraActive = false;
-	Camera camera2(width, height, glm::vec3(10.0f, 6.0f, 10.0f)); // Segona càmera
-	Camera camera3(width, height, glm::vec3(-10.0f, 6.0f, -10.0f)); // Tercera càmera
+
+	glm::vec3 minPos2(10.0f, 6.0f, 10.0f);
+	glm::vec3 maxPos2(10.0f, 6.0f, 10.0f);
+
+	Camera camera2(width, height, glm::vec3(10.0f, 6.0f, 10.0f), minPos2, maxPos2); // Segunda cámara con límites
+
+	glm::vec3 minPos3(10.0f, 6.0f, 10.0f);
+	glm::vec3 maxPos3(10.0f, 6.0f, 10.0f);
+
+	Camera camera3(width, height, glm::vec3(-10.0f, 6.0f, -10.0f), minPos3, maxPos3); // Tercera cámara con límites
+
 	std::vector<Camera> Cameres;
 	Cameres.push_back(cameraEstatica); Cameres.push_back(camera2); Cameres.push_back(camera3);
 	Camera* camera = &cameraEstatica; // Inicialitzem la càmera activa
@@ -175,7 +187,7 @@ int main() {
 		glDepthFunc(GL_LEQUAL);
 		// Inputs i actualització de la càmera
 		camera->Inputs(window);
-		camera->UpdateMatrix(45.0f, 0.1f, 100.0f);
+		camera->UpdateMatrix(45.0f, 0.1f, 500.0f);
 		//-----------------------------------------------
 		varImgui.imGuiInitNewFrame();
 		//-----------------------------------------------
