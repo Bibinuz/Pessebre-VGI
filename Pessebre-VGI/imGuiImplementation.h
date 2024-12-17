@@ -38,6 +38,7 @@ public:
     void imGuiShowFPS();
     void imGuiStaticCamera(Camera*& c, Camera& estaticCam) { c = &estaticCam; };
     void imGuiCamPosition(const Camera* camera);
+    void imGuiLightsPos(glm::vec3 pos1, glm::vec3 pos2, glm::vec3 pos3);
     void imGuiControls(int windowWidth, int windowHeight);
     void imGuiCredits(int windowWidth, int windowHeight);
     void loadBackgroundImage(const char* imagePath);
@@ -278,12 +279,33 @@ inline void imGuiImplementation::imGuiCamPosition(const Camera* camera)
     ImGui::Text("Z: %.2f", camera->Up.z);
 
     ImGui::Text("Camera Active: %s", camera->cameraActive ? "Yes" : "No");
-    ImGui::Text("Static Camera: %s", camera->cameraEstatica ? "Yes" : "No");
+    //ImGui::Text("Static Camera: %s", camera->cameraEstatica ? "Yes" : "No");
 
     ImGui::Text("Speed:");
     ImGui::Text("Current Speed: %.2f", camera->speed);
     ImGui::Text("Walk Speed: %.2f", camera->walkSpeed);
     ImGui::Text("Run Speed: %.2f", camera->runSpeed);
+
+    ImGui::End();
+}
+
+inline void imGuiImplementation::imGuiLightsPos(glm::vec3 pos1, glm::vec3 pos2, glm::vec3 pos3)
+{
+    ImGui::Begin("Posició de les llums");
+    ImGui::Text("Position 1:");
+    ImGui::Text("X: %.2f", pos1.x);
+    ImGui::Text("Y: %.2f", pos1.y);
+    ImGui::Text("Z: %.2f", pos1.z);
+
+    ImGui::Text("Position 2:");
+    ImGui::Text("X: %.2f", pos2.x);
+    ImGui::Text("Y: %.2f", pos2.y);
+    ImGui::Text("Z: %.2f", pos2.z);
+
+    ImGui::Text("Position 3:");
+    ImGui::Text("X: %.2f", pos3.x);
+    ImGui::Text("Y: %.2f", pos3.y);
+    ImGui::Text("Z: %.2f", pos3.z);
 
     ImGui::End();
 }

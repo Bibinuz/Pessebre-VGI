@@ -50,24 +50,24 @@ void SetupModels(std::vector<Model>& models, std::vector<glm::mat4>& modelMatric
 	};
 
 	std::vector<ModelData> modelDataList = {
-		{"models3d/terratopBaixRes.obj", glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(5.0f, 5.0f, 5.0f), 0.0f, glm::vec3(0.0f, 1.0f, 0.0f)},
-		{ "models3d/baltasarBaixRes.obj", glm::vec3(-5.0f, 0.05f, -6.0f), glm::vec3(20.0f, 20.0f, 20.0f), glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f) },
-		{ "models3d/melchorBaixRes.obj", glm::vec3(5.0f, 1.25f, -5.0f), glm::vec3(2.0f, 2.0f, 2.0f), glm::radians(-90.0f), glm::vec3(0.0f, 1.0f, 0.0f) },
-		{ "models3d/gasparBaixRes.obj", glm::vec3(9.0f, 0.05f, -8.0f), glm::vec3(20.0f, 20.0f, 20.0f), glm::radians(-60.0f), glm::vec3(0.0f, 1.0f, 0.0f) },
-		{ "models3d/casaBaixRes.obj", glm::vec3(1.0f, 3.75f, 1.75f), glm::vec3(0.075f, 0.075f, 0.075f), glm::radians(0.0f), glm::vec3(0.0f, 1.0f, 0.0f) },
-		{ "models3d/joseBaixRes.obj", glm::vec3(-2.0f, 1.75f, -2.0f), glm::vec3(0.05f, 0.05f, 0.05f), 0.0f, glm::vec3(0.0f, 1.0f, 0.0f) },
-		{ "models3d/mariaBaixRes.obj", glm::vec3(1.0f, 0.05f, 0.0f), glm::vec3(20.0f, 20.0f, 20.0f), glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f) },
-		{ "models3d/burroBaixRes.obj", glm::vec3(0.5f, 0.05f, 2.0f), glm::vec3(20.0f, 20.0f, 20.0f), glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f) },
-		{ "models3d/bueyBaixRes.obj", glm::vec3(-0.5f, 0.05f, 2.0f), glm::vec3(20.0f, 20.0f, 20.0f), glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f) },
-		{ "models3d/nenJesusBaixRes.obj", glm::vec3(0.25f, 0.1f, 0.0f), glm::vec3(20.0f, 20.0f, 20.0f), glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f) },
-		{ "models3d/cunaBaixRes.obj", glm::vec3(0.25f, 0.05f, 1.0f), glm::vec3(20.0f, 20.0f, 20.0f), glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f) },
-		{ "models3d/ovellaBaixRes.obj", glm::vec3(-11.0f, 0.8f, -3.0f), glm::vec3(0.4f, 0.4f, 0.4f), glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f) },
-		{ "models3d/camellBaixRes.obj", glm::vec3(-6.0f, 0.0f, -13.0f), glm::vec3(0.075f, 0.075f, 0.075f), glm::radians(-40.0f), glm::vec3(0.0f, 1.0f, 0.0f) },
-		{ "models3d/camellBaixRes.obj", glm::vec3(-11.0f, 1.5f, -17.0f), glm::vec3(0.075f, 0.075f, 0.075f), glm::radians(-70.0f), glm::vec3(0.0f, 1.0f, 0.0f) },
-		{ "models3d/camellBaixRes.obj", glm::vec3(-9.0f, 0.0f, -15.0f), glm::vec3(0.075f, 0.075f, 0.075f), glm::radians(-60.0f), glm::vec3(0.0f, 1.0f, 0.0f) },
-		{ "models3d/fonsBaixRes.obj", glm::vec3(0.0f, 27.7f, 0.0f), glm::vec3(500.0f, 500.0f, 500.0f), glm::radians(-180.0f), glm::vec3(0.0f, 1.0f, 0.0f) },
-		{ "models3d/caganerBaixRes.obj", glm::vec3(13.0f, 0.0f, 0.0f), glm::vec3(5.0f, 5.0f, 5.0f), glm::radians(-120.0f), glm::vec3(0.0f, 1.0f, 0.0f) },
-		{ "models3d/angelBaixRes.obj", glm::vec3(7.0f, 10.0f, 2.0f), glm::vec3(1.5f, 1.5f, 1.5f), glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f) }
+		{"models3d/terratopBaixRes.obj",	glm::vec3(0.0f, 0.0f, 0.0f),		glm::vec3(5.0f),	glm::radians(0.0f),		glm::vec3(0.0f, 1.0f, 0.0f)},
+		{ "models3d/baltasarBaixRes.obj",	glm::vec3(-5.0f, 0.05f, -6.0f),		glm::vec3(20.0f),	glm::radians(-90.0f),	glm::vec3(1.0f, 0.0f, 0.0f) },
+		{ "models3d/melchorBaixRes.obj",	glm::vec3(5.0f, 1.25f, -5.0f),		glm::vec3(2.0f),	glm::radians(-90.0f),	glm::vec3(0.0f, 1.0f, 0.0f) },
+		{ "models3d/gasparBaixRes.obj",		glm::vec3(9.0f, 0.05f, -8.0f),		glm::vec3(20.0f),	glm::radians(-60.0f),	glm::vec3(0.0f, 1.0f, 0.0f) },
+		{ "models3d/casaBaixRes.obj",		glm::vec3(1.0f, 3.75f, 1.75f),		glm::vec3(0.075f),	glm::radians(0.0f),		glm::vec3(0.0f, 1.0f, 0.0f) },
+		{ "models3d/joseBaixRes.obj",		glm::vec3(-2.0f, 1.75f, -2.0f),		glm::vec3(0.05f),	glm::radians(0.0f),		glm::vec3(0.0f, 1.0f, 0.0f) },
+		{ "models3d/mariaBaixRes.obj",		glm::vec3(1.0f, 0.05f, 0.0f),		glm::vec3(20.0f),	glm::radians(180.0f),	glm::vec3(0.0f, 1.0f, 0.0f) },
+		{ "models3d/burroBaixRes.obj",		glm::vec3(0.5f, 0.05f, 2.0f),		glm::vec3(20.0f),	glm::radians(180.0f),	glm::vec3(0.0f, 1.0f, 0.0f) },
+		{ "models3d/bueyBaixRes.obj",		glm::vec3(-0.5f, 0.05f, 2.0f),		glm::vec3(20.0f),	glm::radians(180.0f),	glm::vec3(0.0f, 1.0f, 0.0f) },
+		{ "models3d/nenJesusBaixRes.obj",	glm::vec3(0.25f, 0.1f, 0.0f),		glm::vec3(20.0f),	glm::radians(180.0f),	glm::vec3(0.0f, 1.0f, 0.0f) },
+		{ "models3d/cunaBaixRes.obj",		glm::vec3(0.25f, 0.05f, 1.0f),		glm::vec3(20.0f),	glm::radians(180.0f),	glm::vec3(0.0f, 1.0f, 0.0f) },
+		{ "models3d/ovellaBaixRes.obj",		glm::vec3(-11.0f, 0.8f, -3.0f),		glm::vec3(0.4f),	glm::radians(180.0f),	glm::vec3(0.0f, 1.0f, 0.0f) },
+		{ "models3d/camellBaixRes.obj",		glm::vec3(-6.0f, 0.0f, -13.0f),		glm::vec3(0.075f),	glm::radians(-40.0f),	glm::vec3(0.0f, 1.0f, 0.0f) },
+		{ "models3d/camellBaixRes.obj",		glm::vec3(-11.0f, 1.5f, -17.0f),	glm::vec3(0.075f),	glm::radians(-70.0f),	glm::vec3(0.0f, 1.0f, 0.0f) },
+		{ "models3d/camellBaixRes.obj",		glm::vec3(-9.0f, 0.0f, -15.0f),		glm::vec3(0.075f),	glm::radians(-60.0f),	glm::vec3(0.0f, 1.0f, 0.0f) },
+		{ "models3d/fonsBaixRes.obj",		glm::vec3(0.0f, 27.7f, 0.0f),		glm::vec3(500.0f),	glm::radians(-180.0f),	glm::vec3(0.0f, 1.0f, 0.0f) },
+		{ "models3d/caganerBaixRes.obj",	glm::vec3(13.0f, 0.0f, 0.0f),		glm::vec3(5.0f),	glm::radians(-120.0f),	glm::vec3(0.0f, 1.0f, 0.0f) },
+		{ "models3d/angelBaixRes.obj",		glm::vec3(7.0f, 10.0f, 2.0f),		glm::vec3(1.5f),	glm::radians(180.0f),	glm::vec3(0.0f, 1.0f, 0.0f) }
 	};
 
 	// Crear cada modelo

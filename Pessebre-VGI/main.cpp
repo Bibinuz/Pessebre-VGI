@@ -8,7 +8,7 @@
 #include "Shadowmap.h"
 
 #include <irrKlang.h> // Añadido para el manejo de música de fondo
-using namespace irrklang;
+
 
 int TOTAL_CAGANERS = 5;
 
@@ -74,9 +74,11 @@ int main() {
 
 	int width, height;
 	get_resolution(width, height);
-
+	
+	//Dona un error
+	/*
 	// Crear el motor de sonido
-	ISoundEngine* engine = createIrrKlangDevice();
+	irrklang::ISoundEngine* engine = irrklang::createIrrKlangDevice();
 	if (!engine) {
 		std::cout << "Could not startup engine" << std::endl;
 		return 0;
@@ -84,7 +86,7 @@ int main() {
 
 	// Ajusta esta ruta absoluta al archivo de audio (mp3, wav u ogg) que quieras probar
 	const char* musicPath = "C:/Users/gfxgp/Desktop/Pessebre-VGI (3)/Pessebre-VGI/Pessebre-VGI/audio/musicaNadal.wav";
-	ISound* music = engine->play2D(musicPath, true);
+	irrklang::ISound* music = engine->play2D(musicPath, true);
 
 	//engine->setSoundVolume(1.0f);
 	//ISound* music = engine->play2D(musicPath, true);
@@ -94,14 +96,14 @@ int main() {
 	else {
 		std::cout << "Music is playing." << std::endl;
 	}
-
+	*/
 	
 	// Limites de posición para cada cámara (ejemplo)
 	glm::vec3 minPos1(-30.0f, 2.0f, -30.0f);
 	glm::vec3 maxPos1(20.0f, 20.0f, 20.0f);
 	
 	// Definim càmeres
-	Camera camBackground(width, height, glm::vec3(0.0f, 4.0f, 18.00f));
+	Camera camBackground(width, height, glm::vec3(0.0f, 4.0f, 18.00f), minPos1, maxPos1);
 	camBackground.cameraActive = false;
 
 	Camera cameraEstatica(width, height, glm::vec3(0.0f, 6.0f, -10.0f), minPos1, maxPos1); // Cámara estática con límites
@@ -110,12 +112,11 @@ int main() {
 	glm::vec3 minPos2(10.0f, 6.0f, 10.0f);
 	glm::vec3 maxPos2(10.0f, 6.0f, 10.0f);
 
+	Camera camera1(width, height, glm::vec3(10.0f, 6.0f, 10.0f), minPos2, maxPos2); // Segunda cámara con límites
+
 	Camera camera2(width, height, glm::vec3(10.0f, 6.0f, 10.0f), minPos2, maxPos2); // Segunda cámara con límites
 
-	glm::vec3 minPos3(10.0f, 6.0f, 10.0f);
-	glm::vec3 maxPos3(10.0f, 6.0f, 10.0f);
-
-	Camera camera3(width, height, glm::vec3(-10.0f, 6.0f, -10.0f), minPos3, maxPos3); // Tercera cámara con límites
+	Camera camera3(width, height, glm::vec3(-10.0f, 6.0f, -10.0f), minPos2, maxPos2); // Tercera cámara con límites
 
 	std::vector<Camera> Cameres;
 	Cameres.push_back(camera1); Cameres.push_back(camera2); Cameres.push_back(camera3);
@@ -139,8 +140,6 @@ int main() {
 	std::vector<Vertex> lightVerts(lightVertices, lightVertices + sizeof(lightVertices) / sizeof(Vertex));
 	std::vector<GLuint> lightInd(lightIndices, lightIndices + sizeof(lightIndices) / sizeof(GLuint));
 	Mesh llum1(lightVerts, lightInd, tex);
-	Mesh llum2(lightVerts, lightInd, tex);
-	Mesh llum3(lightVerts, lightInd, tex);
 
 	std::vector<Model> models;
 	std::vector<glm::mat4> modelMatrices;
@@ -164,9 +163,6 @@ int main() {
 	glm::mat4 modelLlum3 = glm::mat4(1.0f);
 	modelLlum3 = glm::translate(modelLlum3, posLlum3);
 
-	glm::vec3 posLlum3 = glm::vec3(-3, 3, 0);
-	glm::mat4 modelLlum3 = glm::translate(glm::mat4(1.0f), posLlum3);
-
 	glm::vec4 color1 = glm::vec4(1);
 	glm::vec4 color2 = glm::vec4(1);
 	glm::vec4 color3 = glm::vec4(1);
@@ -175,8 +171,8 @@ int main() {
 	std::vector<Llum> llums;
 		
 	ls.push_back({ true, posLlum1, color1, Punt, 2, &llum1, modelLlum1});
-	ls.push_back({ true, posLlum2, color2, Direccional, 1, &llum2, modelLlum2});
-	ls.push_back({ true, posLlum3, color3, Foco, 1, &llum3, modelLlum3 });
+	ls.push_back({ true, posLlum2, color2, Direccional, 1, &llum1, modelLlum2});
+	ls.push_back({ true, posLlum3, color3, Foco, 1, &llum1, modelLlum3 });
 
 	/* Shadow maps */
 	Shader depthShader("depth.vert", "depth.frag");
@@ -187,7 +183,7 @@ int main() {
 		if (ls[i-diff].tipus == Direccional)
 		{
 			ls[i-diff].shadowmap = Shadowmap(resolutionShadowMap, i);
-			ls[i-diff].shadowmap.lightProj = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, 0.5f, 100.0f);
+			ls[i-diff].shadowmap.lightProj = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, 0.5f, 500.0f);
 			llums.push_back(ls[i-diff]);
 		}
 		else if (ls[i-diff].tipus == Punt)
@@ -197,9 +193,7 @@ int main() {
 			{
 				aux[j] = { ls[i-diff].sw_light, ls[i-diff].lightPos, ls[i-diff].lightCol, Punt, ls[i-diff].intensitat, ls[i-diff].mesh, ls[i-diff].model };
 				aux[j].shadowmap = Shadowmap(resolutionShadowMap, i + j);
-				aux[j].shadowmap.lightProj = glm::perspective(90.0f, 1.0f, 0.5f, 100.0f);
-				//aux[j].shadowmap.lightProj = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, 0.1f, 100.0f);
-
+				aux[j].shadowmap.lightProj = glm::perspective(90.0f, 1.0f, 0.5f, 500.0f);
 				llums.push_back(aux[j]);
 			}
 			llums[i+0].shadowmap.lightDir = glm::vec3( 1.0, 0.0, 0.0);
@@ -222,7 +216,7 @@ int main() {
 		{
 			ls[i - diff].shadowmap = Shadowmap(resolutionShadowMap, i);
 			//ls[i - diff].shadowmap.lightProj = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, 0.5f, 100.0f);
-			ls[i - diff].shadowmap.lightProj = glm::perspective(90.0f, 1.0f, 0.5f, 100.0f);
+			ls[i - diff].shadowmap.lightProj = glm::perspective(90.0f, 1.0f, 0.5f, 500.0f);
 			ls[i - diff].shadowmap.lightDir = glm::vec3( 0.0,-1.0, 0.0);
 			ls[i - diff].shadowmap.lightUp  = glm::vec3( 0.0, 0.0,-1.0);
 			llums.push_back(ls[i - diff]);
@@ -245,6 +239,8 @@ int main() {
 	int llumAControlar = 0;
 	int numLlumsAControlar = 6;
 
+
+
 	// Bucle principal
 	while (!glfwWindowShouldClose(window)&&varImgui.op!=Exit) {
 		// Calculem el temps per al frame rate
@@ -255,12 +251,10 @@ int main() {
 
 		glDepthFunc(GL_LEQUAL);
 		
-		glCullFace(GL_FRONT);
 		for (int i = 0; i < llums.size(); i++)
 		{
 			llums[i].shadowmap.RenderitzarShadowMap(llums[i].lightPos, depthShader, models, modelMatrices);
 		}
-		glCullFace(GL_BACK);
 		glViewport(0, 0, width, height);
 		
 		// Inputs i actualització de la càmera
@@ -319,6 +313,7 @@ int main() {
 
 			varImgui.imGuiShowFPS();
 			varImgui.imGuiCamPosition(camera);
+			varImgui.imGuiLightsPos(llums[0].lightPos, llums[6].lightPos, llums[7].lightPos);
 			break;
 
 		case StaticCamera:
@@ -376,6 +371,9 @@ int main() {
 		// Imprimim el frame rate
 		//std::cout << 1 / (glfwGetTime() - i) << std::endl;
 
+
+
+		
 		if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS)
 		{
 			llumAControlar = 0;
@@ -392,47 +390,45 @@ int main() {
 			numLlumsAControlar = 1;
 		}
 
-
-
 		if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
 		{
 			for (int i = llumAControlar; i < llumAControlar+numLlumsAControlar; i++) {
-				llums[i].lightPos.x += 0.01;
+				llums[i].lightPos.x += 0.1;
 				llums[i].model = glm::translate(glm::mat4(1.0), llums[i].lightPos);
 			}
 		}
 		if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
 		{
 			for (int i = llumAControlar; i < llumAControlar+numLlumsAControlar; i++) {
-				llums[i].lightPos.x -= 0.01;
+				llums[i].lightPos.x -= 0.1;
 				llums[i].model = glm::translate(glm::mat4(1.0), llums[i].lightPos);
 			}
 		}
 		if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
 		{
 			for (int i = llumAControlar; i < llumAControlar+numLlumsAControlar; i++) {
-				llums[i].lightPos.z -= 0.01;
+				llums[i].lightPos.z -= 0.1;
 				llums[i].model = glm::translate(glm::mat4(1.0), llums[i].lightPos);
 			}
 		}
 		if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
 		{
 			for (int i = llumAControlar; i < llumAControlar+numLlumsAControlar; i++) {
-				llums[i].lightPos.z += 0.01;
+				llums[i].lightPos.z += 0.1;
 				llums[i].model = glm::translate(glm::mat4(1.0), llums[i].lightPos);
 			}
 		}
 		if (glfwGetKey(window, GLFW_KEY_PAGE_UP) == GLFW_PRESS)
 		{
 			for (int i = llumAControlar; i < llumAControlar+numLlumsAControlar; i++) {
-				llums[i].lightPos.y += 0.01;
+				llums[i].lightPos.y += 0.1;
 				llums[i].model = glm::translate(glm::mat4(1.0), llums[i].lightPos);
 			}
 		}
 		if (glfwGetKey(window, GLFW_KEY_PAGE_DOWN) == GLFW_PRESS)
 		{
 			for (int i = llumAControlar; i < llumAControlar+numLlumsAControlar; i++) {
-				llums[i].lightPos.y -= 0.01;
+				llums[i].lightPos.y -= 0.1;
 				llums[i].model = glm::translate(glm::mat4(1.0), llums[i].lightPos);
 			}
 		}
@@ -445,7 +441,7 @@ int main() {
 	glfwTerminate();
 
 	// Liberar el motor de sonido al terminar
-	engine->drop();
+	//engine->drop();
 
 	return 0;
 }
