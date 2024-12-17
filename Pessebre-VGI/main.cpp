@@ -75,8 +75,7 @@ int main() {
 	int width, height;
 	get_resolution(width, height);
 	
-	//Dona un error
-	/*
+	
 	// Crear el motor de sonido
 	irrklang::ISoundEngine* engine = irrklang::createIrrKlangDevice();
 	if (!engine) {
@@ -85,7 +84,7 @@ int main() {
 	}
 
 	// Ajusta esta ruta absoluta al archivo de audio (mp3, wav u ogg) que quieras probar
-	const char* musicPath = "C:/Users/gfxgp/Desktop/Pessebre-VGI (3)/Pessebre-VGI/Pessebre-VGI/audio/musicaNadal.wav";
+	const char* musicPath = "audio/musicaNadal.wav";
 	irrklang::ISound* music = engine->play2D(musicPath, true);
 
 	//engine->setSoundVolume(1.0f);
@@ -96,7 +95,7 @@ int main() {
 	else {
 		std::cout << "Music is playing." << std::endl;
 	}
-	*/
+	
 	
 	// Limites de posición para cada cámara (ejemplo)
 	glm::vec3 minPos1(-30.0f, 2.0f, -30.0f);
