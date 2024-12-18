@@ -89,8 +89,7 @@ int main() {
 	const char* musicPath = "audio/musicaNadal.wav";
 	irrklang::ISound* music = engine->play2D(musicPath, true);
 
-	//engine->setSoundVolume(1.0f);
-	//ISound* music = engine->play2D(musicPath, true);
+	engine->setSoundVolume(0.2f);
 	if (!music) {
 		std::cout << "Failed to load music file. Check the path: " << musicPath << std::endl;
 	}
@@ -148,9 +147,11 @@ int main() {
 	std::vector<Texture> tex(textures, textures + sizeof(textures) / sizeof(Texture));
 	//------------------------------//
 
-	Shader shaderProgram("default.vert", "default.frag");
-	Shader lightShader("light.vert", "light.frag");
-	Shader skyboxShader("skybox.vert", "skybox.frag");
+	Shader shaderProgram("shaders/default.vert", "shaders/default.frag");
+	Shader lightShader("shaders/light.vert", "shaders/light.frag");
+	Shader skyboxShader("shaders/skybox.vert", "shaders/skybox.frag");
+	Shader depthShader("shaders/depth.vert", "shaders/depth.frag");
+
 
 	std::vector<Vertex> lightVerts(lightVertices, lightVertices + sizeof(lightVertices) / sizeof(Vertex));
 	std::vector<GLuint> lightInd(lightIndices, lightIndices + sizeof(lightIndices) / sizeof(GLuint));
@@ -190,7 +191,6 @@ int main() {
 	ls.push_back({ true, posLlum3, color3, Foco, 2, &llum1, modelLlum3 });
 
 	/* Shadow maps */
-	Shader depthShader("depth.vert", "depth.frag");
 
 	int diff = 0;
 	int resolutionShadowMap = 11;
@@ -374,19 +374,6 @@ int main() {
 		}
 
 		varImgui.imGuiRender();
-		glfwSwapBuffers(window);
-		glfwPollEvents();
-		glFinish();
-
-		// Actualitzem la mida de la finestra i el viewport
-		//glfwGetWindowSize(window, &width, &height);
-		//glViewport(0, 0, width, height);
-
-		// Imprimim el frame rate
-		//std::cout << 1 / (glfwGetTime() - i) << std::endl;
-
-
-
 		
 		if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS)
 		{
@@ -446,6 +433,10 @@ int main() {
 				llums[i].model = glm::translate(glm::mat4(1.0), llums[i].lightPos);
 			}
 		}
+		glfwSwapBuffers(window);
+		glfwPollEvents();
+		glFinish();
+
 	}
 
 	shaderProgram.Delete();
