@@ -72,12 +72,12 @@ int main() {
 
 	int width, height;
 	get_resolution(width, height);
-	
-	
 
-	
+
+
+
 	// Aquesta part no hem funciona----------------------------------------------------------------
-	
+
 	// Crear el motor de sonido
 	irrklang::ISoundEngine* engine = irrklang::createIrrKlangDevice();
 	if (!engine) {
@@ -89,21 +89,23 @@ int main() {
 	const char* musicPath = "audio/musicaNadal.wav";
 	irrklang::ISound* music = engine->play2D(musicPath, true);
 
-	engine->setSoundVolume(0.2f);
+	//engine->setSoundVolume(1.0f);
+	//ISound* music = engine->play2D(musicPath, true);
 	if (!music) {
 		std::cout << "Failed to load music file. Check the path: " << musicPath << std::endl;
 	}
 	else {
 		std::cout << "Music is playing." << std::endl;
 	}
-	
+
 	//---------------------------------------------------------------------------------------------
-	
-	
+
+
 	// Limites de posición para cada cámara (ejemplo)
 	glm::vec3 minPos1(-30.0f, 2.0f, -30.0f);
 	glm::vec3 maxPos1(20.0f, 20.0f, 20.0f);
-	
+
+	// Definim càmeres
 	// Definim càmeres
 	Camera camBackground(width, height, glm::vec3(0.0f, 4.0f, 18.00f), minPos1, maxPos1);
 	camBackground.cameraActive = false;
@@ -112,10 +114,10 @@ int main() {
 	cameraEstatica.Orientation = glm::vec3(-0.47f, -0.01f, 0.88f);
 
 	cameraEstatica.cameraActive = false;
-	
+
 	glm::vec3 minPos2(10.0f, 6.0f, 10.0f);
 	glm::vec3 maxPos2(10.0f, 6.0f, 10.0f);
-	
+
 
 	Camera camera1(width, height, glm::vec3(11.0f, 6.2f, -30.0f), minPos1, maxPos1); // Camera principal
 	camera1.Orientation = glm::vec3((float)(-0.47), (float)(0), (float)(0.88));
@@ -130,11 +132,9 @@ int main() {
 	camera3.Orientation = glm::vec3((float)(-0.3), (float)(-0.6), (float)(0.74));
 	camera3.cameraActive = false;
 
-
-
 	std::vector<Camera> Cameres;
 	Cameres.push_back(camera1); Cameres.push_back(camera2); Cameres.push_back(camera3);
-	Camera* camera = &cameraEstatica;
+	Camera* camera = &camera1;
 
 	//------------------------------// esto no se porque influye en una cara del skybox que le da la vuelta si lo borro ademas influye en el color de algun objeto no entiendo nada;
 	Texture textures[2]
@@ -147,11 +147,9 @@ int main() {
 	std::vector<Texture> tex(textures, textures + sizeof(textures) / sizeof(Texture));
 	//------------------------------//
 
-	Shader shaderProgram("shaders/default.vert", "shaders/default.frag");
-	Shader lightShader("shaders/light.vert", "shaders/light.frag");
-	Shader skyboxShader("shaders/skybox.vert", "shaders/skybox.frag");
-	Shader depthShader("shaders/depth.vert", "shaders/depth.frag");
-
+	Shader shaderProgram("default.vert", "default.frag");
+	Shader lightShader("light.vert", "light.frag");
+	Shader skyboxShader("skybox.vert", "skybox.frag");
 
 	std::vector<Vertex> lightVerts(lightVertices, lightVertices + sizeof(lightVertices) / sizeof(Vertex));
 	std::vector<GLuint> lightInd(lightIndices, lightIndices + sizeof(lightIndices) / sizeof(GLuint));
@@ -174,7 +172,7 @@ int main() {
 	glm::vec3 posLlum2 = glm::vec3(7.0f, 18.0f, 9.0f);
 	glm::mat4 modelLlum2 = glm::mat4(1.0f);
 	modelLlum2 = glm::translate(modelLlum2, posLlum2);
-	
+
 	glm::vec3 posLlum3 = glm::vec3(0.2f, 5.0f, -2.8f);
 	glm::mat4 modelLlum3 = glm::mat4(1.0f);
 	modelLlum3 = glm::translate(modelLlum3, posLlum3);
@@ -185,45 +183,46 @@ int main() {
 
 	std::vector<Llum> ls;
 	std::vector<Llum> llums;
-		
-	ls.push_back({ true, posLlum1, glm::vec4(1.0f, 0.639f, 0.329f, 1.0f), Punt, 3, &llum1, modelLlum1});
-	ls.push_back({ true, posLlum2, color2, Direccional, 1.5, &llum1, modelLlum2});
+
+	ls.push_back({ true, posLlum1, glm::vec4(1.0f, 0.639f, 0.329f, 1.0f), Punt, 3, &llum1, modelLlum1 });
+	ls.push_back({ true, posLlum2, color2, Direccional, 1.5, &llum1, modelLlum2 });
 	ls.push_back({ true, posLlum3, color3, Foco, 2, &llum1, modelLlum3 });
 
 	/* Shadow maps */
+	Shader depthShader("depth.vert", "depth.frag");
 
 	int diff = 0;
 	int resolutionShadowMap = 11;
-	for (int i = 0; i-diff < ls.size(); i++) {
-		if (ls[i-diff].tipus == Direccional)
+	for (int i = 0; i - diff < ls.size(); i++) {
+		if (ls[i - diff].tipus == Direccional)
 		{
-			ls[i-diff].shadowmap = Shadowmap(resolutionShadowMap, i);
-			ls[i-diff].shadowmap.lightProj = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, 0.5f, 500.0f);
-			llums.push_back(ls[i-diff]);
+			ls[i - diff].shadowmap = Shadowmap(resolutionShadowMap, i);
+			ls[i - diff].shadowmap.lightProj = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, 0.5f, 500.0f);
+			llums.push_back(ls[i - diff]);
 		}
-		else if (ls[i-diff].tipus == Punt)
+		else if (ls[i - diff].tipus == Punt)
 		{
 			Llum aux[6];
 			for (int j = 0; j < 6; j++)
 			{
-				aux[j] = { ls[i-diff].sw_light, ls[i-diff].lightPos, ls[i-diff].lightCol, Punt, ls[i-diff].intensitat, ls[i-diff].mesh, ls[i-diff].model };
+				aux[j] = { ls[i - diff].sw_light, ls[i - diff].lightPos, ls[i - diff].lightCol, Punt, ls[i - diff].intensitat, ls[i - diff].mesh, ls[i - diff].model };
 				aux[j].shadowmap = Shadowmap(resolutionShadowMap, i + j);
 				aux[j].shadowmap.lightProj = glm::perspective(90.0f, 1.0f, 0.5f, 500.0f);
 				llums.push_back(aux[j]);
 			}
-			llums[i+0].shadowmap.lightDir = glm::vec3( 1.0, 0.0, 0.0);
-			llums[i+1].shadowmap.lightDir = glm::vec3(-1.0, 0.0, 0.0);
-			llums[i+2].shadowmap.lightDir = glm::vec3( 0.0, 1.0, 0.0);
-			llums[i+3].shadowmap.lightDir = glm::vec3( 0.0,-1.0, 0.0);
-			llums[i+4].shadowmap.lightDir = glm::vec3( 0.0, 0.0, 1.0);
-			llums[i+5].shadowmap.lightDir = glm::vec3( 0.0, 0.0,-1.0);
-			
-			llums[i+0].shadowmap.lightUp = glm::vec3( 0.0,-1.0, 0.0);
-			llums[i+1].shadowmap.lightUp = glm::vec3( 0.0,-1.0, 0.0);
-			llums[i+2].shadowmap.lightUp = glm::vec3( 0.0, 0.0, 1.0);
-			llums[i+3].shadowmap.lightUp = glm::vec3( 0.0, 0.0,-1.0);
-			llums[i+4].shadowmap.lightUp = glm::vec3( 0.0,-1.0, 0.0);
-			llums[i+5].shadowmap.lightUp = glm::vec3( 0.0,-1.0, 0.0);
+			llums[i + 0].shadowmap.lightDir = glm::vec3(1.0, 0.0, 0.0);
+			llums[i + 1].shadowmap.lightDir = glm::vec3(-1.0, 0.0, 0.0);
+			llums[i + 2].shadowmap.lightDir = glm::vec3(0.0, 1.0, 0.0);
+			llums[i + 3].shadowmap.lightDir = glm::vec3(0.0, -1.0, 0.0);
+			llums[i + 4].shadowmap.lightDir = glm::vec3(0.0, 0.0, 1.0);
+			llums[i + 5].shadowmap.lightDir = glm::vec3(0.0, 0.0, -1.0);
+
+			llums[i + 0].shadowmap.lightUp = glm::vec3(0.0, -1.0, 0.0);
+			llums[i + 1].shadowmap.lightUp = glm::vec3(0.0, -1.0, 0.0);
+			llums[i + 2].shadowmap.lightUp = glm::vec3(0.0, 0.0, 1.0);
+			llums[i + 3].shadowmap.lightUp = glm::vec3(0.0, 0.0, -1.0);
+			llums[i + 4].shadowmap.lightUp = glm::vec3(0.0, -1.0, 0.0);
+			llums[i + 5].shadowmap.lightUp = glm::vec3(0.0, -1.0, 0.0);
 			i += 5;
 			diff += 5;
 		}
@@ -232,8 +231,8 @@ int main() {
 			ls[i - diff].shadowmap = Shadowmap(resolutionShadowMap, i);
 			//ls[i - diff].shadowmap.lightProj = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, 0.5f, 100.0f);
 			ls[i - diff].shadowmap.lightProj = glm::perspective(90.0f, 1.0f, 0.5f, 500.0f);
-			ls[i - diff].shadowmap.lightDir = glm::vec3( 0.0,-1.0, 0.0);
-			ls[i - diff].shadowmap.lightUp  = glm::vec3( 0.0, 0.0,-1.0);
+			ls[i - diff].shadowmap.lightDir = glm::vec3(0.0, -1.0, 0.0);
+			ls[i - diff].shadowmap.lightUp = glm::vec3(0.0, 0.0, -1.0);
 			llums.push_back(ls[i - diff]);
 		}
 	}
@@ -256,7 +255,7 @@ int main() {
 
 
 	// Bucle principal
-	while (!glfwWindowShouldClose(window)&&varImgui.op!=Exit) {
+	while (!glfwWindowShouldClose(window) && varImgui.op != Exit) {
 		// Calculem el temps per al frame rate
 		float i = glfwGetTime();
 
@@ -264,22 +263,24 @@ int main() {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		glDepthFunc(GL_LEQUAL);
-		
+
 		for (int i = 0; i < llums.size(); i++)
 		{
 			llums[i].shadowmap.RenderitzarShadowMap(llums[i].lightPos, depthShader, models, modelMatrices);
 		}
 		glViewport(0, 0, width, height);
-		
+
 		// Inputs i actualització de la càmera
-		camera->Inputs(window);
+		//std::cout << "Ha entrat a imput";
+		if (varImgui.op != Menu && varImgui.op != StaticCamera)
+			camera->Inputs(window);
 		camera->UpdateMatrix(45.0f, 0.1f, 500.0f);
 		//-----------------------------------------------
 		varImgui.imGuiInitNewFrame();
 		//-----------------------------------------------
 
 
-		glfwGetFramebufferSize(window, &windowWidth, &windowHeight);		
+		glfwGetFramebufferSize(window, &windowWidth, &windowHeight);
 
 		DrawModels(shaderProgram, models, modelMatrices, llums, *camera);
 		//DrawLights(lightShader, llums, *camera);
@@ -287,7 +288,7 @@ int main() {
 
 		switch (varImgui.op) {
 		case Juga:
-			camera = &Cameres[0];
+			//camera = &Cameres[0];
 
 			ImGui::SetNextWindowPos(ImVec2(1650, 10));
 			ImGui::Begin("Juga", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_AlwaysAutoResize);
@@ -296,7 +297,6 @@ int main() {
 			ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0, 0, 0, 0));
 			ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0, 0, 0, 0));
 			ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0, 0));
-
 			if (ImGui::ImageButton("return_btn_juga", (ImTextureID)(uintptr_t)varImgui.buttonReturnTextureID, ImVec2(100, 100), ImVec2(0, 0), ImVec2(1, 1))) {
 				varImgui.op = Menu;
 			}
@@ -374,7 +374,20 @@ int main() {
 		}
 
 		varImgui.imGuiRender();
-		
+		glfwSwapBuffers(window);
+		glfwPollEvents();
+		glFinish();
+
+		// Actualitzem la mida de la finestra i el viewport
+		//glfwGetWindowSize(window, &width, &height);
+		//glViewport(0, 0, width, height);
+
+		// Imprimim el frame rate
+		//std::cout << 1 / (glfwGetTime() - i) << std::endl;
+
+
+
+
 		if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS)
 		{
 			llumAControlar = 0;
@@ -393,50 +406,46 @@ int main() {
 
 		if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
 		{
-			for (int i = llumAControlar; i < llumAControlar+numLlumsAControlar; i++) {
+			for (int i = llumAControlar; i < llumAControlar + numLlumsAControlar; i++) {
 				llums[i].lightPos.x += 0.1;
 				llums[i].model = glm::translate(glm::mat4(1.0), llums[i].lightPos);
 			}
 		}
 		if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
 		{
-			for (int i = llumAControlar; i < llumAControlar+numLlumsAControlar; i++) {
+			for (int i = llumAControlar; i < llumAControlar + numLlumsAControlar; i++) {
 				llums[i].lightPos.x -= 0.1;
 				llums[i].model = glm::translate(glm::mat4(1.0), llums[i].lightPos);
 			}
 		}
 		if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
 		{
-			for (int i = llumAControlar; i < llumAControlar+numLlumsAControlar; i++) {
+			for (int i = llumAControlar; i < llumAControlar + numLlumsAControlar; i++) {
 				llums[i].lightPos.z -= 0.1;
 				llums[i].model = glm::translate(glm::mat4(1.0), llums[i].lightPos);
 			}
 		}
 		if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
 		{
-			for (int i = llumAControlar; i < llumAControlar+numLlumsAControlar; i++) {
+			for (int i = llumAControlar; i < llumAControlar + numLlumsAControlar; i++) {
 				llums[i].lightPos.z += 0.1;
 				llums[i].model = glm::translate(glm::mat4(1.0), llums[i].lightPos);
 			}
 		}
 		if (glfwGetKey(window, GLFW_KEY_PAGE_UP) == GLFW_PRESS)
 		{
-			for (int i = llumAControlar; i < llumAControlar+numLlumsAControlar; i++) {
+			for (int i = llumAControlar; i < llumAControlar + numLlumsAControlar; i++) {
 				llums[i].lightPos.y += 0.1;
 				llums[i].model = glm::translate(glm::mat4(1.0), llums[i].lightPos);
 			}
 		}
 		if (glfwGetKey(window, GLFW_KEY_PAGE_DOWN) == GLFW_PRESS)
 		{
-			for (int i = llumAControlar; i < llumAControlar+numLlumsAControlar; i++) {
+			for (int i = llumAControlar; i < llumAControlar + numLlumsAControlar; i++) {
 				llums[i].lightPos.y -= 0.1;
 				llums[i].model = glm::translate(glm::mat4(1.0), llums[i].lightPos);
 			}
 		}
-		glfwSwapBuffers(window);
-		glfwPollEvents();
-		glFinish();
-
 	}
 
 	shaderProgram.Delete();

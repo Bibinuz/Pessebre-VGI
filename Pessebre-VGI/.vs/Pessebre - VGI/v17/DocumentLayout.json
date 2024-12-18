@@ -1,25 +1,25 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\Biel\\source\\gitRepos\\Pessebre-VGI\\Pessebre-VGI\\",
+  "WorkspaceRootPath": "C:\\Users\\Lenovo\\Desktop\\UAB\\3r 1r semestre\\VGI\\Pessebre-VGI\\Pessebre-VGI\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{8B73D535-518E-43E0-AE13-E74346276F72}|Pessebre - VGI.vcxproj|C:\\Users\\Biel\\source\\gitRepos\\Pessebre-VGI\\Pessebre-VGI\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "AbsoluteMoniker": "D:0:0:{8B73D535-518E-43E0-AE13-E74346276F72}|Pessebre - VGI.vcxproj|C:\\Users\\Lenovo\\Desktop\\UAB\\3r 1r semestre\\VGI\\Pessebre-VGI\\Pessebre-VGI\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{8B73D535-518E-43E0-AE13-E74346276F72}|Pessebre - VGI.vcxproj|solutionrelative:main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{8B73D535-518E-43E0-AE13-E74346276F72}|Pessebre - VGI.vcxproj|C:\\Users\\Biel\\source\\gitRepos\\Pessebre-VGI\\Pessebre-VGI\\imGuiImplementation.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "AbsoluteMoniker": "D:0:0:{8B73D535-518E-43E0-AE13-E74346276F72}|Pessebre - VGI.vcxproj|C:\\Users\\Lenovo\\Desktop\\UAB\\3r 1r semestre\\VGI\\Pessebre-VGI\\Pessebre-VGI\\imGuiImplementation.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{8B73D535-518E-43E0-AE13-E74346276F72}|Pessebre - VGI.vcxproj|solutionrelative:imGuiImplementation.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{8B73D535-518E-43E0-AE13-E74346276F72}|Pessebre - VGI.vcxproj|C:\\Users\\Biel\\source\\gitRepos\\Pessebre-VGI\\Pessebre-VGI\\Camera.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "AbsoluteMoniker": "D:0:0:{8B73D535-518E-43E0-AE13-E74346276F72}|Pessebre - VGI.vcxproj|C:\\Users\\Lenovo\\Desktop\\UAB\\3r 1r semestre\\VGI\\Pessebre-VGI\\Pessebre-VGI\\Camera.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{8B73D535-518E-43E0-AE13-E74346276F72}|Pessebre - VGI.vcxproj|solutionrelative:Camera.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{8B73D535-518E-43E0-AE13-E74346276F72}|Pessebre - VGI.vcxproj|C:\\Users\\Biel\\source\\gitRepos\\Pessebre-VGI\\Pessebre-VGI\\funcionsEscena.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "AbsoluteMoniker": "D:0:0:{8B73D535-518E-43E0-AE13-E74346276F72}|Pessebre - VGI.vcxproj|C:\\Users\\Lenovo\\Desktop\\UAB\\3r 1r semestre\\VGI\\Pessebre-VGI\\Pessebre-VGI\\funcionsEscena.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{8B73D535-518E-43E0-AE13-E74346276F72}|Pessebre - VGI.vcxproj|solutionrelative:funcionsEscena.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{8B73D535-518E-43E0-AE13-E74346276F72}|Pessebre - VGI.vcxproj|C:\\Users\\Biel\\source\\gitRepos\\Pessebre-VGI\\Pessebre-VGI\\default.frag||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "AbsoluteMoniker": "D:0:0:{8B73D535-518E-43E0-AE13-E74346276F72}|Pessebre - VGI.vcxproj|C:\\Users\\Lenovo\\Desktop\\UAB\\3r 1r semestre\\VGI\\Pessebre-VGI\\Pessebre-VGI\\default.frag||{8B382828-6202-11D1-8870-0000F87579D2}",
       "RelativeMoniker": "D:0:0:{8B73D535-518E-43E0-AE13-E74346276F72}|Pessebre - VGI.vcxproj|solutionrelative:default.frag||{8B382828-6202-11D1-8870-0000F87579D2}"
     }
   ],
@@ -36,23 +36,15 @@
               "$type": "Document",
               "DocumentIndex": 0,
               "Title": "main.cpp",
-              "DocumentMoniker": "C:\\Users\\Biel\\source\\gitRepos\\Pessebre-VGI\\Pessebre-VGI\\main.cpp",
+              "DocumentMoniker": "C:\\Users\\Lenovo\\Desktop\\UAB\\3r 1r semestre\\VGI\\Pessebre-VGI\\Pessebre-VGI\\main.cpp",
               "RelativeDocumentMoniker": "main.cpp",
-              "ToolTip": "C:\\Users\\Biel\\source\\gitRepos\\Pessebre-VGI\\Pessebre-VGI\\main.cpp",
+              "ToolTip": "C:\\Users\\Lenovo\\Desktop\\UAB\\3r 1r semestre\\VGI\\Pessebre-VGI\\Pessebre-VGI\\main.cpp",
               "RelativeToolTip": "main.cpp",
-              "ViewState": "AgIAADAAAAAAAAAAAAAAAE8AAAABAAAAAAAAAA==",
+              "ViewState": "AgIAAPgAAAAAAAAAAAAcwM0BAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2024-10-28T09:52:11.99Z",
               "IsPinned": true,
               "EditorCaption": ""
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:128:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
             },
             {
               "$type": "Bookmark",
@@ -66,9 +58,9 @@
               "$type": "Document",
               "DocumentIndex": 2,
               "Title": "Camera.h",
-              "DocumentMoniker": "C:\\Users\\Biel\\source\\gitRepos\\Pessebre-VGI\\Pessebre-VGI\\Camera.h",
+              "DocumentMoniker": "C:\\Users\\Lenovo\\Desktop\\UAB\\3r 1r semestre\\VGI\\Pessebre-VGI\\Pessebre-VGI\\Camera.h",
               "RelativeDocumentMoniker": "Camera.h",
-              "ToolTip": "C:\\Users\\Biel\\source\\gitRepos\\Pessebre-VGI\\Pessebre-VGI\\Camera.h",
+              "ToolTip": "C:\\Users\\Lenovo\\Desktop\\UAB\\3r 1r semestre\\VGI\\Pessebre-VGI\\Pessebre-VGI\\Camera.h",
               "RelativeToolTip": "Camera.h",
               "ViewState": "AgIAABIAAAAAAAAAAAAAABsAAAAbAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
@@ -78,9 +70,9 @@
               "$type": "Document",
               "DocumentIndex": 4,
               "Title": "default.frag",
-              "DocumentMoniker": "C:\\Users\\Biel\\source\\gitRepos\\Pessebre-VGI\\Pessebre-VGI\\default.frag",
+              "DocumentMoniker": "C:\\Users\\Lenovo\\Desktop\\UAB\\3r 1r semestre\\VGI\\Pessebre-VGI\\Pessebre-VGI\\default.frag",
               "RelativeDocumentMoniker": "default.frag",
-              "ToolTip": "C:\\Users\\Biel\\source\\gitRepos\\Pessebre-VGI\\Pessebre-VGI\\default.frag",
+              "ToolTip": "C:\\Users\\Lenovo\\Desktop\\UAB\\3r 1r semestre\\VGI\\Pessebre-VGI\\Pessebre-VGI\\default.frag",
               "RelativeToolTip": "default.frag",
               "ViewState": "AgIAAG0AAAAAAAAAAAAUwHUAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
@@ -90,9 +82,9 @@
               "$type": "Document",
               "DocumentIndex": 3,
               "Title": "funcionsEscena.cpp",
-              "DocumentMoniker": "C:\\Users\\Biel\\source\\gitRepos\\Pessebre-VGI\\Pessebre-VGI\\funcionsEscena.cpp",
+              "DocumentMoniker": "C:\\Users\\Lenovo\\Desktop\\UAB\\3r 1r semestre\\VGI\\Pessebre-VGI\\Pessebre-VGI\\funcionsEscena.cpp",
               "RelativeDocumentMoniker": "funcionsEscena.cpp",
-              "ToolTip": "C:\\Users\\Biel\\source\\gitRepos\\Pessebre-VGI\\Pessebre-VGI\\funcionsEscena.cpp",
+              "ToolTip": "C:\\Users\\Lenovo\\Desktop\\UAB\\3r 1r semestre\\VGI\\Pessebre-VGI\\Pessebre-VGI\\funcionsEscena.cpp",
               "RelativeToolTip": "funcionsEscena.cpp",
               "ViewState": "AgIAACQAAAAAAAAAAAAAADgAAAACAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
@@ -102,9 +94,9 @@
               "$type": "Document",
               "DocumentIndex": 1,
               "Title": "imGuiImplementation.h",
-              "DocumentMoniker": "C:\\Users\\Biel\\source\\gitRepos\\Pessebre-VGI\\Pessebre-VGI\\imGuiImplementation.h",
+              "DocumentMoniker": "C:\\Users\\Lenovo\\Desktop\\UAB\\3r 1r semestre\\VGI\\Pessebre-VGI\\Pessebre-VGI\\imGuiImplementation.h",
               "RelativeDocumentMoniker": "imGuiImplementation.h",
-              "ToolTip": "C:\\Users\\Biel\\source\\gitRepos\\Pessebre-VGI\\Pessebre-VGI\\imGuiImplementation.h",
+              "ToolTip": "C:\\Users\\Lenovo\\Desktop\\UAB\\3r 1r semestre\\VGI\\Pessebre-VGI\\Pessebre-VGI\\imGuiImplementation.h",
               "RelativeToolTip": "imGuiImplementation.h",
               "ViewState": "AgIAAIEAAAAAAAAAAAAAAFYBAAA8AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
