@@ -109,17 +109,29 @@ int main() {
 	Camera camBackground(width, height, glm::vec3(0.0f, 4.0f, 18.00f), minPos1, maxPos1);
 	camBackground.cameraActive = false;
 
-	Camera cameraEstatica(width, height, glm::vec3(0.0f, 6.0f, -10.0f), minPos1, maxPos1); // Cámara estática con límites
-	cameraEstatica.cameraActive = false;
+	Camera cameraEstatica(width, height, glm::vec3(11.0f, 6.2f, -30.0f), minPos1, maxPos1); // Cámara estática con límites
+	cameraEstatica.Orientation = glm::vec3(-0.47f, -0.01f, 0.88f);
 
+	cameraEstatica.cameraActive = false;
+	
 	glm::vec3 minPos2(10.0f, 6.0f, 10.0f);
 	glm::vec3 maxPos2(10.0f, 6.0f, 10.0f);
+	
 
-	Camera camera1(width, height, glm::vec3(10.0f, 6.0f, 10.0f), minPos2, maxPos2); // Segunda cámara con límites
+	Camera camera1(width, height, glm::vec3(11.0f, 6.2f, -30.0f), minPos1, maxPos1); // Camera principal
+	camera1.Orientation = glm::vec3((float)(-0.47), (float)(0), (float)(0.88));
+	camera1.cameraActive = false;
 
-	Camera camera2(width, height, glm::vec3(10.0f, 6.0f, 10.0f), minPos2, maxPos2); // Segunda cámara con límites
+	Camera camera2(width, height, glm::vec3(0.3f, 4.4f, -8.9f), minPos1, maxPos1); // camera bb
+	camera2.Orientation = glm::vec3((float)(0), (float)(-0.3), (float)(0.95));
+	camera2.cameraActive = false;
 
-	Camera camera3(width, height, glm::vec3(-10.0f, 6.0f, -10.0f), minPos2, maxPos2); // Tercera cámara con límites
+
+	Camera camera3(width, height, glm::vec3(8.9f, 20.0f, -27.7f), minPos1, maxPos1); // camera aerea
+	camera3.Orientation = glm::vec3((float)(-0.3), (float)(-0.6), (float)(0.74));
+	camera3.cameraActive = false;
+
+
 
 	std::vector<Camera> Cameres;
 	Cameres.push_back(camera1); Cameres.push_back(camera2); Cameres.push_back(camera3);

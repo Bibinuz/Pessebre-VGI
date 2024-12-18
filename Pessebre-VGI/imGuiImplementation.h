@@ -336,6 +336,16 @@ inline void imGuiImplementation::imGuiControls(int windowWidth, int windowHeight
     ImGui::Text("Controls del juego:");
     ImGui::BulletText("W, A, S, D: Moverse");
     ImGui::BulletText("Click izquierdo: Interactuar con botones");
+    ImGui::BulletText("Click derecho: activar movimiento camara");
+    ImGui::BulletText("Space: Subir camara");
+    ImGui::BulletText("Shift: Bajar camara");
+    ImGui::BulletText("Left ctr: correr");
+    ImGui::BulletText("Escape: desactivar moviment camera");
+
+
+
+
+
 
     ImVec2 buttonSize(100, 100);
     float buttonCenterX = (windowSize.x - buttonSize.x) / 2.0f;
